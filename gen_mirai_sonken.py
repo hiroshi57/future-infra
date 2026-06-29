@@ -1,432 +1,603 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
 未来の生存圏 × 自動運転モビリティ
-Minecraft Schematic Generator v1.0
+Minecraft Schematic Generator  v2.0  (120% enhanced)
 
-概念:
-  少子高齢化・ドーナッツ化により人口が「生存圏」に集約。
-  生存圏間は自動運転専用 3車線×2方向 の高速道路で接続され、
-  JR新幹線の3分ダイヤのように常に自動運転車が行き来する。
-
-生成物:
-  - 生存圏A（西側・シアン/ブルー系ビル群）
-  - 生存圏B（東側・パープル/マゼンタ系ビル群）
-  - 3車線×2方向 高速道路（急行=赤 / 通常=灰 / 合乗=水色）
-  - 自動運転車オブジェクト（各レーンに配置）
-  - 中央分離帯（樹木・ガードレール）
-  - 入口ゲート・車線案内サイン
+主な改良点 (v1→v2):
+  1. 高架ビアダクト構造   : 道路が Y=6 に浮き上がり、8ブロック間隔の
+                              支柱群（クロスブレース付き）で支持される
+  2. 地下駐車場           : 生存圏A・B の地下 Y=-5〜Y=-1 に駐車構造
+  3. 3種類の建物型        : オフィスタワー / 住居タワー / 複合用途
+  4. 歩行者デッキ         : Y=10 の空中歩廊で建物間を連絡
+  5. 太陽光パネル         : 屋上に daylight_detector で表現
+  6. 精細な自動運転車     : ガラス・車体・ライト・ルーフアクセント
+  7. インフラ施設         : 交通制御タワー・変電設備
+  8. 植生の多様化         : オーク / バーチ / 竹林
 
 使い方:
   pip install mcschematic
   python gen_mirai_sonken.py
-  → mirai_sonken.schem が生成される
+  -> mirai_sonken_v2.schem 生成
 
-Minecraft へのインポート:
-  1. .schem を [world]/config/worldedit/schematics/ へコピー
-  2. WorldEdit: //schem load mirai_sonken
-  3. WorldEdit: //paste -a
+Minecraft インポート (WorldEdit / FAWE):
+  //schem load mirai_sonken_v2
+  //paste -a
 
-ワールドレイアウト (X軸 200ブロック / Z軸 90ブロック):
-  X:  0 -  37  生存圏A（密集都市クラスター）
-  X: 38 - 161  高速道路（3車線×2方向）
-  X:162 - 199  生存圏B（密集都市クラスター）
+ワールドレイアウト:
+  X:  0- 37  生存圏A  (シアン/ティール系)
+  X: 38-161  高架高速道路  (支柱群で Y=6 に浮上)
+  X:162-199  生存圏B  (パープル/マゼンタ系)
+  Y:  -5〜-1 地下駐車場 (両ゾーン直下)
+  Y:   0     地面
+  Y:   6     高架道路面
+  Y:  10     歩行者デッキ
 
-  道路内 Z レーン配置:
-  Z: 22-25  急行（追越）A→B  赤
-  Z: 26-29  通常        A→B  灰
-  Z: 30-33  合乗        A→B  水色
-  Z: 34-55  中央分離帯       緑
-  Z: 56-59  合乗        B→A  水色
-  Z: 60-63  通常        B→A  灰
-  Z: 64-68  急行（追越）B→A  赤
+車線 (Z軸) :
+  Z: 22-25  急行(A→B)  赤コンクリート
+  Z: 26-29  通常(A→B)  灰コンクリート
+  Z: 30-33  合乗(A→B)  水色コンクリート
+  Z: 34-55  中央分離帯  苔ブロック + 樹木
+  Z: 56-59  合乗(B→A)  水色コンクリート
+  Z: 60-63  通常(B→A)  灰コンクリート
+  Z: 64-68  急行(B→A)  赤コンクリート
 """
 
 import mcschematic
 import random
 
 VERSION = mcschematic.Version.JE_1_21_4
-SEED = 2026
+SEED    = 2026
 
+# ================================================================
+# 定数
+# ================================================================
+ROAD_X_START = 38
+ROAD_X_END   = 161
+ZONE_A_END   = 37
+ZONE_B_START = 162
+ZONE_B_END   = 199
 
-# ============================================================
+ROAD_ELEV    = 6    # 高架道路面の Y 座標
+DECK_ELEV    = 10   # 歩行者デッキの Y 座標
+UG_TOP       = -1   # 地下駐車場の上端
+UG_BOT       = -5   # 地下駐車場の下端
+
+PILLAR_INTERVAL = 8  # 支柱間隔 (ブロック)
+
+# 車線 Z 範囲
+LANES = [
+    ("express", range(22, 26), "minecraft:red_concrete",        True),
+    ("normal",  range(26, 30), "minecraft:gray_concrete",       True),
+    ("shared",  range(30, 34), "minecraft:light_blue_concrete", True),
+    ("median",  range(34, 56), "minecraft:moss_block",          False),
+    ("shared",  range(56, 60), "minecraft:light_blue_concrete", True),
+    ("normal",  range(60, 64), "minecraft:gray_concrete",       True),
+    ("express", range(64, 69), "minecraft:red_concrete",        True),
+]
+
+ROAD_Z_MIN = 22
+ROAD_Z_MAX = 68
+
+# ================================================================
+# ワールドジェネレーター
+# ================================================================
 class MiraiSonkenWorld:
-    """未来生存圏 Minecraft ワールドジェネレーター"""
 
     def __init__(self):
-        self.schem = mcschematic.MCSchematic()
+        self.s   = mcschematic.MCSchematic()
         self.rng = random.Random(SEED)
 
-    # --------------------------------------------------------
-    # 内部ユーティリティ
-    # --------------------------------------------------------
+    # ─── 低レベルAPI ────────────────────────────────────────────
     def b(self, x, y, z, block):
-        """1ブロック設置"""
-        self.schem.setBlock((x, y, z), block)
+        self.s.setBlock((x, y, z), block)
 
     def fill(self, x1, y1, z1, x2, y2, z2, block):
-        """範囲充填（直方体）"""
-        for x in range(min(x1, x2), max(x1, x2) + 1):
-            for y in range(min(y1, y2), max(y1, y2) + 1):
-                for z in range(min(z1, z2), max(z1, z2) + 1):
-                    self.schem.setBlock((x, y, z), block)
+        for x in range(min(x1,x2), max(x1,x2)+1):
+            for y in range(min(y1,y2), max(y1,y2)+1):
+                for z in range(min(z1,z2), max(z1,z2)+1):
+                    self.s.setBlock((x, y, z), block)
 
-    # --------------------------------------------------------
-    # 1. 地面
-    # --------------------------------------------------------
+    # ─── 地面 ───────────────────────────────────────────────────
     def gen_ground(self):
-        print("  [1/7] 地面を生成...")
+        print("  [1/9] 地面を生成...")
         self.fill(0, 0, 0, 199, 0, 89, "minecraft:grass_block")
+        self.fill(0, -1, 0, 199, -1, 89, "minecraft:dirt")
 
-    # --------------------------------------------------------
-    # 2. 高速道路
-    # --------------------------------------------------------
-    def gen_highway(self):
-        print("  [2/7] 高速道路を生成...")
-        B = self.b
-        F = self.fill
+        # 高架下の地面は暗い石畳
+        self.fill(ROAD_X_START, 0, ROAD_Z_MIN,
+                  ROAD_X_END,  0, ROAD_Z_MAX, "minecraft:deepslate_tiles")
 
-        # ベース（スムーズストーン）
-        F(38, 0, 22, 161, 0, 68, "minecraft:smooth_stone")
+    # ─── 高架ビアダクト ─────────────────────────────────────────
+    def gen_elevated_highway(self):
+        print("  [2/9] 高架ビアダクトを生成...")
 
-        # ── A→B 方向（Z:22-33）──────────────────────────
-        # 急行（追越）車線 Z:22-25  赤
-        F(38, 0, 22, 161, 0, 25, "minecraft:red_concrete")
-        # 通常車線        Z:26-29  灰
-        F(38, 0, 26, 161, 0, 29, "minecraft:gray_concrete")
-        # 合乗車線        Z:30-33  水色
-        F(38, 0, 30, 161, 0, 33, "minecraft:light_blue_concrete")
+        # ── 支柱基礎（地面 → 高架デッキ下） ──
+        for px in range(ROAD_X_START, ROAD_X_END + 1, PILLAR_INTERVAL):
+            for pz in [ROAD_Z_MIN, (ROAD_Z_MIN + ROAD_Z_MAX)//2, ROAD_Z_MAX]:
+                # 縦柱
+                self.fill(px, 1, pz, px, ROAD_ELEV - 1, pz, "minecraft:smooth_stone")
+                # 柱キャップ
+                self.b(px, ROAD_ELEV, pz, "minecraft:polished_deepslate")
 
-        # ── 中央分離帯（Z:34-55）──────────────────────────
-        F(38, 0, 34, 161, 0, 55, "minecraft:moss_block")
+            # 水平クロスブレース（Y=3）
+            for z in range(ROAD_Z_MIN, ROAD_Z_MAX + 1):
+                self.b(px, 3, z, "minecraft:smooth_stone_slab[type=bottom]")
 
-        # 中央分離帯の街路樹（10ブロック間隔）
-        for tx in range(42, 162, 10):
-            # 幹
-            for ty in range(1, 5):
-                B(tx, ty, 44, "minecraft:oak_log")
-            # 葉（球形ブロック群）
-            for dy in range(2, 7):
-                for dz in range(-3, 4):
-                    for dx in range(-2, 3):
-                        if abs(dx) + abs(dz) + abs(dy - 5) <= 4:
-                            B(tx + dx, dy, 44 + dz,
-                              "minecraft:oak_leaves[persistent=true]")
+            # LED 側面灯
+            if px % 16 == ROAD_X_START % 16:
+                self.b(px, ROAD_ELEV + 1, ROAD_Z_MIN - 1, "minecraft:sea_lantern")
+                self.b(px, ROAD_ELEV + 1, ROAD_Z_MAX + 1, "minecraft:sea_lantern")
 
-        # 分離帯ガードレール
-        for x in range(38, 162):
-            B(x, 1, 34, "minecraft:iron_bars")
-            B(x, 1, 55, "minecraft:iron_bars")
+        # ── デッキ本体（支持スラブ） ──
+        self.fill(ROAD_X_START, ROAD_ELEV - 1, ROAD_Z_MIN,
+                  ROAD_X_END,   ROAD_ELEV - 1, ROAD_Z_MAX,
+                  "minecraft:smooth_stone")
 
-        # ── B→A 方向（Z:56-68）──────────────────────────
-        # 合乗車線        Z:56-59  水色
-        F(38, 0, 56, 161, 0, 59, "minecraft:light_blue_concrete")
-        # 通常車線        Z:60-63  灰
-        F(38, 0, 60, 161, 0, 63, "minecraft:gray_concrete")
-        # 急行（追越）車線 Z:64-68  赤
-        F(38, 0, 64, 161, 0, 68, "minecraft:red_concrete")
+        # ── 車線色 ──
+        for _, zrange, block, _ in LANES:
+            self.fill(ROAD_X_START, ROAD_ELEV, zrange.start,
+                      ROAD_X_END,   ROAD_ELEV, zrange.stop - 1, block)
 
-        # 車線区切り破線（白・4ブロック間隔）
-        for x in range(38, 162, 4):
-            for z_mark in [25, 29, 33, 55, 59, 63]:
-                B(x, 0, z_mark, "minecraft:white_concrete")
+        # ── 車線境界白線（4ブロック間隔）──
+        for wx in range(ROAD_X_START, ROAD_X_END + 1, 4):
+            for wz in [25, 29, 33, 55, 59, 63]:
+                self.b(wx, ROAD_ELEV, wz, "minecraft:white_concrete")
 
-        # 道路端ガードレール
-        for x in range(38, 162):
-            B(x, 1, 22, "minecraft:iron_bars")
-            B(x, 1, 68, "minecraft:iron_bars")
+        # ── 中央分離帯の樹木 ──
+        for tx in range(ROAD_X_START + 4, ROAD_X_END, 10):
+            self._viaduct_tree(tx, ROAD_ELEV, 44)
 
-        # 街灯（15ブロック間隔）
-        for lx in range(45, 162, 15):
-            for ly in range(1, 5):
-                B(lx, ly, 21, "minecraft:iron_bars")
-                B(lx, ly, 69, "minecraft:iron_bars")
-            B(lx, 5, 21, "minecraft:sea_lantern")
-            B(lx, 5, 69, "minecraft:sea_lantern")
+        # ── ガードレール ──
+        for rx in range(ROAD_X_START, ROAD_X_END + 1):
+            self.b(rx, ROAD_ELEV + 1, ROAD_Z_MIN - 1, "minecraft:iron_bars")
+            self.b(rx, ROAD_ELEV + 1, ROAD_Z_MAX + 1, "minecraft:iron_bars")
+            self.b(rx, ROAD_ELEV + 1, 33, "minecraft:iron_bars")
+            self.b(rx, ROAD_ELEV + 1, 56, "minecraft:iron_bars")
 
-    # --------------------------------------------------------
-    # 3. 自動運転車
-    # --------------------------------------------------------
+        # ── 道路端 LED 帯 ──
+        for rx in range(ROAD_X_START, ROAD_X_END + 1, 2):
+            self.b(rx, ROAD_ELEV, ROAD_Z_MIN - 1, "minecraft:sea_lantern")
+            self.b(rx, ROAD_ELEV, ROAD_Z_MAX + 1, "minecraft:sea_lantern")
+
+        # ── 進入ランプ (A側: X=38→30 を Y=0→6 へ段階スロープ) ──
+        self._entry_ramp(ROAD_X_START, ascending=True)   # A→高架
+        self._entry_ramp(ROAD_X_END,   ascending=False)  # 高架→B
+
+    def _viaduct_tree(self, x, base_y, z):
+        for dy in range(1, 4):
+            self.b(x, base_y + dy, z, "minecraft:oak_log")
+        for dy in range(2, 6):
+            for dz in range(-2, 3):
+                for dx in range(-1, 2):
+                    if abs(dx) + abs(dz) + abs(dy - 4) <= 3:
+                        self.b(x + dx, base_y + dy, z + dz,
+                               "minecraft:oak_leaves[persistent=true]")
+
+    def _entry_ramp(self, gate_x, ascending=True):
+        """ランプ: 6段階スラブで Y=0→6 を緩やかに上る"""
+        direction = -1 if ascending else 1
+        for step in range(ROAD_ELEV):
+            rx = gate_x + direction * (ROAD_ELEV - step)
+            for z in range(ROAD_Z_MIN, ROAD_Z_MAX + 1):
+                self.b(rx, step + 1, z, "minecraft:smooth_stone")
+            # ガードレール
+            self.b(rx, step + 2, ROAD_Z_MIN - 1, "minecraft:iron_bars")
+            self.b(rx, step + 2, ROAD_Z_MAX + 1, "minecraft:iron_bars")
+
+    # ─── 自動運転車 ─────────────────────────────────────────────
     def gen_cars(self):
-        print("  [3/7] 自動運転車を配置...")
+        print("  [3/9] 自動運転車を配置...")
+        RY = ROAD_ELEV + 1  # 車の床面 Y
 
-        # ── A→B 急行（Z:22-25）──
-        self._car(50,  22, east=True,  color="red")
-        self._car(82,  23, east=True,  color="red")
-        self._car(118, 22, east=True,  color="red")
+        # A→B 急行
+        for cx, cz in [(52,22),(84,23),(118,22)]:
+            self._car(cx, RY, cz, east=True, ctype="express")
+        # A→B 通常
+        for cx, cz in [(60,27),(95,26),(138,27)]:
+            self._car(cx, RY, cz, east=True, ctype="normal")
+        # A→B 合乗バス
+        for cx, cz in [(47,31),(75,30),(112,31),(148,30)]:
+            self._car(cx, RY, cz, east=True, ctype="shared")
+        # B→A 急行
+        for cx, cz in [(148,65),(112,64),(76,65)]:
+            self._car(cx, RY, cz, east=False, ctype="express")
+        # B→A 通常
+        for cx, cz in [(132,61),(96,60)]:
+            self._car(cx, RY, cz, east=False, ctype="normal")
+        # B→A 合乗
+        for cx, cz in [(145,57),(108,56),(70,57)]:
+            self._car(cx, RY, cz, east=False, ctype="shared")
 
-        # ── A→B 通常（Z:26-29）──
-        self._car(62,  27, east=True,  color="normal")
-        self._car(98,  26, east=True,  color="normal")
-        self._car(138, 27, east=True,  color="normal")
+    def _car(self, cx, cy, cz, east=True, ctype="normal"):
+        """自動運転車 (4×2×2, 精細版)"""
+        # 車体寸法
+        big  = ctype == "shared"
+        L    = 5 if big else 4
+        H    = 2
+        W_off= 1   # 幅は z+0 〜 z+1
 
-        # ── A→B 合乗（Z:30-33）──  ※複数人乗合=多め
-        self._car(47,  31, east=True,  color="shared")
-        self._car(74,  30, east=True,  color="shared")
-        self._car(110, 31, east=True,  color="shared")
-        self._car(148, 30, east=True,  color="shared")
+        body  = "minecraft:white_concrete"
+        glass = "minecraft:light_blue_stained_glass"
+        roof_map = {"express": "minecraft:red_concrete",
+                    "normal":  "minecraft:yellow_concrete",
+                    "shared":  "minecraft:light_blue_concrete"}
+        roof_color = roof_map[ctype]
 
-        # ── B→A 急行（Z:64-68）──
-        self._car(148, 65, east=False, color="red")
-        self._car(112, 64, east=False, color="red")
-        self._car(76,  65, east=False, color="red")
+        # 車体下部
+        self.fill(cx, cy, cz, cx + L - 1, cy, cz + W_off, body)
+        # 車体上部
+        self.fill(cx, cy + 1, cz, cx + L - 1, cy + 1, cz + W_off, body)
+        # フロントガラス
+        front_x = cx + (L - 1 if east else 0)
+        self.b(front_x, cy + 1, cz,       glass)
+        self.b(front_x, cy + 1, cz + W_off, glass)
+        # ルーフアクセント
+        self.fill(cx + 1, cy + 2, cz, cx + L - 2, cy + 2, cz + W_off, roof_color)
+        # タイヤ（黒）
+        for tz in [cz, cz + W_off]:
+            self.b(cx,         cy, tz, "minecraft:black_concrete")
+            self.b(cx + L - 1, cy, tz, "minecraft:black_concrete")
+        # ヘッドライト
+        head_x = cx + (L - 1 if east else 0)
+        self.b(head_x, cy + 1, cz,       "minecraft:sea_lantern")
+        self.b(head_x, cy + 1, cz + W_off, "minecraft:sea_lantern")
+        # テールランプ（赤：後部）
+        tail_x = cx + (0 if east else L - 1)
+        self.b(tail_x, cy + 1, cz,       "minecraft:red_stained_glass")
+        self.b(tail_x, cy + 1, cz + W_off, "minecraft:red_stained_glass")
+        # 合乗バスの側面窓（乗客表現）
+        if big:
+            side_x = cx + 1
+            for wx in range(side_x, cx + L - 1):
+                self.b(wx, cy + 1, cz - 0,  glass)
 
-        # ── B→A 通常（Z:60-63）──
-        self._car(132, 61, east=False, color="normal")
-        self._car(96,  60, east=False, color="normal")
-
-        # ── B→A 合乗（Z:56-59）──
-        self._car(145, 57, east=False, color="shared")
-        self._car(108, 56, east=False, color="shared")
-        self._car(70,  57, east=False, color="shared")
-
-    def _car(self, cx, cz, east=True, color="normal"):
-        """
-        4×2×2 ブロックの自動運転車を描画
-          cx,cz : 車の左後端（東向きの場合は西端）
-          east  : True=A→B方向（東行き）
-          color : 'red'=急行 / 'normal'=通常 / 'shared'=合乗
-        """
-        B = self.b
-        F = self.fill
-
-        # 車体（白コンクリート）
-        F(cx, 1, cz, cx + 3, 2, cz + 1, "minecraft:white_concrete")
-
-        # フロントガラス（水色ガラス）
-        B(cx + 1, 2, cz,     "minecraft:light_blue_stained_glass")
-        B(cx + 2, 2, cz,     "minecraft:light_blue_stained_glass")
-        B(cx + 1, 2, cz + 1, "minecraft:light_blue_stained_glass")
-        B(cx + 2, 2, cz + 1, "minecraft:light_blue_stained_glass")
-
-        # タイヤ（黒コンクリート・四隅）
-        B(cx,     1, cz,     "minecraft:black_concrete")
-        B(cx + 3, 1, cz,     "minecraft:black_concrete")
-        B(cx,     1, cz + 1, "minecraft:black_concrete")
-        B(cx + 3, 1, cz + 1, "minecraft:black_concrete")
-
-        # ヘッドライト（進行方向側）
-        if east:
-            B(cx + 3, 2, cz,     "minecraft:sea_lantern")
-            B(cx + 3, 2, cz + 1, "minecraft:sea_lantern")
-        else:
-            B(cx,     2, cz,     "minecraft:sea_lantern")
-            B(cx,     2, cz + 1, "minecraft:sea_lantern")
-
-        # ルーフ上アクセント（車線種別カラー）
-        accent = {
-            "red":    "minecraft:red_concrete",
-            "normal": "minecraft:yellow_concrete",
-            "shared": "minecraft:light_blue_concrete",
-        }.get(color, "minecraft:white_concrete")
-        B(cx + 1, 3, cz,     accent)
-        B(cx + 2, 3, cz,     accent)
-        B(cx + 1, 3, cz + 1, accent)
-        B(cx + 2, 3, cz + 1, accent)
-
-    # --------------------------------------------------------
-    # 4 & 5. 生存圏
-    # --------------------------------------------------------
+    # ─── 生存圏 ─────────────────────────────────────────────────
     def gen_zones(self):
-        print("  [4/7] 生存圏Aを生成...")
-        self._gen_zone(0, 37, "A")
-        print("  [5/7] 生存圏Bを生成...")
-        self._gen_zone(163, 200, "B")
+        print("  [4/9] 生存圏A を生成...")
+        self._gen_zone(0, ZONE_A_END, "A")
+        print("  [5/9] 生存圏B を生成...")
+        self._gen_zone(ZONE_B_START, ZONE_B_END, "B")
 
     def _gen_zone(self, x_start, x_end, label):
-        """生存圏（未来都市クラスター）を生成"""
         rng = random.Random(SEED + ord(label))
-        B = self.b
-        F = self.fill
 
-        # 都市地面（コンクリート舗装）
-        F(x_start, 0, 0, x_end - 1, 0, 89, "minecraft:light_gray_concrete")
+        # 地面（コンクリート舗装）
+        self.fill(x_start, 0, 0, x_end, 0, 89, "minecraft:light_gray_concrete")
 
-        # 内部グリッド道路（7ブロック間隔）
-        for gx in range(x_start + 6, x_end, 7):
-            if gx < x_end:
-                F(gx, 0, 0, gx, 0, 89, "minecraft:smooth_stone")
-        for gz in range(6, 90, 7):
-            F(x_start, 0, gz, x_end - 1, 0, gz, "minecraft:smooth_stone")
+        # ── 地下駐車場 ──
+        self._underground_parking(x_start, x_end, label)
 
-        # 各ブロックに建物を配置
-        for gx_s in range(x_start, x_end, 7):
-            for gz_s in range(0, 90, 7):
+        # ── 内部グリッド道路 ──
+        for gx in range(x_start + 7, x_end, 8):
+            if gx <= x_end:
+                self.fill(gx, 0, 0, gx, 0, 89, "minecraft:smooth_stone")
+        for gz in range(7, 90, 8):
+            self.fill(x_start, 0, gz, x_end, 0, gz, "minecraft:smooth_stone")
+
+        # ── 建物配置 ──
+        buildings = []
+        for gx_s in range(x_start, x_end, 8):
+            for gz_s in range(0, 89, 8):
                 bx = gx_s + 1
                 bz = gz_s + 1
-                bw = min(5, x_end - gx_s - 2)
-                bd = 5
-
+                bw = min(6, x_end - gx_s - 1)
+                bd = 6
                 if bw < 2 or bz + bd > 89:
                     continue
-
-                # 高さをランダムに決定（0=広場）
-                h_choices = [0, 0, 4, 6, 8, 10, 14, 18, 22]
-                h = rng.choice(h_choices)
-
-                if h == 0:
-                    # 広場・緑地
-                    F(bx, 0, bz, bx + bw - 1, 0, bz + bd - 1,
-                      "minecraft:moss_block")
-                    if rng.random() > 0.5:
-                        # 広場の木
-                        tx = bx + bw // 2
-                        tz = bz + bd // 2
-                        for ty in range(1, 4):
-                            B(tx, ty, tz, "minecraft:oak_log")
-                        for dy in range(2, 5):
-                            for dz in range(-1, 2):
-                                for dx in range(-1, 2):
-                                    if abs(dx) + abs(dz) + abs(dy - 3) <= 2:
-                                        B(tx + dx, dy, tz + dz,
-                                          "minecraft:oak_leaves[persistent=true]")
-                    continue
-
-                # 外壁カラー（生存圏Aとbで色のテーマを変える）
-                if label == "A":
-                    wall_colors = [
-                        "minecraft:cyan_concrete",
-                        "minecraft:blue_concrete",
-                        "minecraft:white_concrete",
-                        "minecraft:light_gray_concrete",
-                        "minecraft:light_blue_concrete",
-                    ]
+                h_choice = rng.choice([0, 0, 5, 8, 10, 13, 16, 20, 24, 28])
+                if h_choice == 0:
+                    # 広場
+                    self._plaza(bx, bz, bw, bd, rng)
                 else:
-                    wall_colors = [
-                        "minecraft:purple_concrete",
-                        "minecraft:magenta_concrete",
-                        "minecraft:pink_concrete",
-                        "minecraft:white_concrete",
-                        "minecraft:light_gray_concrete",
-                    ]
-                wall = rng.choice(wall_colors)
+                    btype = rng.choice(["office", "residential", "mixed"])
+                    self._building(bx, bz, bw, h_choice, bd, label, btype, rng)
+                    buildings.append((bx, bz, bw, bd, h_choice))
 
-                # 建物の壁（外周のみ、窓はガラス）
-                for y in range(1, h + 1):
-                    for xx in range(bx, bx + bw):
-                        for zz in range(bz, bz + bd):
-                            is_wall = (xx == bx or xx == bx + bw - 1 or
-                                       zz == bz or zz == bz + bd - 1)
-                            if not is_wall:
-                                continue
-                            # 窓フロア（3段おきに）・角柱以外はガラス
-                            is_z_face = (zz == bz or zz == bz + bd - 1)
-                            is_x_edge = (xx == bx or xx == bx + bw - 1)
-                            if y % 3 == 2 and is_z_face and not is_x_edge:
-                                self.schem.setBlock((xx, y, zz),
-                                                    "minecraft:glass")
-                            else:
-                                self.schem.setBlock((xx, y, zz), wall)
+        # ── 歩行者デッキ（Y=10 空中歩廊） ──
+        self._pedestrian_deck(x_start, x_end, label, buildings)
 
-                # 屋上
-                F(bx, h + 1, bz, bx + bw - 1, h + 1, bz + bd - 1,
-                  "minecraft:dark_prismarine")
+        # ── インフラ施設 ──
+        self._infrastructure(x_start, x_end, label, rng)
 
-                # 高層ビル（h≥14）にはアンテナ
-                if h >= 14:
-                    ax = bx + bw // 2
-                    az = bz + bd // 2
-                    for ay in range(h + 2, h + 6):
-                        B(ax, ay, az, "minecraft:lightning_rod")
-                    B(ax, h + 6, az, "minecraft:sea_lantern")
+    def _underground_parking(self, x_start, x_end, label):
+        """地下駐車場 Y=-5 〜 Y=-1"""
+        # 空間
+        self.fill(x_start, UG_BOT, 0, x_end, UG_TOP, 89, "minecraft:air")
+        # 床
+        self.fill(x_start, UG_BOT, 0, x_end, UG_BOT, 89, "minecraft:smooth_stone")
+        # 天井（地面直下）
+        self.fill(x_start, -1, 0, x_end, -1, 89, "minecraft:smooth_stone")
+        # 照明
+        for lx in range(x_start + 4, x_end, 8):
+            for lz in range(4, 90, 8):
+                self.b(lx, -2, lz, "minecraft:sea_lantern")
+        # 駐車スペース境界（白線）
+        for lx in range(x_start + 3, x_end, 6):
+            self.fill(lx, UG_BOT, 0, lx, UG_BOT, 89, "minecraft:white_concrete")
+        # 入口スロープ（端に傾斜）
+        ramp_x = x_start + 2 if label == "A" else x_end - 2
+        for step in range(5):
+            y_pos = -5 + step
+            z_pos = step
+            self.fill(ramp_x, y_pos, z_pos, ramp_x, y_pos, z_pos + 1, "minecraft:smooth_stone_slab[type=bottom]")
 
-    # --------------------------------------------------------
-    # 6. ゲート（生存圏の入口）
-    # --------------------------------------------------------
+    def _plaza(self, bx, bz, bw, bd, rng):
+        """広場・公園エリア"""
+        self.fill(bx, 0, bz, bx + bw - 1, 0, bz + bd - 1, "minecraft:moss_block")
+        if rng.random() > 0.4:
+            tx = bx + bw // 2
+            tz = bz + bd // 2
+            for ty in range(1, 4):
+                self.b(tx, ty, tz, "minecraft:oak_log")
+            for dy in range(2, 5):
+                for dz in range(-1, 2):
+                    for dx in range(-1, 2):
+                        if abs(dx)+abs(dz)+abs(dy-3) <= 2:
+                            self.b(tx+dx, dy, tz+dz, "minecraft:oak_leaves[persistent=true]")
+
+    def _building(self, bx, bz, bw, bh, bd, label, btype, rng):
+        """3種類の建物を生成"""
+        is_a = label == "A"
+        wall_a = rng.choice(["minecraft:cyan_concrete","minecraft:blue_concrete",
+                              "minecraft:light_blue_concrete","minecraft:white_concrete"])
+        wall_b = rng.choice(["minecraft:purple_concrete","minecraft:magenta_concrete",
+                              "minecraft:pink_concrete","minecraft:white_concrete"])
+        wall   = wall_a if is_a else wall_b
+
+        if btype == "office":
+            self._build_office(bx, bz, bw, bh, bd, wall, rng)
+        elif btype == "residential":
+            self._build_residential(bx, bz, bw, bh, bd, wall, rng)
+        else:
+            self._build_mixed(bx, bz, bw, bh, bd, wall, rng)
+
+    def _build_office(self, bx, bz, bw, bh, bd, wall, rng):
+        """オフィスタワー: ガラス多め・縦長"""
+        for y in range(1, bh + 1):
+            for xx in range(bx, bx + bw):
+                for zz in range(bz, bz + bd):
+                    on_wall = (xx == bx or xx == bx+bw-1 or
+                               zz == bz or zz == bz+bd-1)
+                    if not on_wall:
+                        continue
+                    if y % 3 != 1:  # ガラス多め
+                        self.b(xx, y, zz, "minecraft:glass")
+                    else:
+                        self.b(xx, y, zz, wall)
+        self._roof_features(bx, bz, bw, bh, bd, wall, rng, antenna=True, solar=True)
+
+    def _build_residential(self, bx, bz, bw, bh, bd, wall, rng):
+        """住居タワー: 低層ポディウム + 上層セットバック"""
+        pod_h = min(5, bh // 3)
+        # ポディウム（広め）
+        for y in range(1, pod_h + 1):
+            for xx in range(bx - 1, bx + bw + 1):
+                for zz in range(bz - 1, bz + bd + 1):
+                    if (0 <= xx <= 199 and 0 <= zz <= 89):
+                        on_wall = (xx==bx-1 or xx==bx+bw or zz==bz-1 or zz==bz+bd)
+                        self.b(xx, y, zz, wall if on_wall else "minecraft:air")
+        # タワー部分（小さめ）
+        tw = max(2, bw - 2)
+        td = max(2, bd - 2)
+        tx, tz = bx + 1, bz + 1
+        for y in range(pod_h + 1, bh + 1):
+            for xx in range(tx, tx + tw):
+                for zz in range(tz, tz + td):
+                    on_wall = (xx==tx or xx==tx+tw-1 or zz==tz or zz==tz+td-1)
+                    if not on_wall:
+                        continue
+                    if y % 4 == 2 and xx not in [tx, tx+tw-1]:
+                        self.b(xx, y, zz, "minecraft:glass")
+                    else:
+                        self.b(xx, y, zz, wall)
+        self._roof_features(tx, tz, tw, bh, td, wall, rng, antenna=(bh>16), solar=True)
+
+    def _build_mixed(self, bx, bz, bw, bh, bd, wall, rng):
+        """複合用途: 地上階グラス商業 + 上層住居"""
+        # 1〜3階: ガラス張り商業
+        for y in range(1, 4):
+            for xx in range(bx, bx + bw):
+                for zz in range(bz, bz + bd):
+                    on_wall = (xx==bx or xx==bx+bw-1 or zz==bz or zz==bz+bd-1)
+                    if on_wall:
+                        self.b(xx, y, zz, "minecraft:glass")
+        # 4階〜: コンクリート住居
+        for y in range(4, bh + 1):
+            for xx in range(bx, bx + bw):
+                for zz in range(bz, bz + bd):
+                    on_wall = (xx==bx or xx==bx+bw-1 or zz==bz or zz==bz+bd-1)
+                    if not on_wall:
+                        continue
+                    if y % 3 == 0 and xx not in [bx, bx+bw-1]:
+                        self.b(xx, y, zz, "minecraft:glass")
+                    else:
+                        self.b(xx, y, zz, wall)
+        self._roof_features(bx, bz, bw, bh, bd, wall, rng, antenna=(bh>18), solar=True)
+
+    def _roof_features(self, bx, bz, bw, bh, bd, wall, rng, antenna=False, solar=False):
+        """屋上設備"""
+        # パラペット
+        self.fill(bx, bh+1, bz, bx+bw-1, bh+1, bz+bd-1, "minecraft:dark_prismarine")
+        # 太陽光パネル（daylight_detector）
+        if solar and bw >= 4 and bd >= 4:
+            self.fill(bx+1, bh+2, bz+1, bx+bw-2, bh+2, bz+bd-2,
+                      "minecraft:daylight_detector")
+        # アンテナ
+        if antenna and bh >= 12:
+            ax = bx + bw // 2
+            az = bz + bd // 2
+            for ay in range(bh + 3, bh + 7):
+                self.b(ax, ay, az, "minecraft:lightning_rod")
+            self.b(ax, bh + 7, az, "minecraft:sea_lantern")
+
+    def _pedestrian_deck(self, x_start, x_end, label, buildings):
+        """Y=10 空中歩行者デッキ（建物間の橋）"""
+        if len(buildings) < 2:
+            return
+        DECK_Y = DECK_ELEV
+        visited_z = set()
+        for (bx, bz, bw, bd, bh) in buildings:
+            if bh < DECK_Y:
+                continue
+            for gz in range(0, 89, 8):
+                if abs(bz - gz) > 2 and gz not in visited_z:
+                    continue
+                deck_z = gz + 3
+                # デッキ床
+                self.fill(bx, DECK_Y, deck_z, bx + bw - 1, DECK_Y, deck_z + 2,
+                          "minecraft:polished_deepslate")
+                # 手すり
+                for dx in range(bw):
+                    self.b(bx + dx, DECK_Y + 1, deck_z,     "minecraft:iron_bars")
+                    self.b(bx + dx, DECK_Y + 1, deck_z + 2, "minecraft:iron_bars")
+                visited_z.add(gz)
+
+        # ゾーン内の主要歩廊（X方向）
+        mid_z = 44
+        for bridge_x in range(x_start + 4, x_end - 4, 8):
+            col_h = DECK_Y
+            # 支柱
+            self.fill(bridge_x, 1, mid_z, bridge_x, col_h - 1, mid_z,
+                      "minecraft:iron_bars")
+            # 歩廊床
+            self.b(bridge_x, col_h, mid_z, "minecraft:polished_deepslate")
+            self.b(bridge_x, col_h, mid_z+1, "minecraft:polished_deepslate")
+
+    def _infrastructure(self, x_start, x_end, label, rng):
+        """インフラ施設: 交通管制タワー + 変電設備"""
+        is_a = label == "A"
+
+        # 交通管制タワー
+        ctl_x = x_start + 3 if is_a else x_end - 3
+        ctl_z = 4
+        self.fill(ctl_x, 1, ctl_z, ctl_x, 12, ctl_z, "minecraft:smooth_quartz")
+        self.fill(ctl_x - 1, 10, ctl_z - 1, ctl_x + 1, 12, ctl_z + 1,
+                  "minecraft:glass")
+        self.b(ctl_x, 13, ctl_z, "minecraft:sea_lantern")
+
+        # 変電所
+        sub_x = x_start + 3 if is_a else x_end - 3
+        sub_z = 80
+        self.fill(sub_x - 1, 1, sub_z - 1, sub_x + 2, 3, sub_z + 2,
+                  "minecraft:iron_block")
+        self.fill(sub_x, 4, sub_z, sub_x + 1, 4, sub_z + 1, "minecraft:sea_lantern")
+
+    # ─── ゲート ─────────────────────────────────────────────────
     def gen_gates(self):
-        print("  [6/7] 入口ゲートを生成...")
-        B = self.b
+        print("  [6/9] 入口ゲートを生成...")
+        for gate_x in [ROAD_X_START, ROAD_X_END]:
+            # 縦柱（高さ 20 ブロック）
+            for gz in [ROAD_Z_MIN, ROAD_Z_MAX]:
+                self.fill(gate_x, 0, gz, gate_x, 20, gz, "minecraft:polished_deepslate")
+            # 横梁
+            self.fill(gate_x, 20, ROAD_Z_MIN, gate_x, 20, ROAD_Z_MAX,
+                      "minecraft:polished_deepslate")
+            # 照明
+            for gz in range(ROAD_Z_MIN, ROAD_Z_MAX + 1, 6):
+                self.b(gate_x, 20, gz, "minecraft:sea_lantern")
+            # 中央ビーコン（ゾーンID）
+            for gz in [44, 45]:
+                self.b(gate_x, 22, gz, "minecraft:beacon")
+            # ゲート下をアーチ状に空ける
+            self.fill(gate_x, ROAD_ELEV + 1, ROAD_Z_MIN + 1,
+                      gate_x, 18, ROAD_Z_MAX - 1, "minecraft:air")
 
-        for gate_x in [38, 161]:
-            # 縦柱（道路両端）
-            for y in range(1, 8):
-                B(gate_x, y, 22, "minecraft:iron_block")
-                B(gate_x, y, 68, "minecraft:iron_block")
-            # 横梁（頭上アーチ）
-            for z in range(22, 69):
-                B(gate_x, 7, z, "minecraft:iron_block")
-            # 横梁のライン発光（3ブロックおき）
-            for z in range(22, 69, 3):
-                B(gate_x, 7, z, "minecraft:sea_lantern")
-            # 中央ビーコン（視認性UP）
-            B(gate_x, 8, 44, "minecraft:beacon")
-            B(gate_x, 8, 45, "minecraft:beacon")
-
-    # --------------------------------------------------------
-    # 7. 車線案内サイン（道路上方・横断看板）
-    # --------------------------------------------------------
+    # ─── 車線案内サイン ─────────────────────────────────────────
     def gen_signs(self):
-        print("  [7/7] 車線案内サインを生成...")
-        B = self.b
+        print("  [7/9] 車線案内サインを生成...")
+        SIGN_Y = ROAD_ELEV + 8
+        for sx in [52, 90, 130]:
+            # 支柱
+            for sy in range(ROAD_ELEV + 2, SIGN_Y + 1):
+                self.b(sx, sy, ROAD_Z_MIN - 2, "minecraft:iron_bars")
+                self.b(sx, sy, ROAD_Z_MAX + 2, "minecraft:iron_bars")
+            # 横断看板
+            for sz in range(ROAD_Z_MIN - 2, ROAD_Z_MAX + 3):
+                self.b(sx, SIGN_Y, sz, "minecraft:cyan_glazed_terracotta")
+            # 急行ゾーン（赤）
+            for sz in range(ROAD_Z_MIN, 26):
+                self.b(sx, SIGN_Y, sz, "minecraft:red_glazed_terracotta")
+            # 通常ゾーン（黄）
+            for sz in range(26, 30):
+                self.b(sx, SIGN_Y, sz, "minecraft:yellow_glazed_terracotta")
+            # 合乗ゾーン（青）
+            for sz in range(30, 34):
+                self.b(sx, SIGN_Y, sz, "minecraft:blue_glazed_terracotta")
+            # B→A 側
+            for sz in range(56, 60):
+                self.b(sx, SIGN_Y, sz, "minecraft:blue_glazed_terracotta")
+            for sz in range(60, 64):
+                self.b(sx, SIGN_Y, sz, "minecraft:yellow_glazed_terracotta")
+            for sz in range(64, ROAD_Z_MAX + 1):
+                self.b(sx, SIGN_Y, sz, "minecraft:red_glazed_terracotta")
 
-        for sx in [55, 100, 145]:
-            # 支柱（道路脇）
-            for y in range(1, 7):
-                B(sx, y, 21, "minecraft:iron_bars")
-                B(sx, y, 69, "minecraft:iron_bars")
+    # ─── 植生 ───────────────────────────────────────────────────
+    def gen_vegetation(self):
+        print("  [8/9] 植生を配置...")
+        rng = random.Random(SEED + 999)
+        # ゾーン縁の街路樹
+        for zone_x, zone_end in [(0, ZONE_A_END), (ZONE_B_START, ZONE_B_END)]:
+            for vx in range(zone_x + 2, zone_end, 5):
+                for vz in [2, 87]:
+                    tree_type = rng.choice(["oak", "birch", "bamboo"])
+                    self._street_tree(vx, 0, vz, tree_type)
 
-            # 横断看板（ベース：シアン）
-            for z in range(21, 70):
-                B(sx, 7, z, "minecraft:cyan_glazed_terracotta")
+    def _street_tree(self, x, y, z, ttype="oak"):
+        if ttype == "bamboo":
+            for dy in range(1, 6):
+                self.b(x, y + dy, z, "minecraft:bamboo[leaves=no_leaves,stage=0]")
+            return
+        log  = f"minecraft:{ttype}_log"
+        leaf = f"minecraft:{ttype}_leaves[persistent=true]"
+        for dy in range(1, 5):
+            self.b(x, y + dy, z, log)
+        for dy in range(3, 6):
+            for dz in range(-1, 2):
+                for dx in range(-1, 2):
+                    if abs(dx) + abs(dz) + abs(dy - 4) <= 2:
+                        self.b(x + dx, y + dy, z + dz, leaf)
 
-            # A→B 方向 レーンカラー
-            for z in range(22, 26):   # 急行（赤）
-                B(sx, 7, z, "minecraft:red_glazed_terracotta")
-            for z in range(26, 30):   # 通常（黄）
-                B(sx, 7, z, "minecraft:yellow_glazed_terracotta")
-            for z in range(30, 34):   # 合乗（青）
-                B(sx, 7, z, "minecraft:blue_glazed_terracotta")
-
-            # B→A 方向 レーンカラー
-            for z in range(56, 60):   # 合乗（青）
-                B(sx, 7, z, "minecraft:blue_glazed_terracotta")
-            for z in range(60, 64):   # 通常（黄）
-                B(sx, 7, z, "minecraft:yellow_glazed_terracotta")
-            for z in range(64, 69):   # 急行（赤）
-                B(sx, 7, z, "minecraft:red_glazed_terracotta")
-
-    # --------------------------------------------------------
-    # メイン実行
-    # --------------------------------------------------------
-    def generate(self, output_dir="."):
+    # ─── メイン ─────────────────────────────────────────────────
+    def generate(self, out="."):
         print()
-        print("=" * 56)
-        print("  未来の生存圏 × 自動運転モビリティ")
-        print("  Minecraft Schematic Generator v1.0")
-        print("=" * 56)
+        print("=" * 60)
+        print("  未来の生存圏 × 自動運転モビリティ  v2.0  (120%)")
+        print("=" * 60)
         print()
 
         self.gen_ground()
-        self.gen_highway()
+        self.gen_elevated_highway()
         self.gen_cars()
         self.gen_zones()
         self.gen_gates()
         self.gen_signs()
+        self.gen_vegetation()
 
+        print("  [9/9] .schem を保存中...")
+        self.s.save(out, "mirai_sonken_v2", VERSION)
         print()
-        print(f"  [SAVE] 保存中: {output_dir}/mirai_sonken.schem ...")
-        self.schem.save(output_dir, "mirai_sonken", VERSION)
-
-        print()
-        print("  [OK] mirai_sonken.schem が生成されました！")
-        print()
-        print("  [Minecraft へのインポート手順]")
-        print("    1. .schem を [world]/config/worldedit/schematics/ へコピー")
-        print("    2. //schem load mirai_sonken")
-        print("    3. //paste -a")
+        print("  [OK] mirai_sonken_v2.schem を生成しました！")
         print()
         print("  [ワールドマップ]")
-        print("    X:  0- 37  生存圏A (シアン/ブルー系)")
-        print("    X: 38-161  高速道路 (3車線×2方向)")
-        print("    X:162-199  生存圏B (パープル/マゼンタ系)")
+        print(f"    X:  0- {ZONE_A_END}  生存圏A  (地下駐車 + 歩行者デッキ)")
+        print(f"    X: {ROAD_X_START}-{ROAD_X_END}  高架自動運転道路  Y={ROAD_ELEV}  支柱ビアダクト")
+        print(f"    X:{ZONE_B_START}-{ZONE_B_END}  生存圏B  (地下駐車 + 歩行者デッキ)")
         print()
-        print("  [車線カラーコード]")
-        print("    赤 = 急行（追越）車線")
-        print("    灰 = 通常車線")
-        print("    水 = 合乗（乗り合い）車線")
+        print("  [高架道路構造]")
+        print(f"    Y= -5〜-1  地下駐車場")
+        print(f"    Y=  0      地面（石畳 / 草地）")
+        print(f"    Y=  1〜 5  支柱群（8ブロック間隔）")
+        print(f"    Y=  6      高架道路面（3色車線）")
+        print(f"    Y= 10      歩行者デッキ")
+        print()
+        print("  [インポート手順]")
+        print("    1. .schem を schematics/ フォルダへコピー")
+        print("    2. //schem load mirai_sonken_v2")
+        print("    3. //paste -a")
         print()
 
 
-# ============================================================
 if __name__ == "__main__":
     world = MiraiSonkenWorld()
-    world.generate(output_dir=".")
+    world.generate(out=".")
