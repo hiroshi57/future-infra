@@ -9,9 +9,6 @@
     body { overflow:hidden; background:#03050d; font-family:'Segoe UI','Noto Sans JP',sans-serif; }
     #cv  { position:fixed; inset:0; }
 
-    /* ══════════════════════════════════════════
-       共通パネル
-    ══════════════════════════════════════════ */
     .panel {
       position:fixed;
       background:rgba(3,6,20,0.88);
@@ -21,27 +18,18 @@
       color:#cde;
     }
 
-    /* ══════════════════════════════════════════
-       ① ヘッダー（上中央）
-    ══════════════════════════════════════════ */
+    /* ── ヘッダー ── */
     #hdr {
       top:14px; left:50%; transform:translateX(-50%);
       padding:10px 28px;
       display:flex; align-items:center; gap:18px;
       white-space:nowrap; z-index:10;
     }
-    #hdr h1 {
-      font-size:15px; font-weight:300; letter-spacing:.14em;
-      color:rgba(210,235,255,.92);
-    }
+    #hdr h1 { font-size:15px; font-weight:300; letter-spacing:.14em; color:rgba(210,235,255,.92); }
     #hdr h1 strong { color:#60d0ff; font-weight:700; }
     #hdr .ver { font-size:10px; color:rgba(100,140,170,.6); margin-left:-8px; }
 
-    /* 時刻表示 */
-    #hdr .sim-clock {
-      display:flex; align-items:baseline; gap:4px;
-      border-left:1px solid rgba(80,170,255,.15); padding-left:18px;
-    }
+    #hdr .sim-clock { display:flex; align-items:baseline; gap:4px; border-left:1px solid rgba(80,170,255,.15); padding-left:18px; }
     #sim-time { font-size:18px; font-weight:700; color:#60d0ff; font-variant-numeric:tabular-nums; letter-spacing:.04em; }
     .sim-tz   { font-size:10px; color:#3a7090; }
 
@@ -55,76 +43,53 @@
       background:rgba(100,80,255,.12); border:1px solid rgba(100,80,255,.3);
       color:#9988ff; letter-spacing:.06em;
     }
+    #rain-badge {
+      display:none; font-size:10px; padding:3px 10px; border-radius:12px;
+      background:rgba(40,80,180,.12); border:1px solid rgba(40,80,180,.3);
+      color:#88aaee; letter-spacing:.06em;
+    }
     @keyframes pulse { 0%,100%{opacity:.8} 50%{opacity:1} }
 
-    .spd-group { display:flex; align-items:center; gap:6px;
-      border-left:1px solid rgba(80,170,255,.15); padding-left:18px; }
+    .spd-group { display:flex; align-items:center; gap:6px; border-left:1px solid rgba(80,170,255,.15); padding-left:18px; }
     .spd-lbl   { font-size:11px; color:#5a8099; }
-    .spd-btn   {
-      padding:4px 12px; font-size:12px; border-radius:7px; cursor:pointer;
-      background:rgba(80,160,255,.07);
-      border:1px solid rgba(80,160,255,.22);
-      color:#88bbdd; transition:all .15s;
-    }
+    .spd-btn   { padding:4px 12px; font-size:12px; border-radius:7px; cursor:pointer; background:rgba(80,160,255,.07); border:1px solid rgba(80,160,255,.22); color:#88bbdd; transition:all .15s; }
     .spd-btn:hover { background:rgba(80,160,255,.18); color:#fff; }
     .spd-btn.on    { background:rgba(80,160,255,.28); border-color:#60d0ff; color:#fff; font-weight:600; }
 
-    /* ══════════════════════════════════════════
-       ② 右パネル：統計 & チャート
-    ══════════════════════════════════════════ */
-    #right {
-      top:14px; right:14px;
-      padding:18px 20px; min-width:280px; z-index:10;
-    }
-    .sec-ttl {
-      font-size:10px; letter-spacing:.12em; text-transform:uppercase;
-      color:#4a9abf; margin-bottom:12px;
-    }
-
-    /* KPI ── スループット */
-    .tp-row {
-      display:flex; align-items:center; gap:10px; margin:5px 0;
-    }
-    .tp-arrow {
-      font-size:13px; font-weight:700; min-width:40px;
-    }
-    .tp-bar-wrap {
-      flex:1; height:5px;
-      background:rgba(255,255,255,.06); border-radius:3px; overflow:hidden;
-    }
+    /* ── 右パネル ── */
+    #right { top:14px; right:14px; padding:18px 20px; min-width:280px; z-index:10; }
+    .sec-ttl { font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:#4a9abf; margin-bottom:12px; }
+    .tp-row  { display:flex; align-items:center; gap:10px; margin:5px 0; }
+    .tp-arrow { font-size:13px; font-weight:700; min-width:40px; }
+    .tp-bar-wrap { flex:1; height:5px; background:rgba(255,255,255,.06); border-radius:3px; overflow:hidden; }
     .tp-bar { height:100%; border-radius:3px; transition:width .4s ease; }
     .tp-val { font-size:13px; font-weight:700; color:#fff; min-width:52px; text-align:right; }
-
-    /* レーン行 */
     .hr { border-top:1px solid rgba(80,170,255,.10); margin:12px 0; }
     .dir-lbl { font-size:10px; color:#3a7090; margin-bottom:6px; letter-spacing:.06em; }
-    .lrow {
-      display:flex; align-items:center; gap:8px; margin:5px 0; font-size:12px;
-    }
+    .lrow { display:flex; align-items:center; gap:8px; margin:5px 0; font-size:12px; }
     .ldot  { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
     .lname { color:#99c0d0; min-width:42px; }
     .lbg   { flex:1; height:4px; background:rgba(255,255,255,.06); border-radius:2px; overflow:hidden; }
     .lb    { height:100%; border-radius:2px; transition:width .35s ease; }
     .lct   { font-size:13px; font-weight:700; color:#fff; min-width:22px; text-align:right; }
 
-    /* スパークラインチャート */
+    /* 60秒スパークライン */
     #chart-wrap { margin-top:14px; }
     .chart-ttl  { font-size:10px; color:#3a7090; margin-bottom:5px; }
     .chart-leg  { display:flex; gap:14px; margin-bottom:4px; }
     .chart-leg-item { display:flex; align-items:center; gap:5px; font-size:10px; color:#7aaccc; }
     .chart-dot  { width:8px; height:2px; border-radius:1px; }
-    #chart      {
-      width:100%; height:55px; border-radius:6px;
-      background:rgba(0,15,40,.5); display:block;
-    }
+    #chart      { width:100%; height:55px; border-radius:6px; background:rgba(0,15,40,.5); display:block; }
 
-    /* ══════════════════════════════════════════
-       ③ 左パネル：KPI 数字
-    ══════════════════════════════════════════ */
-    #left {
-      top:14px; left:14px;
-      padding:18px 20px; min-width:160px; z-index:10;
-    }
+    /* 24時間需要グラフ */
+    #demand-wrap { margin-top:14px; }
+    .demand-hdr  { display:flex; align-items:center; justify-content:space-between; margin-bottom:4px; }
+    .demand-ttl  { font-size:10px; color:#3a7090; letter-spacing:.06em; }
+    .demand-badge{ font-size:9px; color:#ff8040; }
+    #demand-chart{ width:100%; height:46px; border-radius:5px; display:block; background:rgba(0,12,35,.5); }
+
+    /* ── 左KPI ── */
+    #left { top:14px; left:14px; padding:18px 20px; min-width:160px; z-index:10; }
     .kpi-block { text-align:center; }
     .kpi-main  { font-size:42px; font-weight:800; color:#60d0ff; line-height:1; letter-spacing:-.02em; }
     .kpi-unit  { font-size:11px; color:#5a8099; margin-top:3px; }
@@ -132,150 +97,70 @@
     .kpi-sub-item { flex:1; text-align:center; }
     .kpi-sub-num  { font-size:20px; font-weight:700; color:#fff; }
     .kpi-sub-lbl  { font-size:9px; color:#3a7090; margin-top:2px; }
-
-    /* 乗客数KPI */
-    .kpi-pax-row { display:flex; align-items:baseline; gap:6px; margin-top:14px; padding-top:14px;
-      border-top:1px solid rgba(80,170,255,.10); }
+    .kpi-pax-row  { display:flex; align-items:baseline; gap:6px; margin-top:14px; padding-top:14px; border-top:1px solid rgba(80,170,255,.10); }
     .kpi-pax-num  { font-size:28px; font-weight:800; color:#88ddaa; line-height:1; }
     .kpi-pax-unit { font-size:10px; color:#3a8060; }
 
-    /* ══════════════════════════════════════════
-       ④ 下中央：選択車両パネル
-    ══════════════════════════════════════════ */
-    #carinfo {
-      bottom:16px; left:50%; transform:translateX(-50%);
-      padding:16px 22px; min-width:360px; z-index:10;
-      display:none;
-    }
-    #carinfo-ttl {
-      font-size:11px; color:#4a9abf; letter-spacing:.1em;
-      text-transform:uppercase; margin-bottom:12px;
-    }
-    .ci-grid {
-      display:grid; grid-template-columns:repeat(3,1fr); gap:8px;
-    }
-    .ci-cell {
-      background:rgba(80,160,255,.06); border-radius:8px; padding:8px 10px;
-      border:1px solid rgba(80,160,255,.10);
-    }
+    /* ── 選択車両 ── */
+    #carinfo { bottom:16px; left:50%; transform:translateX(-50%); padding:16px 22px; min-width:360px; z-index:10; display:none; }
+    #carinfo-ttl { font-size:11px; color:#4a9abf; letter-spacing:.1em; text-transform:uppercase; margin-bottom:12px; }
+    .ci-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+    .ci-cell { background:rgba(80,160,255,.06); border-radius:8px; padding:8px 10px; border:1px solid rgba(80,160,255,.10); }
     .ci-lbl  { font-size:9px; color:#3a7090; letter-spacing:.07em; text-transform:uppercase; margin-bottom:4px; }
     .ci-val  { font-size:16px; font-weight:700; color:#fff; }
     .ci-prog-wrap { height:3px; background:rgba(255,255,255,.08); border-radius:2px; margin-top:12px; overflow:hidden; }
     .ci-prog { height:100%; border-radius:2px; transition:width .3s ease; }
-    #ci-close {
-      position:absolute; top:12px; right:14px;
-      background:none; border:none; color:#3a7090; cursor:pointer;
-      font-size:18px; line-height:1; padding:2px 6px; border-radius:4px;
-    }
+    #ci-close { position:absolute; top:12px; right:14px; background:none; border:none; color:#3a7090; cursor:pointer; font-size:18px; line-height:1; padding:2px 6px; border-radius:4px; }
     #ci-close:hover { color:#fff; background:rgba(255,255,255,.08); }
 
-    /* ══════════════════════════════════════════
-       ⑤ 凡例（下左）
-    ══════════════════════════════════════════ */
-    #legend {
-      bottom:16px; left:14px; padding:14px 16px; z-index:10;
-    }
+    /* ── 凡例 ── */
+    #legend { bottom:16px; left:14px; padding:14px 16px; z-index:10; }
     #legend .sec-ttl { margin-bottom:10px; }
     .leg-item { display:flex; align-items:center; gap:9px; margin:5px 0; }
-    .leg-swatch {
-      width:24px; height:8px; border-radius:3px; flex-shrink:0;
-    }
-    .leg-text { font-size:11px; color:#99bfcc; }
+    .leg-swatch { width:24px; height:8px; border-radius:3px; flex-shrink:0; }
+    .leg-text  { font-size:11px; color:#99bfcc; }
     .leg-speed { font-size:10px; color:#3a7090; margin-left:auto; padding-left:8px; }
 
-    /* ══════════════════════════════════════════
-       ⑥ ミニマップ（下右）
-    ══════════════════════════════════════════ */
-    #minimap-wrap {
-      bottom:16px; right:14px; padding:12px 14px;
-      z-index:10; min-width:240px;
-    }
+    /* ── ミニマップ ── */
+    #minimap-wrap { bottom:16px; right:14px; padding:12px 14px; z-index:10; min-width:240px; }
     #minimap-wrap .sec-ttl { margin-bottom:8px; }
-    #minimap {
-      display:block; border-radius:5px;
-      border:1px solid rgba(80,170,255,.12);
-    }
-    .mm-hint {
-      font-size:9px; color:rgba(80,120,150,.5); margin-top:7px;
-      line-height:1.7; text-align:right;
-    }
+    #minimap { display:block; border-radius:5px; border:1px solid rgba(80,170,255,.12); }
+    .mm-hint { font-size:9px; color:rgba(80,120,150,.5); margin-top:7px; line-height:1.7; text-align:right; }
 
-    /* ══════════════════════════════════════════
-       ⑦ コンセプト説明カード（初回）
-    ══════════════════════════════════════════ */
+    /* ── コンセプトカード ── */
     #intro-card {
       position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);
-      background:rgba(3,7,22,.96);
-      border:1px solid rgba(80,170,255,.28);
-      border-radius:20px; padding:36px 44px;
-      z-index:200; text-align:center; max-width:500px;
-      backdrop-filter:blur(24px);
-      transition:opacity 1.4s ease;
-      pointer-events:none;
+      background:rgba(3,7,22,.96); border:1px solid rgba(80,170,255,.28);
+      border-radius:20px; padding:36px 44px; z-index:200; text-align:center; max-width:500px;
+      backdrop-filter:blur(24px); transition:opacity 1.4s ease; pointer-events:none;
     }
-    #intro-card h2 {
-      font-size:20px; font-weight:300; color:#60d0ff;
-      letter-spacing:.22em; margin-bottom:22px; line-height:1.5;
-    }
-    #intro-card p {
-      font-size:12.5px; color:rgba(160,200,220,.78);
-      line-height:2.0; margin-bottom:10px;
-    }
-    #intro-card .ic-keywords {
-      display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:18px;
-    }
-    #intro-card .ic-tag {
-      font-size:10px; padding:3px 12px; border-radius:20px;
-      background:rgba(80,160,255,.10); border:1px solid rgba(80,160,255,.2);
-      color:#6aaabb; letter-spacing:.06em;
-    }
-    #intro-card .ic-dim {
-      font-size:10px; color:#2a5066; margin-top:16px; letter-spacing:.04em;
-    }
+    #intro-card h2  { font-size:20px; font-weight:300; color:#60d0ff; letter-spacing:.22em; margin-bottom:22px; line-height:1.5; }
+    #intro-card p   { font-size:12.5px; color:rgba(160,200,220,.78); line-height:2.0; margin-bottom:10px; }
+    .ic-keywords    { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:18px; }
+    .ic-tag         { font-size:10px; padding:3px 12px; border-radius:20px; background:rgba(80,160,255,.10); border:1px solid rgba(80,160,255,.2); color:#6aaabb; letter-spacing:.06em; }
+    .ic-dim         { font-size:10px; color:#2a5066; margin-top:16px; letter-spacing:.04em; }
 
-    /* ══════════════════════════════════════════
-       CSS2DRenderer 用: 生存圏ラベル
-    ══════════════════════════════════════════ */
-    .zone-label {
-      padding:7px 16px; border-radius:8px;
-      font-size:18px; font-weight:700; letter-spacing:.14em;
-      pointer-events:none; white-space:nowrap;
-      transition:opacity .5s;
-    }
-    .zone-label-A {
-      color:#4488ff;
-      text-shadow:0 0 24px #4488ff, 0 0 60px #4488ff88;
-      background:rgba(0,5,24,.75);
-      border:1px solid rgba(68,136,255,.3);
-    }
-    .zone-label-B {
-      color:#bb44ff;
-      text-shadow:0 0 24px #bb44ff, 0 0 60px #bb44ff88;
-      background:rgba(10,0,24,.75);
-      border:1px solid rgba(187,68,255,.3);
-    }
-
-    /* レーン種別ラベル（道路上 CSS2D） */
-    .lane-label {
-      font-size:10px; font-weight:600; letter-spacing:.08em;
-      padding:2px 7px; border-radius:3px; pointer-events:none;
-      color:rgba(255,255,255,.7); background:rgba(0,0,0,.55);
-    }
+    /* CSS2D ラベル */
+    .zone-label { padding:7px 16px; border-radius:8px; font-size:18px; font-weight:700; letter-spacing:.14em; pointer-events:none; white-space:nowrap; }
+    .zone-label-A { color:#4488ff; text-shadow:0 0 24px #4488ff,0 0 60px #4488ff88; background:rgba(0,5,24,.75); border:1px solid rgba(68,136,255,.3); }
+    .zone-label-B { color:#bb44ff; text-shadow:0 0 24px #bb44ff,0 0 60px #bb44ff88; background:rgba(10,0,24,.75); border:1px solid rgba(187,68,255,.3); }
+    .lane-label { font-size:10px; font-weight:600; letter-spacing:.08em; padding:2px 7px; border-radius:3px; pointer-events:none; color:rgba(255,255,255,.7); background:rgba(0,0,0,.55); }
   </style>
 </head>
 <body>
 
 <canvas id="cv"></canvas>
 
-<!-- ① ヘッダー -->
+<!-- ヘッダー -->
 <div class="panel" id="hdr">
   <h1><strong>未来の生存圏</strong> &times; 自動運転モビリティ</h1>
-  <span class="ver">v4.0</span>
+  <span class="ver">v5.0</span>
   <div class="sim-clock">
     <span id="sim-time">07:00</span>
     <span class="sim-tz">JST</span>
     <span id="rush-badge">ラッシュ時</span>
     <span id="night-badge">深&nbsp;夜</span>
+    <span id="rain-badge">雨&nbsp;</span>
   </div>
   <div class="spd-group">
     <span class="spd-lbl">速度倍率</span>
@@ -285,7 +170,7 @@
   </div>
 </div>
 
-<!-- ② 右パネル -->
+<!-- 右パネル -->
 <div class="panel" id="right">
   <div class="sec-ttl">スループット (台/分)</div>
   <div class="tp-row">
@@ -301,44 +186,15 @@
 
   <div class="hr"></div>
   <div class="dir-lbl">▶ A → B 方向</div>
-  <div class="lrow">
-    <div class="ldot" style="background:#ff5544"></div>
-    <span class="lname">急&nbsp;&nbsp;行</span>
-    <div class="lbg"><div class="lb" id="b-abe" style="background:#ff5544;width:0%"></div></div>
-    <span class="lct" id="c-abe">0</span>
-  </div>
-  <div class="lrow">
-    <div class="ldot" style="background:#cccccc"></div>
-    <span class="lname">通&nbsp;&nbsp;常</span>
-    <div class="lbg"><div class="lb" id="b-abn" style="background:#cccccc;width:0%"></div></div>
-    <span class="lct" id="c-abn">0</span>
-  </div>
-  <div class="lrow">
-    <div class="ldot" style="background:#22aaff"></div>
-    <span class="lname">合&nbsp;&nbsp;乗</span>
-    <div class="lbg"><div class="lb" id="b-abs" style="background:#22aaff;width:0%"></div></div>
-    <span class="lct" id="c-abs">0</span>
-  </div>
+  <div class="lrow"><div class="ldot" style="background:#ff5544"></div><span class="lname">急&nbsp;&nbsp;行</span><div class="lbg"><div class="lb" id="b-abe" style="background:#ff5544;width:0%"></div></div><span class="lct" id="c-abe">0</span></div>
+  <div class="lrow"><div class="ldot" style="background:#cccccc"></div><span class="lname">通&nbsp;&nbsp;常</span><div class="lbg"><div class="lb" id="b-abn" style="background:#cccccc;width:0%"></div></div><span class="lct" id="c-abn">0</span></div>
+  <div class="lrow"><div class="ldot" style="background:#22aaff"></div><span class="lname">合&nbsp;&nbsp;乗</span><div class="lbg"><div class="lb" id="b-abs" style="background:#22aaff;width:0%"></div></div><span class="lct" id="c-abs">0</span></div>
   <div class="dir-lbl" style="margin-top:10px">◀ B → A 方向</div>
-  <div class="lrow">
-    <div class="ldot" style="background:#22aaff"></div>
-    <span class="lname">合&nbsp;&nbsp;乗</span>
-    <div class="lbg"><div class="lb" id="b-bas" style="background:#22aaff;width:0%"></div></div>
-    <span class="lct" id="c-bas">0</span>
-  </div>
-  <div class="lrow">
-    <div class="ldot" style="background:#cccccc"></div>
-    <span class="lname">通&nbsp;&nbsp;常</span>
-    <div class="lbg"><div class="lb" id="b-ban" style="background:#cccccc;width:0%"></div></div>
-    <span class="lct" id="c-ban">0</span>
-  </div>
-  <div class="lrow">
-    <div class="ldot" style="background:#ff5544"></div>
-    <span class="lname">急&nbsp;&nbsp;行</span>
-    <div class="lbg"><div class="lb" id="b-bae" style="background:#ff5544;width:0%"></div></div>
-    <span class="lct" id="c-bae">0</span>
-  </div>
+  <div class="lrow"><div class="ldot" style="background:#22aaff"></div><span class="lname">合&nbsp;&nbsp;乗</span><div class="lbg"><div class="lb" id="b-bas" style="background:#22aaff;width:0%"></div></div><span class="lct" id="c-bas">0</span></div>
+  <div class="lrow"><div class="ldot" style="background:#cccccc"></div><span class="lname">通&nbsp;&nbsp;常</span><div class="lbg"><div class="lb" id="b-ban" style="background:#cccccc;width:0%"></div></div><span class="lct" id="c-ban">0</span></div>
+  <div class="lrow"><div class="ldot" style="background:#ff5544"></div><span class="lname">急&nbsp;&nbsp;行</span><div class="lbg"><div class="lb" id="b-bae" style="background:#ff5544;width:0%"></div></div><span class="lct" id="c-bae">0</span></div>
 
+  <!-- 60秒スパークライン -->
   <div id="chart-wrap">
     <div class="hr"></div>
     <div class="chart-leg">
@@ -349,9 +205,19 @@
     </div>
     <canvas id="chart"></canvas>
   </div>
+
+  <!-- 24時間需要グラフ -->
+  <div id="demand-wrap">
+    <div class="hr"></div>
+    <div class="demand-hdr">
+      <span class="demand-ttl">24時間 交通需要</span>
+      <span class="demand-badge" id="demand-badge"></span>
+    </div>
+    <canvas id="demand-chart"></canvas>
+  </div>
 </div>
 
-<!-- ③ 左KPI -->
+<!-- 左KPI -->
 <div class="panel" id="left">
   <div class="sec-ttl">走行中</div>
   <div class="kpi-block">
@@ -361,23 +227,16 @@
   <div class="hr" style="margin:14px 0"></div>
   <div class="sec-ttl">到着済み</div>
   <div class="kpi-sub">
-    <div class="kpi-sub-item">
-      <div class="kpi-sub-num" id="kv-ab" style="color:#ff7766">0</div>
-      <div class="kpi-sub-lbl">→ 生存圏B</div>
-    </div>
-    <div class="kpi-sub-item">
-      <div class="kpi-sub-num" id="kv-ba" style="color:#55aaff">0</div>
-      <div class="kpi-sub-lbl">→ 生存圏A</div>
-    </div>
+    <div class="kpi-sub-item"><div class="kpi-sub-num" id="kv-ab" style="color:#ff7766">0</div><div class="kpi-sub-lbl">→ 生存圏B</div></div>
+    <div class="kpi-sub-item"><div class="kpi-sub-num" id="kv-ba" style="color:#55aaff">0</div><div class="kpi-sub-lbl">→ 生存圏A</div></div>
   </div>
-  <!-- 乗客輸送KPI -->
   <div class="kpi-pax-row">
     <div class="kpi-pax-num" id="kv-pax">0</div>
     <div class="kpi-pax-unit">名 輸送済み</div>
   </div>
 </div>
 
-<!-- ④ 選択車両 -->
+<!-- 選択車両 -->
 <div class="panel" id="carinfo">
   <button id="ci-close" onclick="deselect()">✕</button>
   <div id="carinfo-ttl">選択中の自動運転車</div>
@@ -392,60 +251,35 @@
   <div class="ci-prog-wrap"><div class="ci-prog" id="ci-prog"></div></div>
 </div>
 
-<!-- ⑤ 凡例 -->
+<!-- 凡例 -->
 <div class="panel" id="legend">
   <div class="sec-ttl">車線凡例</div>
-  <div class="leg-item">
-    <div class="leg-swatch" style="background:#ff5544;box-shadow:0 0 8px #ff5544"></div>
-    <span class="leg-text">急行（追越）</span>
-    <span class="leg-speed">〜120 km/h</span>
-  </div>
-  <div class="leg-item">
-    <div class="leg-swatch" style="background:#cccccc"></div>
-    <span class="leg-text">通常走行</span>
-    <span class="leg-speed">〜80 km/h</span>
-  </div>
-  <div class="leg-item">
-    <div class="leg-swatch" style="background:#22aaff;box-shadow:0 0 8px #22aaff"></div>
-    <span class="leg-text">合乗（シェア）</span>
-    <span class="leg-speed">〜50 km/h</span>
-  </div>
-  <div class="leg-item">
-    <div class="leg-swatch" style="background:#1a5c22"></div>
-    <span class="leg-text">中央分離帯</span>
-    <span class="leg-speed"></span>
-  </div>
-  <div style="margin-top:10px; font-size:10px; color:#3a7090; border-top:1px solid rgba(80,170,255,.1); padding-top:8px;">
-    車両クリック → フォロー追尾
-  </div>
+  <div class="leg-item"><div class="leg-swatch" style="background:#ff5544;box-shadow:0 0 8px #ff5544"></div><span class="leg-text">急行（追越）</span><span class="leg-speed">〜120 km/h</span></div>
+  <div class="leg-item"><div class="leg-swatch" style="background:#cccccc"></div><span class="leg-text">通常走行</span><span class="leg-speed">〜80 km/h</span></div>
+  <div class="leg-item"><div class="leg-swatch" style="background:#22aaff;box-shadow:0 0 8px #22aaff"></div><span class="leg-text">合乗（シェア）</span><span class="leg-speed">〜50 km/h</span></div>
+  <div class="leg-item"><div class="leg-swatch" style="background:#1a5c22"></div><span class="leg-text">中央分離帯</span><span></span></div>
+  <div style="margin-top:10px;font-size:10px;color:#3a7090;border-top:1px solid rgba(80,170,255,.1);padding-top:8px;">車両クリック → フォロー追尾</div>
 </div>
 
-<!-- ⑥ ミニマップ（下右） -->
+<!-- ミニマップ -->
 <div class="panel" id="minimap-wrap">
   <div class="sec-ttl">全体マップ</div>
   <canvas id="minimap" width="220" height="72"></canvas>
-  <div class="mm-hint">
-    ドラッグ: 回転 &nbsp;|&nbsp; 右ドラッグ: パン<br>
-    ホイール: ズーム &nbsp;|&nbsp; ESC: 選択解除
-  </div>
+  <div class="mm-hint">ドラッグ: 回転 | 右ドラッグ: パン<br>ホイール: ズーム | ESC: 選択解除</div>
 </div>
 
-<!-- ⑦ コンセプト説明カード -->
+<!-- コンセプトカード -->
 <div id="intro-card">
   <h2>未来の生存圏<br>× 自動運転モビリティ</h2>
   <p>少子高齢化・ドーナッツ化現象により、人が住む場所は<br>特定の「生存圏」に集約されていく。</p>
   <p>生存圏間は自動運転車がJR新幹線のように高頻度往来し、<br>急行・通常・合乗の3車線で人を効率よく輸送する。</p>
   <div class="ic-keywords">
-    <span class="ic-tag">少子高齢化</span>
-    <span class="ic-tag">ドーナッツ化</span>
-    <span class="ic-tag">自動運転</span>
-    <span class="ic-tag">生存圏</span>
-    <span class="ic-tag">3分間隔運行</span>
+    <span class="ic-tag">少子高齢化</span><span class="ic-tag">ドーナッツ化</span>
+    <span class="ic-tag">自動運転</span><span class="ic-tag">生存圏</span><span class="ic-tag">3分間隔運行</span>
   </div>
   <div class="ic-dim">シミュレーション開始中...</div>
 </div>
 
-<!-- Three.js importmap -->
 <script type="importmap">
 {
   "imports": {
@@ -464,866 +298,597 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
 import { OutputPass }      from 'three/addons/postprocessing/OutputPass.js';
 import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
 
-// ══════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════
 // CONFIG
-// ══════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════
 const C = {
   ROAD_HALF: 270,
-
   LANES: [
-    { id:'abe', bar:'b-abe', cnt:'c-abe', z:-19, dir:'AB', type:'express',
-      speed:12.0, color:0xff5544, glow:0xff2200, interval:0.85, label:'急行 A→B' },
-    { id:'abn', bar:'b-abn', cnt:'c-abn', z:-13, dir:'AB', type:'normal',
-      speed: 7.5, color:0xcccccc, glow:0xffffff, interval:1.5,  label:'通常 A→B' },
-    { id:'abs', bar:'b-abs', cnt:'c-abs', z: -7, dir:'AB', type:'shared',
-      speed: 4.2, color:0x22aaff, glow:0x0088ff, interval:2.0,  label:'合乗 A→B' },
-    { id:'bas', bar:'b-bas', cnt:'c-bas', z:  7, dir:'BA', type:'shared',
-      speed: 4.2, color:0x22aaff, glow:0x0088ff, interval:2.0,  label:'合乗 B→A' },
-    { id:'ban', bar:'b-ban', cnt:'c-ban', z: 13, dir:'BA', type:'normal',
-      speed: 7.5, color:0xcccccc, glow:0xffffff, interval:1.5,  label:'通常 B→A' },
-    { id:'bae', bar:'b-bae', cnt:'c-bae', z: 19, dir:'BA', type:'express',
-      speed:12.0, color:0xff5544, glow:0xff2200, interval:0.85, label:'急行 B→A' },
+    { id:'abe', bar:'b-abe', cnt:'c-abe', z:-19, dir:'AB', type:'express', speed:12.0, color:0xff5544, glow:0xff2200, interval:0.85, label:'急行 A→B' },
+    { id:'abn', bar:'b-abn', cnt:'c-abn', z:-13, dir:'AB', type:'normal',  speed: 7.5, color:0xcccccc, glow:0xffffff, interval:1.5,  label:'通常 A→B' },
+    { id:'abs', bar:'b-abs', cnt:'c-abs', z: -7, dir:'AB', type:'shared',  speed: 4.2, color:0x22aaff, glow:0x0088ff, interval:2.0,  label:'合乗 A→B' },
+    { id:'bas', bar:'b-bas', cnt:'c-bas', z:  7, dir:'BA', type:'shared',  speed: 4.2, color:0x22aaff, glow:0x0088ff, interval:2.0,  label:'合乗 B→A' },
+    { id:'ban', bar:'b-ban', cnt:'c-ban', z: 13, dir:'BA', type:'normal',  speed: 7.5, color:0xcccccc, glow:0xffffff, interval:1.5,  label:'通常 B→A' },
+    { id:'bae', bar:'b-bae', cnt:'c-bae', z: 19, dir:'BA', type:'express', speed:12.0, color:0xff5544, glow:0xff2200, interval:0.85, label:'急行 B→A' },
   ],
-
-  ZONE_A: [-440, -270],
-  ZONE_B: [ 270,  440],
-
-  CAR_L: 9.5, CAR_H: 2.0, CAR_W: 3.8,
-  MIN_GAP: 14,
-  TP_WIN: 30,
-  MAX_LANE: 26,
+  ZONE_A:[-440,-270], ZONE_B:[270,440],
+  CAR_L:9.5, CAR_H:2.0, CAR_W:3.8,
+  MIN_GAP:14, TP_WIN:30, MAX_LANE:26,
 };
 
-// ══════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════
 // 時刻シミュレーション
-// ══════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════
 const SimTime = {
-  hour: 7, min: 0,
-  // 1リアル秒 = 2シミュ分（30分 = 1シミュ時間）
+  hour:7, min:0,
   update(dt) {
     this.min += dt * 2 * speedMul;
-    if(this.min >= 60) { this.min -= 60; this.hour = (this.hour + 1) % 24; }
+    if(this.min>=60){ this.min-=60; this.hour=(this.hour+1)%24; }
   },
-  get isRush()  { const h=this.hour; return (h>=7&&h<9)||(h>=17&&h<19); },
-  get isNight() { const h=this.hour; return h>=22||h<5; },
-  // 交通密度倍率（小=高密度、大=低密度）
-  get rushMul() {
-    if(this.isRush)  return 0.52;   // ラッシュ: 頻繁に出発
-    if(this.isNight) return 2.8;    // 深夜: 少ない
-    return 1.0;
-  },
-  get str() {
-    return `${this.hour.toString().padStart(2,'0')}:${Math.floor(this.min).toString().padStart(2,'0')}`;
-  },
+  get isRush()    { const h=this.hour; return (h>=7&&h<9)||(h>=17&&h<19); },
+  get isNight()   { const h=this.hour; return h>=22||h<5; },
+  get isRaining() { const h=this.hour; return h>=20||h<6; },
+  get rushMul()   { return this.isRush?0.52:this.isNight?2.8:1.0; },
+  get frac()      { return (this.hour + this.min/60) / 24; },
+  get str()       { return `${this.hour.toString().padStart(2,'0')}:${Math.floor(this.min).toString().padStart(2,'0')}`; },
 };
 
-// ══════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════
 // STATE
-// ══════════════════════════════════════════════════════════════
-let speedMul = 1, selected = null, arrAB = 0, arrBA = 0, paxTotal = 0;
-let _carId   = 0;
+// ════════════════════════════════════════════
+let speedMul=1, selected=null, arrAB=0, arrBA=0, paxTotal=0;
+let _carId=0;
 
 window.setSpeed = s => {
-  speedMul = s;
-  ['s1','s2','s4'].forEach((id,i) => document.getElementById(id).classList.toggle('on',[1,2,4][i]===s));
+  speedMul=s;
+  ['s1','s2','s4'].forEach((id,i)=>document.getElementById(id).classList.toggle('on',[1,2,4][i]===s));
 };
 window.deselect = () => {
-  selected = null;
-  document.getElementById('carinfo').style.display = 'none';
-  orbit.enabled = true;
+  selected=null;
+  document.getElementById('carinfo').style.display='none';
+  orbit.enabled=true;
 };
-document.addEventListener('keydown', e => { if(e.key==='Escape') deselect(); });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') deselect(); });
 
-// ── コンセプトカード: 5秒後フェードアウト ─────────────────
-const introEl = document.getElementById('intro-card');
-setTimeout(() => {
-  introEl.style.opacity = '0';
-  setTimeout(() => { introEl.style.display='none'; }, 1400);
-}, 5000);
+const introEl=document.getElementById('intro-card');
+setTimeout(()=>{ introEl.style.opacity='0'; setTimeout(()=>introEl.style.display='none',1400); },5000);
 
-// ══════════════════════════════════════════════════════════════
-// RENDERER & SCENE
-// ══════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════
+// RENDERER
+// ════════════════════════════════════════════
 const canvas   = document.getElementById('cv');
-const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
-renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-renderer.setSize(innerWidth, innerHeight);
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type    = THREE.PCFSoftShadowMap;
-renderer.toneMapping        = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.0;
+const renderer = new THREE.WebGLRenderer({ canvas, antialias:true });
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.setSize(innerWidth,innerHeight);
+renderer.shadowMap.enabled=true;
+renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+renderer.toneMapping=THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure=1.0;
 
-// CSS2DRenderer（生存圏ラベル用）
-const labelRend = new CSS2DRenderer();
-labelRend.setSize(innerWidth, innerHeight);
-labelRend.domElement.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:5;';
+const labelRend=new CSS2DRenderer();
+labelRend.setSize(innerWidth,innerHeight);
+labelRend.domElement.style.cssText='position:fixed;inset:0;pointer-events:none;z-index:5;';
 document.body.appendChild(labelRend.domElement);
 
-const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x03050d);
-scene.fog        = new THREE.FogExp2(0x03050d, 0.0012);
+const scene=new THREE.Scene();
+scene.background=new THREE.Color(0x03050d);
+scene.fog=new THREE.FogExp2(0x03050d,0.0012);
 
-const camera = new THREE.PerspectiveCamera(48, innerWidth/innerHeight, 0.5, 3500);
-camera.position.set(60, 210, 280);
-camera.lookAt(0, 0, 0);
+const camera=new THREE.PerspectiveCamera(48,innerWidth/innerHeight,0.5,3500);
+camera.position.set(60,210,280);
+camera.lookAt(0,0,0);
 
-const orbit = new OrbitControls(camera, canvas);
-orbit.enableDamping  = true;
-orbit.dampingFactor  = 0.06;
-orbit.minDistance    = 50;
-orbit.maxDistance    = 1000;
-orbit.maxPolarAngle  = Math.PI / 2.1;
-orbit.target.set(0, 5, 0);
+const orbit=new OrbitControls(camera,canvas);
+orbit.enableDamping=true; orbit.dampingFactor=0.06;
+orbit.minDistance=50; orbit.maxDistance=1000;
+orbit.maxPolarAngle=Math.PI/2.1; orbit.target.set(0,5,0);
 
-// ── Bloom ─────────────────────────────────────────────────────
-const composer  = new EffectComposer(renderer);
-composer.addPass(new RenderPass(scene, camera));
-const bloom = new UnrealBloomPass(
-  new THREE.Vector2(innerWidth, innerHeight),
-  0.75, 0.40, 0.76
-);
+const composer=new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene,camera));
+const bloom=new UnrealBloomPass(new THREE.Vector2(innerWidth,innerHeight),0.75,0.40,0.76);
 composer.addPass(bloom);
 composer.addPass(new OutputPass());
 
-// ── Lights ────────────────────────────────────────────────────
-const ambient = new THREE.AmbientLight(0x1a2840, 2.5); scene.add(ambient);
-const sun = new THREE.DirectionalLight(0xffeedd, 1.4);
-sun.position.set(200, 400, 100);
-sun.castShadow = true;
-Object.assign(sun.shadow.camera, { near:1, far:1200, left:-500, right:500, top:130, bottom:-130 });
-sun.shadow.mapSize.set(2048, 2048);
-scene.add(sun);
+const ambient=new THREE.AmbientLight(0x1a2840,2.5); scene.add(ambient);
+const sun=new THREE.DirectionalLight(0xffeedd,1.4);
+sun.position.set(200,400,100); sun.castShadow=true;
+Object.assign(sun.shadow.camera,{near:1,far:1200,left:-500,right:500,top:130,bottom:-130});
+sun.shadow.mapSize.set(2048,2048); scene.add(sun);
+const gA=new THREE.PointLight(0x1155ff,3.5,300,1.5); gA.position.set(-360,70,0); scene.add(gA);
+const gB=new THREE.PointLight(0x9922ee,3.5,300,1.5); gB.position.set( 360,70,0); scene.add(gB);
+scene.add(Object.assign(new THREE.PointLight(0x0044ff,1.2,200,2),{position:new THREE.Vector3(0,15,0)}));
 
-const gA = new THREE.PointLight(0x1155ff, 3.5, 300, 1.5); gA.position.set(-360, 70, 0); scene.add(gA);
-const gB = new THREE.PointLight(0x9922ee, 3.5, 300, 1.5); gB.position.set( 360, 70, 0); scene.add(gB);
-scene.add(Object.assign(new THREE.PointLight(0x0044ff, 1.2, 200, 2), { position: new THREE.Vector3(0, 15, 0) }));
-
-// ══════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════
 // HELPERS
-// ══════════════════════════════════════════════════════════════
-function mkRng(seed) {
-  let s = seed;
-  return () => { s=(s*16807)%2147483647; return (s-1)/2147483646; };
-}
-function rng2(rng,a,b) { return a+rng()*(b-a); }
-
-const MAT = {
-  lamb : c => new THREE.MeshLambertMaterial({ color:c }),
-  std  : (c,e=0,ei=0,r=0.8) => new THREE.MeshStandardMaterial({ color:c, emissive:e, emissiveIntensity:ei, roughness:r, metalness:0.1 }),
-  glow : (e, ei=3) => new THREE.MeshStandardMaterial({ color:0, emissive:e, emissiveIntensity:ei }),
-  glass: (c=0x88ccff, op=0.7) => new THREE.MeshStandardMaterial({ color:c, transparent:true, opacity:op, roughness:0.05, metalness:0.1 }),
+// ════════════════════════════════════════════
+function mkRng(seed){ let s=seed; return ()=>{ s=(s*16807)%2147483647; return (s-1)/2147483646; }; }
+function rng2(rng,a,b){ return a+rng()*(b-a); }
+const MAT={
+  lamb : c=>new THREE.MeshLambertMaterial({color:c}),
+  std  : (c,e=0,ei=0,r=0.8)=>new THREE.MeshStandardMaterial({color:c,emissive:e,emissiveIntensity:ei,roughness:r,metalness:0.1}),
+  glow : (e,ei=3)=>new THREE.MeshStandardMaterial({color:0,emissive:e,emissiveIntensity:ei}),
+  glass: (c=0x88ccff,op=0.7)=>new THREE.MeshStandardMaterial({color:c,transparent:true,opacity:op,roughness:0.05,metalness:0.1}),
 };
+function mesh(geo,mat,x=0,y=0,z=0,cast=false){ const m=new THREE.Mesh(geo,mat); m.position.set(x,y,z); m.castShadow=cast; m.receiveShadow=true; scene.add(m); return m; }
+function plane(w,d,x,y,z,mat){ const m=new THREE.Mesh(new THREE.PlaneGeometry(w,d),mat); m.rotation.x=-Math.PI/2; m.position.set(x,y,z); m.receiveShadow=true; scene.add(m); return m; }
+function box(w,h,d,x,y,z,mat,cast=false){ return mesh(new THREE.BoxGeometry(w,h,d),mat,x,y+h/2,z,cast); }
 
-function mesh(geo, mat, x=0, y=0, z=0, cast=false) {
-  const m = new THREE.Mesh(geo, mat);
-  m.position.set(x,y,z); m.castShadow=cast; m.receiveShadow=true;
-  scene.add(m); return m;
+// ════════════════════════════════════════════
+// 雨パーティクルシステム
+// ════════════════════════════════════════════
+const RAIN_N  = 7000;
+const rainGeo = new THREE.BufferGeometry();
+const rPos    = new Float32Array(RAIN_N*3);
+const rSpd    = new Float32Array(RAIN_N);
+for(let i=0;i<RAIN_N;i++){
+  rPos[i*3]   = (Math.random()-.5)*1200;
+  rPos[i*3+1] = Math.random()*220;
+  rPos[i*3+2] = (Math.random()-.5)*240;
+  rSpd[i]     = 55+Math.random()*40;
 }
-function plane(w, d, x, y, z, mat) {
-  const m = new THREE.Mesh(new THREE.PlaneGeometry(w,d), mat);
-  m.rotation.x=-Math.PI/2; m.position.set(x,y,z); m.receiveShadow=true; scene.add(m); return m;
-}
-function box(w,h,d,x,y,z,mat,cast=false) {
-  return mesh(new THREE.BoxGeometry(w,h,d), mat, x, y+h/2, z, cast);
-}
+rainGeo.setAttribute('position',new THREE.Float32BufferAttribute(rPos,3));
+const rainMat=new THREE.PointsMaterial({color:0x99bbdd,size:0.28,transparent:true,opacity:0,depthWrite:false,sizeAttenuation:true});
+const rainMesh=new THREE.Points(rainGeo,rainMat);
+scene.add(rainMesh);
 
-// ══════════════════════════════════════════════════════════════
-// WORLD
-// ══════════════════════════════════════════════════════════════
-function buildWorld() {
-  buildGround();
-  buildHighway();
-  buildDirectionArrows();
-  buildZone('A');
-  buildZone('B');
-  buildGates();
-  buildLampposts();
-  buildZoneLabels();
-  buildLaneLabels();
-  buildStars();
-}
+// 路面の濡れ光沢（雨時に透明度が上がる）
+const wetMat=new THREE.MeshStandardMaterial({
+  color:0x002266, emissive:0x002244, emissiveIntensity:0,
+  transparent:true, opacity:0, roughness:0.02, metalness:0.95, depthWrite:false,
+});
+const wetPlane=new THREE.Mesh(new THREE.PlaneGeometry(C.ROAD_HALF*2,52),wetMat);
+wetPlane.rotation.x=-Math.PI/2; wetPlane.position.set(0,0.13,0);
+scene.add(wetPlane);
 
-function buildGround() {
-  plane(1600, 260, 0, 0, 0, MAT.lamb(0x050810));
-}
+let rainIntensity=0;
 
-function buildHighway() {
-  const len = C.ROAD_HALF * 2;
-  plane(len, 50, 0, 0.05, 0, MAT.std(0x0e1520));
+function updateRain(dt){
+  const target = SimTime.isRaining ? 0.88 : 0;
+  rainIntensity += (target-rainIntensity)*0.008;
 
-  C.LANES.forEach(l => {
-    const mat = new THREE.MeshStandardMaterial({
-      color: l.color, emissive: l.glow, emissiveIntensity: 0.12, roughness: 0.88,
-    });
-    plane(len, 5.8, 0, 0.10, l.z, mat);
-  });
+  rainMat.opacity = rainIntensity*0.52;
+  wetMat.opacity  = rainIntensity*0.30;
+  wetMat.emissiveIntensity = rainIntensity*0.35;
 
-  plane(len, 10, 0, 0.07, 0, MAT.std(0x0d2016, 0x0d3020, 0.15));
-  for(let x=-250; x<=250; x+=30) addTree(x, 0, 0, 0.9);
+  document.getElementById('rain-badge').style.display = rainIntensity>0.15?'inline':'none';
 
-  const ledMat = MAT.glow(0xaaccff, 2.8);
-  [-23,-17,-11,-5, 5,11,17,23].forEach(z => plane(len, 0.35, 0, 0.15, z, ledMat));
-
-  const medLed = MAT.glow(0x00ff88, 2.0);
-  [-4.5, 4.5].forEach(z => plane(len, 0.2, 0, 0.15, z, medLed));
-
-  mkRail(-C.ROAD_HALF, C.ROAD_HALF, -25.0);
-  mkRail(-C.ROAD_HALF, C.ROAD_HALF,  25.0);
-  mkRail(-C.ROAD_HALF, C.ROAD_HALF, -5.0, 0x225522);
-  mkRail(-C.ROAD_HALF, C.ROAD_HALF,  5.0, 0x225522);
-}
-
-function mkRail(x1, x2, z, col=0x334455) {
-  const len=x2-x1, cx=(x1+x2)/2, m=MAT.lamb(col);
-  [0.5, 1.1].forEach(y => box(len, 0.22, 0.18, cx, y-0.11, z, m));
-  for(let x=x1; x<=x2; x+=12) box(0.22, 1.4, 0.22, x, 0, z, m, true);
-}
-
-function buildDirectionArrows() {
-  const makeArrow = (toRight) => {
-    const cv = document.createElement('canvas');
-    cv.width = cv.height = 128;
-    const ctx = cv.getContext('2d');
-    ctx.clearRect(0,0,128,128);
-    ctx.fillStyle = 'rgba(255,255,255,0.55)';
-    ctx.beginPath();
-    if(toRight) {
-      ctx.moveTo(16, 44); ctx.lineTo(74, 44); ctx.lineTo(74, 30);
-      ctx.lineTo(112, 64); ctx.lineTo(74, 98); ctx.lineTo(74, 84);
-      ctx.lineTo(16, 84);
-    } else {
-      ctx.moveTo(112,44); ctx.lineTo(54, 44); ctx.lineTo(54, 30);
-      ctx.lineTo(16, 64); ctx.lineTo(54, 98); ctx.lineTo(54, 84);
-      ctx.lineTo(112,84);
+  if(rainIntensity<0.03) return;
+  const pos=rainGeo.attributes.position.array;
+  const spd=speedMul;
+  for(let i=0;i<RAIN_N;i++){
+    pos[i*3+1]-=rSpd[i]*dt*spd;
+    if(pos[i*3+1]<0){
+      pos[i*3]  =(Math.random()-.5)*1200;
+      pos[i*3+1]=190+Math.random()*40;
+      pos[i*3+2]=(Math.random()-.5)*240;
     }
-    ctx.closePath(); ctx.fill();
-    return new THREE.CanvasTexture(cv);
+  }
+  rainGeo.attributes.position.needsUpdate=true;
+}
+
+// ════════════════════════════════════════════
+// WORLD BUILD
+// ════════════════════════════════════════════
+function buildWorld(){
+  buildGround(); buildHighway(); buildDirectionArrows();
+  buildZone('A'); buildZone('B');
+  buildGates(); buildLampposts();
+  buildZoneLabels(); buildLaneLabels(); buildStars();
+}
+
+function buildGround(){ plane(1600,260,0,0,0,MAT.lamb(0x050810)); }
+
+function buildHighway(){
+  const len=C.ROAD_HALF*2;
+  plane(len,50,0,0.05,0,MAT.std(0x0e1520));
+  C.LANES.forEach(l=>{
+    plane(len,5.8,0,0.10,l.z,new THREE.MeshStandardMaterial({color:l.color,emissive:l.glow,emissiveIntensity:0.12,roughness:0.88}));
+  });
+  plane(len,10,0,0.07,0,MAT.std(0x0d2016,0x0d3020,0.15));
+  for(let x=-250;x<=250;x+=30) addTree(x,0,0,0.9);
+  const ledMat=MAT.glow(0xaaccff,2.8);
+  [-23,-17,-11,-5,5,11,17,23].forEach(z=>plane(len,0.35,0,0.15,z,ledMat));
+  [- 4.5,4.5].forEach(z=>plane(len,0.2,0,0.15,z,MAT.glow(0x00ff88,2.0)));
+  mkRail(-C.ROAD_HALF,C.ROAD_HALF,-25.0);
+  mkRail(-C.ROAD_HALF,C.ROAD_HALF, 25.0);
+  mkRail(-C.ROAD_HALF,C.ROAD_HALF,-5.0,0x225522);
+  mkRail(-C.ROAD_HALF,C.ROAD_HALF, 5.0,0x225522);
+}
+
+function mkRail(x1,x2,z,col=0x334455){
+  const len=x2-x1,cx=(x1+x2)/2,m=MAT.lamb(col);
+  [0.5,1.1].forEach(y=>box(len,0.22,0.18,cx,y-0.11,z,m));
+  for(let x=x1;x<=x2;x+=12) box(0.22,1.4,0.22,x,0,z,m,true);
+}
+
+function buildDirectionArrows(){
+  const mk=r=>{
+    const cv=document.createElement('canvas'); cv.width=cv.height=128;
+    const ctx=cv.getContext('2d'); ctx.clearRect(0,0,128,128);
+    ctx.fillStyle='rgba(255,255,255,0.55)'; ctx.beginPath();
+    if(r){ctx.moveTo(16,44);ctx.lineTo(74,44);ctx.lineTo(74,30);ctx.lineTo(112,64);ctx.lineTo(74,98);ctx.lineTo(74,84);ctx.lineTo(16,84);}
+    else {ctx.moveTo(112,44);ctx.lineTo(54,44);ctx.lineTo(54,30);ctx.lineTo(16,64);ctx.lineTo(54,98);ctx.lineTo(54,84);ctx.lineTo(112,84);}
+    ctx.closePath(); ctx.fill(); return new THREE.CanvasTexture(cv);
   };
-
-  const texAB = makeArrow(true);
-  const texBA = makeArrow(false);
-
-  C.LANES.forEach(lane => {
-    const tex = lane.dir==='AB' ? texAB : texBA;
-    const mat = new THREE.MeshBasicMaterial({
-      map:tex, transparent:true, opacity:0.45, depthWrite:false, side:THREE.DoubleSide
-    });
-    for(let x=-C.ROAD_HALF+45; x<C.ROAD_HALF-20; x+=70) {
-      const m = new THREE.Mesh(new THREE.PlaneGeometry(7, 5.5), mat);
-      m.rotation.x = -Math.PI/2;
-      m.position.set(x, 0.18, lane.z);
-      scene.add(m);
+  const tAB=mk(true),tBA=mk(false);
+  C.LANES.forEach(l=>{
+    const mat=new THREE.MeshBasicMaterial({map:l.dir==='AB'?tAB:tBA,transparent:true,opacity:0.45,depthWrite:false,side:THREE.DoubleSide});
+    for(let x=-C.ROAD_HALF+45;x<C.ROAD_HALF-20;x+=70){
+      const m=new THREE.Mesh(new THREE.PlaneGeometry(7,5.5),mat);
+      m.rotation.x=-Math.PI/2; m.position.set(x,0.18,l.z); scene.add(m);
     }
   });
 }
 
-function buildZoneLabels() {
-  const mkLabel = (text, cls, x, y=55) => {
-    const div = document.createElement('div');
-    div.className = `zone-label ${cls}`;
-    div.textContent = text;
-    const obj = new CSS2DObject(div);
-    obj.position.set(x, y, 0);
-    scene.add(obj);
-  };
-  mkLabel('生存圏 A', 'zone-label-A', -360);
-  mkLabel('生存圏 B', 'zone-label-B',  360);
+function buildZoneLabels(){
+  const mk=(t,cls,x)=>{ const d=document.createElement('div'); d.className=`zone-label ${cls}`; d.textContent=t; const o=new CSS2DObject(d); o.position.set(x,55,0); scene.add(o); };
+  mk('生存圏 A','zone-label-A',-360);
+  mk('生存圏 B','zone-label-B', 360);
+}
+function buildLaneLabels(){
+  const mk=(t,x,z)=>{ const d=document.createElement('div'); d.className='lane-label'; d.textContent=t; const o=new CSS2DObject(d); o.position.set(x,5,z); scene.add(o); };
+  mk('急行 →',-120,-19); mk('通常 →',-120,-13); mk('合乗 →',-120,-7);
+  mk('← 合乗',-120,7);  mk('← 通常',-120,13); mk('← 急行',-120,19);
 }
 
-function buildLaneLabels() {
-  const mkLane = (text, x, z) => {
-    const div = document.createElement('div');
-    div.className = 'lane-label';
-    div.textContent = text;
-    const obj = new CSS2DObject(div);
-    obj.position.set(x, 5, z);
-    scene.add(obj);
-  };
-  mkLane('急行 →', -120, -19);
-  mkLane('通常 →', -120, -13);
-  mkLane('合乗 →', -120,  -7);
-  mkLane('← 合乗', -120,   7);
-  mkLane('← 通常', -120,  13);
-  mkLane('← 急行', -120,  19);
-}
-
-function buildZone(side) {
-  const isA = side==='A';
-  const xr  = isA ? C.ZONE_A : C.ZONE_B;
-  const rng = mkRng(isA ? 42 : 137);
-  const len = xr[1]-xr[0], cx=(xr[0]+xr[1])/2;
-
-  plane(len, 110, cx, 0.02, 0, MAT.lamb(isA ? 0x060e14 : 0x0c0816));
-
-  for(let gx=xr[0]+15; gx<xr[1]; gx+=17)
-    plane(0.8, 110, gx, 0.04, 0, MAT.lamb(0x090d18));
-  for(let gz=-52; gz<=52; gz+=17)
-    plane(len, 0.8, cx, 0.04, gz, MAT.lamb(0x090d18));
-
-  const bTypes = ['office','residential','mixed'];
-  for(let gx=xr[0]+2; gx<xr[1]-2; gx+=17) {
-    for(let gz=-52; gz<52; gz+=17) {
+function buildZone(side){
+  const isA=side==='A', xr=isA?C.ZONE_A:C.ZONE_B;
+  const rng=mkRng(isA?42:137), len=xr[1]-xr[0], cx=(xr[0]+xr[1])/2;
+  plane(len,110,cx,0.02,0,MAT.lamb(isA?0x060e14:0x0c0816));
+  for(let gx=xr[0]+15;gx<xr[1];gx+=17) plane(0.8,110,gx,0.04,0,MAT.lamb(0x090d18));
+  for(let gz=-52;gz<=52;gz+=17)         plane(len,0.8,cx,0.04,gz,MAT.lamb(0x090d18));
+  const bt=['office','residential','mixed'];
+  for(let gx=xr[0]+2;gx<xr[1]-2;gx+=17)
+    for(let gz=-52;gz<52;gz+=17){
       if(rng()<0.12) continue;
-      const h  = rng2(rng, 6, 44);
-      const bw = rng2(rng, 7, 14);
-      const bd = rng2(rng, 7, 14);
-      const bt = bTypes[Math.floor(rng()*3)];
-      const bx = Math.min(gx+8.5, xr[1]-bw/2-1);
-      buildBuilding(bx, gz+8.5, bw, h, bd, bt, isA, rng);
+      buildBuilding(Math.min(gx+8.5,xr[1]-rng2(rng,7,14)/2-1),gz+8.5,rng2(rng,7,14),rng2(rng,6,44),rng2(rng,7,14),bt[Math.floor(rng()*3)],isA,rng);
     }
-  }
 }
 
-function buildBuilding(cx, cz, bw, bh, bd, type, isA, rng) {
-  const g = new THREE.Group();
-  const wallA = [0x0a2850, 0x0c3060, 0x0e2848, 0x082040][Math.floor(rng()*4)];
-  const wallB = [0x28083a, 0x30064a, 0x200840, 0x380a56][Math.floor(rng()*4)];
-  const wallCol = isA ? wallA : wallB;
-  const winColor = isA ? 0x88ccff : 0xcc88ff;
-
-  if(type==='office') {
-    const body = new THREE.Mesh(
-      new THREE.BoxGeometry(bw, bh, bd),
-      new THREE.MeshStandardMaterial({ color:wallCol, roughness:0.65, metalness:0.25 }));
-    body.position.y=bh/2; body.castShadow=true; g.add(body);
-    const winMat = MAT.std(0x000000, winColor, 0.75+rng()*0.55);
-    for(let wy=2.5; wy<bh-1; wy+=3.0) {
-      [-1,1].forEach(side => {
-        const wf = new THREE.Mesh(new THREE.PlaneGeometry(bw*0.80, 1.3), winMat);
-        wf.position.set(0, wy, (bd/2+0.02)*side);
-        if(side===-1) wf.rotation.y=Math.PI;
-        g.add(wf);
-      });
-    }
-    if(bh>22) {
-      const ant = new THREE.Mesh(new THREE.CylinderGeometry(0.08,0.12,10,5), MAT.lamb(0x556677));
-      ant.position.y=bh+5; g.add(ant);
-      const bk = new THREE.Mesh(new THREE.SphereGeometry(0.34,8,6),
-        MAT.glow(isA ? 0x3366ff : 0xaa33ff, 4.0));
-      bk.position.y=bh+10.4; bk.userData.beacon=true; g.add(bk);
-    }
-
-  } else if(type==='residential') {
-    const ph = Math.min(6, bh*0.35);
-    const pod = new THREE.Mesh(
-      new THREE.BoxGeometry(bw*1.25, ph, bd*1.25), MAT.lamb(wallCol));
-    pod.position.y=ph/2; pod.castShadow=true; g.add(pod);
-    const twH=bh-ph, tw=Math.max(3,bw*0.75), td=Math.max(3,bd*0.75);
-    const tw_mesh = new THREE.Mesh(
-      new THREE.BoxGeometry(tw, twH, td),
-      new THREE.MeshStandardMaterial({color:wallCol, roughness:0.72}));
-    tw_mesh.position.y=ph+twH/2; tw_mesh.castShadow=true; g.add(tw_mesh);
-    const balMat = MAT.std(0, winColor, 0.45+rng()*0.35);
-    for(let wy=ph+2.5; wy<bh-2; wy+=4.0) {
-      const bal = new THREE.Mesh(new THREE.PlaneGeometry(tw*0.82, 0.9), balMat);
-      bal.position.set(0,wy,td/2+0.02); g.add(bal);
-    }
-
+function buildBuilding(cx,cz,bw,bh,bd,type,isA,rng){
+  const g=new THREE.Group();
+  const wA=[0x0a2850,0x0c3060,0x0e2848,0x082040],wB=[0x28083a,0x30064a,0x200840,0x380a56];
+  const wc=isA?wA[Math.floor(rng()*4)]:wB[Math.floor(rng()*4)], wn=isA?0x88ccff:0xcc88ff;
+  if(type==='office'){
+    const b=new THREE.Mesh(new THREE.BoxGeometry(bw,bh,bd),new THREE.MeshStandardMaterial({color:wc,roughness:0.65,metalness:0.25}));
+    b.position.y=bh/2; b.castShadow=true; g.add(b);
+    const wm=MAT.std(0,wn,0.75+rng()*0.55);
+    for(let wy=2.5;wy<bh-1;wy+=3)[-1,1].forEach(s=>{const f=new THREE.Mesh(new THREE.PlaneGeometry(bw*.8,1.3),wm); f.position.set(0,wy,(bd/2+.02)*s); if(s===-1)f.rotation.y=Math.PI; g.add(f);});
+    if(bh>22){const a=new THREE.Mesh(new THREE.CylinderGeometry(.08,.12,10,5),MAT.lamb(0x556677)); a.position.y=bh+5; g.add(a); const bk=new THREE.Mesh(new THREE.SphereGeometry(.34,8,6),MAT.glow(isA?0x3366ff:0xaa33ff,4)); bk.position.y=bh+10.4; bk.userData.beacon=true; g.add(bk);}
+  } else if(type==='residential'){
+    const ph=Math.min(6,bh*.35), pd=new THREE.Mesh(new THREE.BoxGeometry(bw*1.25,ph,bd*1.25),MAT.lamb(wc)); pd.position.y=ph/2; pd.castShadow=true; g.add(pd);
+    const twH=bh-ph,tw=Math.max(3,bw*.75),td=Math.max(3,bd*.75);
+    const tw_=new THREE.Mesh(new THREE.BoxGeometry(tw,twH,td),new THREE.MeshStandardMaterial({color:wc,roughness:.72})); tw_.position.y=ph+twH/2; tw_.castShadow=true; g.add(tw_);
+    const bm=MAT.std(0,wn,.45+rng()*.35);
+    for(let wy=ph+2.5;wy<bh-2;wy+=4){const bl=new THREE.Mesh(new THREE.PlaneGeometry(tw*.82,.9),bm); bl.position.set(0,wy,td/2+.02); g.add(bl);}
   } else {
-    const comH = Math.min(5, bh*0.3);
-    const com = new THREE.Mesh(
-      new THREE.BoxGeometry(bw, comH, bd),
-      new THREE.MeshStandardMaterial({color:0x081826, roughness:0.2, metalness:0.4}));
-    com.position.y=comH/2; com.castShadow=true; g.add(com);
-    const retMat = MAT.glow(isA?0x0055ff:0x8800ee, 0.6);
-    const ret=new THREE.Mesh(new THREE.PlaneGeometry(bw-0.4, comH*0.7), retMat);
-    ret.position.set(0,comH*0.5,bd/2+0.03); g.add(ret);
-    const upH=bh-comH, uw=bw*0.7, ud=bd*0.7;
-    const up=new THREE.Mesh(
-      new THREE.BoxGeometry(uw,upH,ud),
-      new THREE.MeshStandardMaterial({color:wallCol, roughness:0.58, metalness:0.2}));
-    up.position.y=comH+upH/2; up.castShadow=true; g.add(up);
-    const winMat2=MAT.std(0,winColor,0.80+rng()*0.4);
-    for(let wy=comH+2; wy<bh-1; wy+=3.2) {
-      const w=new THREE.Mesh(new THREE.PlaneGeometry(uw*0.75,1.1),winMat2);
-      w.position.set(0,wy,ud/2+0.02); g.add(w);
-    }
+    const ch=Math.min(5,bh*.3), cm=new THREE.Mesh(new THREE.BoxGeometry(bw,ch,bd),new THREE.MeshStandardMaterial({color:0x081826,roughness:.2,metalness:.4})); cm.position.y=ch/2; cm.castShadow=true; g.add(cm);
+    const rt=new THREE.Mesh(new THREE.PlaneGeometry(bw-.4,ch*.7),MAT.glow(isA?0x0055ff:0x8800ee,.6)); rt.position.set(0,ch*.5,bd/2+.03); g.add(rt);
+    const uh=bh-ch,uw=bw*.7,ud=bd*.7;
+    const up=new THREE.Mesh(new THREE.BoxGeometry(uw,uh,ud),new THREE.MeshStandardMaterial({color:wc,roughness:.58,metalness:.2})); up.position.y=ch+uh/2; up.castShadow=true; g.add(up);
+    const wm2=MAT.std(0,wn,.8+rng()*.4);
+    for(let wy=ch+2;wy<bh-1;wy+=3.2){const w=new THREE.Mesh(new THREE.PlaneGeometry(uw*.75,1.1),wm2); w.position.set(0,wy,ud/2+.02); g.add(w);}
   }
-
-  const roofM=new THREE.Mesh(new THREE.BoxGeometry(bw+0.6,0.4,bd+0.6), MAT.lamb(0x060e1a));
-  roofM.position.y=bh+0.2; g.add(roofM);
-  g.position.set(cx, 0, cz);
-  scene.add(g);
+  const rf=new THREE.Mesh(new THREE.BoxGeometry(bw+.6,.4,bd+.6),MAT.lamb(0x060e1a)); rf.position.y=bh+.2; g.add(rf);
+  g.position.set(cx,0,cz); scene.add(g);
 }
 
-function addTree(x, y, z, sc=1) {
-  const g = new THREE.Group();
-  const tr=new THREE.Mesh(new THREE.CylinderGeometry(0.3*sc,0.4*sc,3.5*sc,6), MAT.lamb(0x2a1400));
-  tr.position.y=1.8*sc; tr.castShadow=true; g.add(tr);
+function addTree(x,y,z,sc=1){
+  const g=new THREE.Group();
+  const tr=new THREE.Mesh(new THREE.CylinderGeometry(.3*sc,.4*sc,3.5*sc,6),MAT.lamb(0x2a1400)); tr.position.y=1.8*sc; tr.castShadow=true; g.add(tr);
   [[0,3.8,0,2.6],[0,5.4,0,2.1],[0,6.9,0,1.4]].forEach(([lx,ly,lz,r],i)=>{
-    const lf=new THREE.Mesh(new THREE.SphereGeometry(r*sc,7,5),
-      MAT.lamb([0x164820,0x1a5c28,0x1e6830][i]));
-    lf.position.set(lx*sc,ly*sc,lz*sc); lf.castShadow=true; g.add(lf);
+    const lf=new THREE.Mesh(new THREE.SphereGeometry(r*sc,7,5),MAT.lamb([0x164820,0x1a5c28,0x1e6830][i])); lf.position.set(lx*sc,ly*sc,lz*sc); lf.castShadow=true; g.add(lf);
   });
   g.position.set(x,y,z); scene.add(g);
 }
 
-function buildGates() {
-  [-C.ROAD_HALF, C.ROAD_HALF].forEach(gx => {
-    const m = MAT.lamb(0x223344);
-    [-26,26].forEach(gz => { box(1.4, 18, 1.4, gx, 0, gz, m, true); });
-    box(1.4, 1.4, 54, gx, 18, 0, m);
-    const lm = MAT.glow(0x88eeff, 4.0);
-    for(let gz=-24; gz<=24; gz+=8) {
-      const lp=new THREE.Mesh(new THREE.SphereGeometry(0.44,8,6),lm);
-      lp.position.set(gx, 17.5, gz); scene.add(lp);
-    }
+function buildGates(){
+  [-C.ROAD_HALF,C.ROAD_HALF].forEach(gx=>{
+    const m=MAT.lamb(0x223344);
+    [-26,26].forEach(gz=>box(1.4,18,1.4,gx,0,gz,m,true));
+    box(1.4,1.4,54,gx,18,0,m);
+    const lm=MAT.glow(0x88eeff,4);
+    for(let gz=-24;gz<=24;gz+=8){ const lp=new THREE.Mesh(new THREE.SphereGeometry(.44,8,6),lm); lp.position.set(gx,17.5,gz); scene.add(lp); }
   });
 }
-
-function buildLampposts() {
-  const pm=MAT.lamb(0x334455), lm=MAT.glow(0xffffbb, 4.0);
-  for(let x=-C.ROAD_HALF+22; x<=C.ROAD_HALF; x+=44) {
-    [-27,27].forEach(gz=>{
-      box(0.22,12,0.22,x,0,gz,pm);
-      const arm=new THREE.Mesh(new THREE.CylinderGeometry(0.1,0.1,4,4),pm);
-      arm.rotation.z=Math.PI/2; arm.position.set(x+(gz>0?-2:2),12,gz); scene.add(arm);
-      const lp=new THREE.Mesh(new THREE.SphereGeometry(0.38,7,5),lm);
-      lp.position.set(x+(gz>0?-4:4),12,gz); scene.add(lp);
-    });
-  }
+function buildLampposts(){
+  const pm=MAT.lamb(0x334455),lm=MAT.glow(0xffffbb,4);
+  for(let x=-C.ROAD_HALF+22;x<=C.ROAD_HALF;x+=44)[-27,27].forEach(gz=>{
+    box(.22,12,.22,x,0,gz,pm);
+    const arm=new THREE.Mesh(new THREE.CylinderGeometry(.1,.1,4,4),pm); arm.rotation.z=Math.PI/2; arm.position.set(x+(gz>0?-2:2),12,gz); scene.add(arm);
+    const lp=new THREE.Mesh(new THREE.SphereGeometry(.38,7,5),lm); lp.position.set(x+(gz>0?-4:4),12,gz); scene.add(lp);
+  });
 }
-
-function buildStars() {
+function buildStars(){
   const pos=[];
-  for(let i=0;i<3000;i++)
-    pos.push((Math.random()-.5)*3000, 150+Math.random()*600, (Math.random()-.5)*3000);
-  const g=new THREE.BufferGeometry();
-  g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));
-  scene.add(new THREE.Points(g,new THREE.PointsMaterial({color:0xffffff,size:0.6})));
+  for(let i=0;i<3000;i++) pos.push((Math.random()-.5)*3000,150+Math.random()*600,(Math.random()-.5)*3000);
+  const g=new THREE.BufferGeometry(); g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));
+  scene.add(new THREE.Points(g,new THREE.PointsMaterial({color:0xffffff,size:.6})));
 }
 
-// ══════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════
 // CAR CLASS
-// ══════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════
 class Car {
-  constructor(lane) {
-    this.lane     = lane;
-    this.id       = `C${(++_carId).toString(36).toUpperCase().padStart(3,'0')}`;
-    this.isAB     = lane.dir==='AB';
-    this.maxSpd   = lane.speed;
-    this.curSpd   = 0;
-    this.x        = this.isAB ? -C.ROAD_HALF-12 : C.ROAD_HALF+12;
-    this.startX   = this.x;
-    this.endX     = this.isAB ?  C.ROAD_HALF+12 : -C.ROAD_HALF-12;
-    this.totalDist= Math.abs(this.endX-this.startX);
-    this.done     = false;
-    this.occupants= lane.type==='shared' ? 2+Math.floor(Math.random()*5) : 1;
-    this.mesh     = this._build();
-    this.mesh.position.set(this.x, 0, lane.z);
-    scene.add(this.mesh);
+  constructor(lane){
+    this.lane=lane; this.id=`C${(++_carId).toString(36).toUpperCase().padStart(3,'0')}`;
+    this.isAB=lane.dir==='AB'; this.maxSpd=lane.speed; this.curSpd=0;
+    this.x=this.isAB?-C.ROAD_HALF-12:C.ROAD_HALF+12;
+    this.startX=this.x; this.endX=this.isAB?C.ROAD_HALF+12:-C.ROAD_HALF-12;
+    this.totalDist=Math.abs(this.endX-this.startX); this.done=false;
+    this.occupants=lane.type==='shared'?2+Math.floor(Math.random()*5):1;
+    this.mesh=this._build(); this.mesh.position.set(this.x,0,lane.z); scene.add(this.mesh);
   }
-
-  _build() {
-    const g  = new THREE.Group();
-    const l  = this.lane;
-    const sx = l.type==='express' ? 0.82 : (l.type==='shared' ? 1.45 : 1.0);
-    const sy = l.type==='express' ? 0.82 : (l.type==='shared' ? 1.15 : 1.0);
-    const sz = l.type==='express' ? 0.88 : (l.type==='shared' ? 1.30 : 1.0);
-    const L=C.CAR_L*sx, H=C.CAR_H*sy, W=C.CAR_W*sz;
-
-    const body=new THREE.Mesh(
-      new THREE.BoxGeometry(L,H,W),
-      new THREE.MeshStandardMaterial({color:0xe0ecf8, roughness:0.45, metalness:0.3}));
-    body.position.y=H/2+0.25; body.castShadow=true; g.add(body);
-
-    const ws=new THREE.Mesh(
-      new THREE.BoxGeometry(0.14,H*0.60,W*0.82),
-      MAT.glass(0x99ccee, 0.72));
-    ws.position.set((this.isAB?1:-1)*L/2, H*0.60, 0); g.add(ws);
-
-    const roof=new THREE.Mesh(
-      new THREE.BoxGeometry(L*0.55,0.28,W*0.78),
-      MAT.glow(l.color, l.type==='normal' ? 1.2 : 2.2));
-    roof.position.y=H+0.28; g.add(roof);
-
-    const hxPos=(this.isAB?1:-1)*L/2;
-    const hlM=MAT.glow(0xffffff, 5.5);
-    [-1,1].forEach(s=>{
-      const hl=new THREE.Mesh(new THREE.SphereGeometry(0.22,8,6),hlM);
-      hl.position.set(hxPos, H*0.32, s*W*0.38); g.add(hl);
-    });
-
-    const txPos=(this.isAB?-1:1)*L/2;
-    const tlM=MAT.glow(0xff2200, 4.0);
-    [-1,1].forEach(s=>{
-      const tl=new THREE.Mesh(new THREE.SphereGeometry(0.18,7,5),tlM);
-      tl.position.set(txPos, H*0.32, s*W*0.38); g.add(tl);
-    });
-
-    if(l.type==='shared') {
-      const pwM=new THREE.MeshStandardMaterial({color:0,emissive:0xffe8aa,emissiveIntensity:0.7,transparent:true,opacity:0.85});
-      for(let i=0;i<3;i++){
-        const pw=new THREE.Mesh(new THREE.PlaneGeometry(1.5,0.9),pwM);
-        pw.rotation.y=Math.PI/2;
-        pw.position.set((i-1)*2.2, H*0.62, W/2+0.03); g.add(pw);
-      }
+  _build(){
+    const g=new THREE.Group(), l=this.lane;
+    const sx=l.type==='express'?.82:l.type==='shared'?1.45:1;
+    const sy=l.type==='express'?.82:l.type==='shared'?1.15:1;
+    const sz=l.type==='express'?.88:l.type==='shared'?1.30:1;
+    const L=C.CAR_L*sx,H=C.CAR_H*sy,W=C.CAR_W*sz;
+    const body=new THREE.Mesh(new THREE.BoxGeometry(L,H,W),new THREE.MeshStandardMaterial({color:0xe0ecf8,roughness:.45,metalness:.3})); body.position.y=H/2+.25; body.castShadow=true; g.add(body);
+    const ws=new THREE.Mesh(new THREE.BoxGeometry(.14,H*.6,W*.82),MAT.glass(0x99ccee,.72)); ws.position.set((this.isAB?1:-1)*L/2,H*.6,0); g.add(ws);
+    const rf=new THREE.Mesh(new THREE.BoxGeometry(L*.55,.28,W*.78),MAT.glow(l.color,l.type==='normal'?1.2:2.2)); rf.position.y=H+.28; g.add(rf);
+    const hx=(this.isAB?1:-1)*L/2, hlM=MAT.glow(0xffffff,5.5);
+    [-1,1].forEach(s=>{ const hl=new THREE.Mesh(new THREE.SphereGeometry(.22,8,6),hlM); hl.position.set(hx,H*.32,s*W*.38); g.add(hl); });
+    const tx=(this.isAB?-1:1)*L/2, tlM=MAT.glow(0xff2200,4);
+    [-1,1].forEach(s=>{ const tl=new THREE.Mesh(new THREE.SphereGeometry(.18,7,5),tlM); tl.position.set(tx,H*.32,s*W*.38); g.add(tl); });
+    if(l.type==='shared'){
+      const pw=new THREE.MeshStandardMaterial({color:0,emissive:0xffe8aa,emissiveIntensity:.7,transparent:true,opacity:.85});
+      for(let i=0;i<3;i++){ const w=new THREE.Mesh(new THREE.PlaneGeometry(1.5,.9),pw); w.rotation.y=Math.PI/2; w.position.set((i-1)*2.2,H*.62,W/2+.03); g.add(w); }
     }
-
-    if(l.type==='express') {
-      const udM=MAT.glow(0xff3300,1.5);
-      const ud=new THREE.Mesh(new THREE.PlaneGeometry(L*0.7,W*0.55),udM);
-      ud.rotation.x=Math.PI/2; ud.position.y=0.08; g.add(ud);
-    }
-
+    if(l.type==='express'){ const ud=new THREE.Mesh(new THREE.PlaneGeometry(L*.7,W*.55),MAT.glow(0xff3300,1.5)); ud.rotation.x=Math.PI/2; ud.position.y=.08; g.add(ud); }
     g.userData.car=this;
     if(!this.isAB) g.rotation.y=Math.PI;
     return g;
   }
-
-  update(dt, peers) {
+  update(dt,peers){
     if(this.done) return;
-    const accel = this.lane.type==='express' ? 6 : 4;
-    const ahead = this._ahead(peers);
-    let tgt = this.maxSpd;
-    if(ahead) {
-      const gap = this.isAB ? ahead.x-this.x-C.CAR_L*1.1 : this.x-ahead.x-C.CAR_L*1.1;
-      if(gap < C.MIN_GAP) tgt = Math.max(0, this.maxSpd*(gap/C.MIN_GAP));
-    }
-    if(this.curSpd < tgt) this.curSpd=Math.min(tgt, this.curSpd+accel*dt);
-    else                  this.curSpd=Math.max(tgt, this.curSpd-accel*2*dt);
-    this.x += (this.isAB?1:-1)*this.curSpd*dt*speedMul;
+    const accel=this.lane.type==='express'?6:4, ahead=this._ahead(peers);
+    let tgt=this.maxSpd;
+    if(ahead){ const gap=this.isAB?ahead.x-this.x-C.CAR_L*1.1:this.x-ahead.x-C.CAR_L*1.1; if(gap<C.MIN_GAP) tgt=Math.max(0,this.maxSpd*(gap/C.MIN_GAP)); }
+    this.curSpd=this.curSpd<tgt?Math.min(tgt,this.curSpd+accel*dt):Math.max(tgt,this.curSpd-accel*2*dt);
+    this.x+=(this.isAB?1:-1)*this.curSpd*dt*speedMul;
     this.mesh.position.x=this.x;
-    if((this.isAB && this.x>=this.endX)||(!this.isAB && this.x<=this.endX)) this.done=true;
+    if((this.isAB&&this.x>=this.endX)||(!this.isAB&&this.x<=this.endX)) this.done=true;
   }
-
-  _ahead(peers) {
-    let best=null, bd=Infinity;
-    for(const p of peers) {
-      if(p===this||p.done) continue;
-      const d=this.isAB ? p.x-this.x : this.x-p.x;
-      if(d>0 && d<bd){bd=d;best=p;}
-    }
-    return best;
-  }
-
-  get progress() { return Math.min(1, Math.abs(this.x-this.startX)/this.totalDist); }
-  get kmh()      { return Math.round(this.curSpd*3.6); }
-  get eta()      { return Math.round(Math.abs(this.endX-this.x)/Math.max(0.1,this.curSpd*speedMul)); }
-
-  dispose() {
+  _ahead(peers){ let best=null,bd=Infinity; for(const p of peers){ if(p===this||p.done) continue; const d=this.isAB?p.x-this.x:this.x-p.x; if(d>0&&d<bd){bd=d;best=p;} } return best; }
+  get progress(){ return Math.min(1,Math.abs(this.x-this.startX)/this.totalDist); }
+  get kmh()     { return Math.round(this.curSpd*3.6); }
+  get eta()     { return Math.round(Math.abs(this.endX-this.x)/Math.max(.1,this.curSpd*speedMul)); }
+  dispose(){
     if(this===selected) deselect();
     scene.remove(this.mesh);
-    this.mesh.traverse(o=>{if(o.isMesh){o.geometry.dispose();o.material.dispose();}});
+    this.mesh.traverse(o=>{ if(o.isMesh){o.geometry.dispose();o.material.dispose();} });
   }
 }
 
-// ══════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════
 // TRAFFIC MANAGER
-// ══════════════════════════════════════════════════════════════
-const TM = (() => {
-  const lanes={}, timers={}, tpAB=[], tpBA=[];
-
-  const init = () => C.LANES.forEach(l=>{ lanes[l.id]=[]; timers[l.id]=Math.random()*l.interval; });
-
-  const update = dt => {
+// ════════════════════════════════════════════
+const TM=(()=>{
+  const lanes={},timers={},tpAB=[],tpBA=[];
+  const init=()=>C.LANES.forEach(l=>{ lanes[l.id]=[]; timers[l.id]=Math.random()*l.interval; });
+  const update=dt=>{
     const now=performance.now()/1000;
     C.LANES.forEach(l=>{
       const cars=lanes[l.id];
-      timers[l.id] -= dt*speedMul;
+      timers[l.id]-=dt*speedMul;
       if(timers[l.id]<=0){
-        // ラッシュ倍率を適用（小さいほど頻繁に出発）
-        timers[l.id] = (l.interval+(Math.random()-.5)*0.4) * SimTime.rushMul;
-        const sx = l.dir==='AB' ? -C.ROAD_HALF-10 : C.ROAD_HALF+10;
+        timers[l.id]=(l.interval+(Math.random()-.5)*.4)*SimTime.rushMul;
+        const sx=l.dir==='AB'?-C.ROAD_HALF-10:C.ROAD_HALF+10;
         if(!cars.some(c=>Math.abs(c.x-sx)<C.MIN_GAP+C.CAR_L)) cars.push(new Car(l));
       }
       cars.forEach(c=>c.update(dt,cars));
-      cars.filter(c=>c.done).forEach(c=>{
-        (l.dir==='AB' ? tpAB : tpBA).push(now);
-        if(l.dir==='AB') arrAB++; else arrBA++;
-        paxTotal += c.occupants;   // 乗客数を累計
-        c.dispose();
-      });
+      cars.filter(c=>c.done).forEach(c=>{ (l.dir==='AB'?tpAB:tpBA).push(now); if(l.dir==='AB')arrAB++;else arrBA++; paxTotal+=c.occupants; c.dispose(); });
       lanes[l.id]=cars.filter(c=>!c.done);
     });
     const cut=now-C.TP_WIN;
     while(tpAB.length&&tpAB[0]<cut) tpAB.shift();
     while(tpBA.length&&tpBA[0]<cut) tpBA.shift();
   };
-
-  const stats = () => ({
-    total : Object.values(lanes).reduce((s,a)=>s+a.length,0),
-    tpAB  : Math.round(tpAB.length/C.TP_WIN*60),
-    tpBA  : Math.round(tpBA.length/C.TP_WIN*60),
-    lanes : Object.fromEntries(C.LANES.map(l=>[l.id, lanes[l.id].length])),
-  });
-
-  const all = () => Object.values(lanes).flat();
-
-  return { init, update, stats, all };
+  const stats=()=>({ total:Object.values(lanes).reduce((s,a)=>s+a.length,0), tpAB:Math.round(tpAB.length/C.TP_WIN*60), tpBA:Math.round(tpBA.length/C.TP_WIN*60), lanes:Object.fromEntries(C.LANES.map(l=>[l.id,lanes[l.id].length])) });
+  const all=()=>Object.values(lanes).flat();
+  return {init,update,stats,all};
 })();
 
-// ══════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════
 // MINIMAP
-// ══════════════════════════════════════════════════════════════
-const mmEl  = document.getElementById('minimap');
-const mmCtx = mmEl.getContext('2d');
-const MM_W  = 220, MM_H = 72;
+// ════════════════════════════════════════════
+const mmEl=document.getElementById('minimap'), mmCtx=mmEl.getContext('2d');
+const MM_W=220, MM_H=72;
+const xMm=x=>(x+440)/880*MM_W, zMm=z=>(z+24)/48*MM_H;
 
-// 座標変換：シミュ空間(-440~+440) → ミニマップピクセル
-const xToMm = x => (x + 440) / 880 * MM_W;
-const zToMm = z => (z + 24)  / 48  * MM_H;   // Z: -24~+24 の範囲
-
-function drawMinimap() {
-  mmCtx.clearRect(0, 0, MM_W, MM_H);
-
-  // 背景
-  mmCtx.fillStyle = 'rgba(4,9,26,1)';
-  mmCtx.fillRect(0, 0, MM_W, MM_H);
-
-  // 生存圏A（左・青）
-  mmCtx.fillStyle = 'rgba(16,44,160,.32)';
-  mmCtx.fillRect(0, 0, xToMm(-270), MM_H);
-
-  // 生存圏B（右・紫）
-  mmCtx.fillStyle = 'rgba(72,16,140,.32)';
-  mmCtx.fillRect(xToMm(270), 0, MM_W - xToMm(270), MM_H);
-
-  // 道路エリア（中央）
-  mmCtx.fillStyle = 'rgba(14,22,48,.7)';
-  mmCtx.fillRect(xToMm(-270), 0, xToMm(270) - xToMm(-270), MM_H);
-
-  // 各レーン帯
-  C.LANES.forEach(l => {
-    const r=(l.color>>16)&255, g=(l.color>>8)&255, b=l.color&255;
-    mmCtx.fillStyle = `rgba(${r},${g},${b},0.18)`;
-    const y = zToMm(l.z) - 2.5;
-    mmCtx.fillRect(xToMm(-270), y, xToMm(270)-xToMm(-270), 5);
-  });
-
-  // 中央分離帯（緑）
-  mmCtx.fillStyle = 'rgba(0,180,80,.2)';
-  mmCtx.fillRect(xToMm(-270), zToMm(-5), xToMm(270)-xToMm(-270), zToMm(5)-zToMm(-5));
-
-  // 境界線
-  mmCtx.strokeStyle = 'rgba(80,170,255,.25)';
-  mmCtx.lineWidth = 0.5;
-  mmCtx.strokeRect(xToMm(-270), 0, xToMm(270)-xToMm(-270), MM_H);
-
-  // ゾーンラベル
-  mmCtx.font = 'bold 9px sans-serif';
-  mmCtx.fillStyle = 'rgba(80,120,255,.75)';
-  mmCtx.fillText('A', 4, 12);
-  mmCtx.fillStyle = 'rgba(160,80,255,.75)';
-  mmCtx.fillText('B', MM_W - 12, 12);
-
-  // 全車両を描画
-  TM.all().forEach(c => {
-    if(c.done) return;
-    const r=(c.lane.color>>16)&255, g=(c.lane.color>>8)&255, b=c.lane.color&255;
-    const mx = xToMm(c.x);
-    const mz = zToMm(c.lane.z);
-    mmCtx.fillStyle = `rgb(${r},${g},${b})`;
-    mmCtx.fillRect(mx-2.5, mz-2, 5, 4);
-  });
-
-  // 選択車両をハイライト
-  if(selected && !selected.done) {
-    const mx = xToMm(selected.x);
-    const mz = zToMm(selected.lane.z);
-    mmCtx.strokeStyle = '#ffffff';
-    mmCtx.lineWidth = 1.5;
-    mmCtx.strokeRect(mx-5, mz-3.5, 10, 7);
+function drawMinimap(){
+  mmCtx.clearRect(0,0,MM_W,MM_H);
+  mmCtx.fillStyle='rgba(4,9,26,1)'; mmCtx.fillRect(0,0,MM_W,MM_H);
+  mmCtx.fillStyle='rgba(16,44,160,.32)'; mmCtx.fillRect(0,0,xMm(-270),MM_H);
+  mmCtx.fillStyle='rgba(72,16,140,.32)'; mmCtx.fillRect(xMm(270),0,MM_W-xMm(270),MM_H);
+  mmCtx.fillStyle='rgba(14,22,48,.7)'; mmCtx.fillRect(xMm(-270),0,xMm(270)-xMm(-270),MM_H);
+  C.LANES.forEach(l=>{ const r=(l.color>>16)&255,g=(l.color>>8)&255,b=l.color&255; mmCtx.fillStyle=`rgba(${r},${g},${b},.18)`; mmCtx.fillRect(xMm(-270),zMm(l.z)-2.5,xMm(270)-xMm(-270),5); });
+  mmCtx.fillStyle='rgba(0,180,80,.2)'; mmCtx.fillRect(xMm(-270),zMm(-5),xMm(270)-xMm(-270),zMm(5)-zMm(-5));
+  mmCtx.strokeStyle='rgba(80,170,255,.25)'; mmCtx.lineWidth=.5; mmCtx.strokeRect(xMm(-270),0,xMm(270)-xMm(-270),MM_H);
+  mmCtx.font='bold 9px sans-serif'; mmCtx.fillStyle='rgba(80,120,255,.75)'; mmCtx.fillText('A',4,12); mmCtx.fillStyle='rgba(160,80,255,.75)'; mmCtx.fillText('B',MM_W-12,12);
+  TM.all().forEach(c=>{ if(c.done) return; const r=(c.lane.color>>16)&255,g=(c.lane.color>>8)&255,b=c.lane.color&255; mmCtx.fillStyle=`rgb(${r},${g},${b})`; mmCtx.fillRect(xMm(c.x)-2.5,zMm(c.lane.z)-2,5,4); });
+  if(selected&&!selected.done){ mmCtx.strokeStyle='#fff'; mmCtx.lineWidth=1.5; mmCtx.strokeRect(xMm(selected.x)-5,zMm(selected.lane.z)-3.5,10,7); }
+  // 雨粒をミニマップにも点描
+  if(rainIntensity>0.1){
+    mmCtx.fillStyle=`rgba(150,190,220,${rainIntensity*.12})`;
+    for(let i=0;i<40;i++) mmCtx.fillRect(Math.random()*MM_W,Math.random()*MM_H,.8,2);
   }
-
-  // カメラ視点位置の参考線（薄く）
-  mmCtx.strokeStyle = 'rgba(200,220,255,.15)';
-  mmCtx.lineWidth = 0.5;
-  const cpx = xToMm(Math.max(-440, Math.min(440, camera.position.x)));
-  mmCtx.beginPath(); mmCtx.moveTo(cpx, 0); mmCtx.lineTo(cpx, MM_H); mmCtx.stroke();
 }
 
-// ══════════════════════════════════════════════════════════════
-// 昼夜サイクル（ambient・fog・sunの変化）
-// ══════════════════════════════════════════════════════════════
-const _bgNight = new THREE.Color(0x020408);
-const _bgDay   = new THREE.Color(0x04080e);
-const _bgRush  = new THREE.Color(0x050510);
+// ════════════════════════════════════════════
+// 24時間需要グラフ
+// ════════════════════════════════════════════
+const demEl=document.getElementById('demand-chart');
+demEl.width=240*Math.min(devicePixelRatio,2); demEl.height=46*Math.min(devicePixelRatio,2);
+const demCtx=demEl.getContext('2d');
+demCtx.scale(Math.min(devicePixelRatio,2),Math.min(devicePixelRatio,2));
+const DW=240,DH=46;
 
-function updateDayNight() {
-  const isN = SimTime.isNight, isR = SimTime.isRush;
-  const tgtBg = isN ? _bgNight : isR ? _bgRush : _bgDay;
-  scene.background.lerp(tgtBg, 0.008);
-  scene.fog.density += ((isN ? 0.0018 : 0.0012) - scene.fog.density) * 0.008;
+// 24時間の需要曲線（朝ラッシュ8時・夕ラッシュ18時にピーク）
+const DEMAND_CURVE=Array.from({length:24},(_, h)=>{
+  let d=0.12;
+  d+=Math.exp(-.5*((h-8)/.9)**2)*.88;    // 朝ラッシュ
+  d+=Math.exp(-.5*((h-18)/.9)**2)*.72;   // 夕ラッシュ
+  d+=Math.exp(-.5*((h-12)/1.4)**2)*.22;  // 昼間ピーク
+  return Math.min(1,d);
+});
 
-  const tgtSun = isN ? 0.18 : isR ? 1.9 : 1.4;
-  sun.intensity += (tgtSun - sun.intensity) * 0.012;
+function drawDemandChart(){
+  demCtx.clearRect(0,0,DW,DH);
+  demCtx.fillStyle='rgba(0,12,35,.6)'; demCtx.fillRect(0,0,DW,DH);
 
-  const tgtAmb = isN ? 1.6 : isR ? 2.8 : 2.5;
-  ambient.intensity += (tgtAmb - ambient.intensity) * 0.012;
+  // 塗り潰し面
+  demCtx.beginPath();
+  DEMAND_CURVE.forEach((v,i)=>{ const x=i/23*DW,y=DH-v*(DH-8)-4; i===0?demCtx.moveTo(x,y):demCtx.lineTo(x,y); });
+  demCtx.lineTo(DW,DH); demCtx.lineTo(0,DH); demCtx.closePath();
+  const g=demCtx.createLinearGradient(0,0,0,DH);
+  g.addColorStop(0,'rgba(255,85,68,.4)'); g.addColorStop(1,'rgba(255,85,68,.04)');
+  demCtx.fillStyle=g; demCtx.fill();
+
+  // 折れ線
+  demCtx.beginPath();
+  DEMAND_CURVE.forEach((v,i)=>{ const x=i/23*DW,y=DH-v*(DH-8)-4; i===0?demCtx.moveTo(x,y):demCtx.lineTo(x,y); });
+  demCtx.strokeStyle='#ff7755'; demCtx.lineWidth=1.4; demCtx.shadowColor='#ff5544'; demCtx.shadowBlur=4; demCtx.stroke(); demCtx.shadowBlur=0;
+
+  // ラッシュ帯ハイライト
+  [[7,9],[17,19]].forEach(([h1,h2])=>{
+    demCtx.fillStyle='rgba(255,120,60,.08)';
+    demCtx.fillRect(h1/23*DW,0,(h2-h1)/23*DW,DH);
+  });
+
+  // 現在時刻マーカー
+  const cx=(SimTime.hour+SimTime.min/60)/24*DW;
+  demCtx.strokeStyle='rgba(255,255,255,.85)'; demCtx.lineWidth=1;
+  demCtx.setLineDash([2,2]);
+  demCtx.beginPath(); demCtx.moveTo(cx,0); demCtx.lineTo(cx,DH); demCtx.stroke();
+  demCtx.setLineDash([]);
+
+  // 時刻ラベル
+  demCtx.font='7px sans-serif'; demCtx.fillStyle='rgba(80,120,150,.5)';
+  [0,6,12,18].forEach(h=>demCtx.fillText(`${h}`,h/23*DW+(h===0?1:-3),DH-1));
+
+  // 需要バッジ
+  const curDemand=DEMAND_CURVE[SimTime.hour];
+  const label=curDemand>0.6?'高需要':curDemand<0.2?'低需要':'通常';
+  document.getElementById('demand-badge').textContent=label;
 }
 
-// ══════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════
+// 昼夜サイクル
+// ════════════════════════════════════════════
+const _bgN=new THREE.Color(0x020408), _bgD=new THREE.Color(0x04080e), _bgR=new THREE.Color(0x050510);
+function updateDayNight(){
+  scene.background.lerp(SimTime.isNight?_bgN:SimTime.isRush?_bgR:_bgD,.008);
+  scene.fog.density+=((SimTime.isNight?.0018:.0012)-scene.fog.density)*.008;
+  sun.intensity+=(SimTime.isNight?.18:SimTime.isRush?1.9:1.4-sun.intensity)*.012;
+  ambient.intensity+=(SimTime.isNight?1.6:SimTime.isRush?2.8:2.5-ambient.intensity)*.012;
+}
+
+// ════════════════════════════════════════════
 // INTERACTION
-// ══════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════
 const ray=new THREE.Raycaster(), mp=new THREE.Vector2();
 const fPos=new THREE.Vector3(), fLook=new THREE.Vector3();
-
-canvas.addEventListener('click', e=>{
-  mp.set((e.clientX/innerWidth)*2-1, -(e.clientY/innerHeight)*2+1);
-  ray.setFromCamera(mp, camera);
-  const hits=ray.intersectObjects(TM.all().map(c=>c.mesh), true);
+canvas.addEventListener('click',e=>{
+  mp.set((e.clientX/innerWidth)*2-1,-(e.clientY/innerHeight)*2+1);
+  ray.setFromCamera(mp,camera);
+  const hits=ray.intersectObjects(TM.all().map(c=>c.mesh),true);
   if(!hits.length) return;
-  let obj=hits[0].object;
-  while(obj && !obj.userData.car) obj=obj.parent;
+  let obj=hits[0].object; while(obj&&!obj.userData.car) obj=obj.parent;
   if(!obj?.userData.car) return;
-  selected=obj.userData.car;
-  orbit.enabled=false;
+  selected=obj.userData.car; orbit.enabled=false;
   document.getElementById('carinfo').style.display='block';
 });
-
-function followCam(dt) {
+function followCam(dt){
   if(!selected||selected.done){deselect();return;}
-  const p=selected.mesh.position, dir=selected.isAB?1:-1;
-  fPos.set(p.x-dir*32, p.y+14, p.z+18);
-  fLook.set(p.x+dir*24, p.y+2, p.z);
-  camera.position.lerp(fPos, 7*dt);
-  camera.lookAt(fLook);
+  const p=selected.mesh.position,dir=selected.isAB?1:-1;
+  fPos.set(p.x-dir*32,p.y+14,p.z+18); fLook.set(p.x+dir*24,p.y+2,p.z);
+  camera.position.lerp(fPos,7*dt); camera.lookAt(fLook);
 }
 
-// ══════════════════════════════════════════════════════════════
-// SPARKLINE CHART
-// ══════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════
+// 60秒スパークライン
+// ════════════════════════════════════════════
 const chartEl=document.getElementById('chart');
-chartEl.width  = 240 * Math.min(devicePixelRatio,2);
-chartEl.height =  55 * Math.min(devicePixelRatio,2);
-const ctx2 = chartEl.getContext('2d');
-ctx2.scale(Math.min(devicePixelRatio,2), Math.min(devicePixelRatio,2));
-
-const dAB=new Array(60).fill(0), dBA=new Array(60).fill(0);
-let chartMax=10;
-
-function pushChart(ab,ba){
-  dAB.shift(); dAB.push(ab);
-  dBA.shift(); dBA.push(ba);
-  chartMax=Math.max(12, ...dAB, ...dBA);
-  drawChart();
-}
+chartEl.width=240*Math.min(devicePixelRatio,2); chartEl.height=55*Math.min(devicePixelRatio,2);
+const ctx2=chartEl.getContext('2d'); ctx2.scale(Math.min(devicePixelRatio,2),Math.min(devicePixelRatio,2));
+const dAB=new Array(60).fill(0),dBA=new Array(60).fill(0); let chartMax=10;
+function pushChart(ab,ba){ dAB.shift();dAB.push(ab);dBA.shift();dBA.push(ba); chartMax=Math.max(12,...dAB,...dBA); drawChart(); }
 function drawChart(){
-  const W=240,H=55;
-  ctx2.clearRect(0,0,W,H);
-  ctx2.fillStyle='rgba(0,12,35,.6)';
-  ctx2.fillRect(0,0,W,H);
-  ctx2.strokeStyle='rgba(80,160,255,.07)';
-  ctx2.lineWidth=1;
+  const W=240,H=55; ctx2.clearRect(0,0,W,H); ctx2.fillStyle='rgba(0,12,35,.6)'; ctx2.fillRect(0,0,W,H);
+  ctx2.strokeStyle='rgba(80,160,255,.07)'; ctx2.lineWidth=1;
   for(let y=H/4;y<H;y+=H/4){ctx2.beginPath();ctx2.moveTo(0,y);ctx2.lineTo(W,y);ctx2.stroke();}
-
-  const draw=(data,col)=>{
-    ctx2.strokeStyle=col; ctx2.lineWidth=1.8;
-    ctx2.shadowColor=col; ctx2.shadowBlur=5;
-    ctx2.beginPath();
-    data.forEach((v,i)=>{
-      const x=i/(data.length-1)*W;
-      const y=H-(v/chartMax)*(H-8)-4;
-      i===0?ctx2.moveTo(x,y):ctx2.lineTo(x,y);
-    });
-    ctx2.stroke(); ctx2.shadowBlur=0;
-  };
-  draw(dAB,'#ff5544');
-  draw(dBA,'#2299ee');
+  const draw=(data,col)=>{ ctx2.strokeStyle=col;ctx2.lineWidth=1.8;ctx2.shadowColor=col;ctx2.shadowBlur=5; ctx2.beginPath(); data.forEach((v,i)=>{const x=i/(data.length-1)*W,y=H-(v/chartMax)*(H-8)-4; i===0?ctx2.moveTo(x,y):ctx2.lineTo(x,y);}); ctx2.stroke();ctx2.shadowBlur=0; };
+  draw(dAB,'#ff5544'); draw(dBA,'#2299ee');
 }
 
-// ══════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════
 // UI UPDATE
-// ══════════════════════════════════════════════════════════════
-function updateUI(s) {
-  const maxTP=Math.max(80, s.tpAB, s.tpBA);
-  document.getElementById('kv-total').textContent = s.total;
-  document.getElementById('kv-ab').textContent    = arrAB;
-  document.getElementById('kv-ba').textContent    = arrBA;
-  document.getElementById('kv-pax').textContent   = paxTotal.toLocaleString();
-  document.getElementById('sv-ab').textContent    = `${s.tpAB} 台/分`;
-  document.getElementById('sv-ba').textContent    = `${s.tpBA} 台/分`;
-  document.getElementById('tp-ab').style.width    = `${Math.min(100,s.tpAB/maxTP*100)}%`;
-  document.getElementById('tp-ba').style.width    = `${Math.min(100,s.tpBA/maxTP*100)}%`;
-  C.LANES.forEach(l=>{
-    const cnt=s.lanes[l.id]||0;
-    document.getElementById(l.bar).style.width=`${Math.min(100,cnt/C.MAX_LANE*100)}%`;
-    document.getElementById(l.cnt).textContent=cnt;
-  });
-
-  // 時刻・バッジ更新
-  document.getElementById('sim-time').textContent = SimTime.str;
-  document.getElementById('rush-badge').style.display  = SimTime.isRush  ? 'inline' : 'none';
-  document.getElementById('night-badge').style.display = SimTime.isNight ? 'inline' : 'none';
+// ════════════════════════════════════════════
+function updateUI(s){
+  const maxTP=Math.max(80,s.tpAB,s.tpBA);
+  document.getElementById('kv-total').textContent=s.total;
+  document.getElementById('kv-ab').textContent=arrAB;
+  document.getElementById('kv-ba').textContent=arrBA;
+  document.getElementById('kv-pax').textContent=paxTotal.toLocaleString();
+  document.getElementById('sv-ab').textContent=`${s.tpAB} 台/分`;
+  document.getElementById('sv-ba').textContent=`${s.tpBA} 台/分`;
+  document.getElementById('tp-ab').style.width=`${Math.min(100,s.tpAB/maxTP*100)}%`;
+  document.getElementById('tp-ba').style.width=`${Math.min(100,s.tpBA/maxTP*100)}%`;
+  C.LANES.forEach(l=>{ const cnt=s.lanes[l.id]||0; document.getElementById(l.bar).style.width=`${Math.min(100,cnt/C.MAX_LANE*100)}%`; document.getElementById(l.cnt).textContent=cnt; });
+  document.getElementById('sim-time').textContent=SimTime.str;
+  document.getElementById('rush-badge').style.display=SimTime.isRush?'inline':'none';
+  document.getElementById('night-badge').style.display=SimTime.isNight?'inline':'none';
 }
-
-function updateCarInfo() {
+function updateCarInfo(){
   if(!selected) return;
-  const c=selected, hex=`#${c.lane.color.toString(16).padStart(6,'0')}`;
-  document.getElementById('ci-id').textContent   = c.id;
-  document.getElementById('ci-spd').textContent  = `${c.kmh} km/h`;
-  document.getElementById('ci-occ').textContent  = `${c.occupants} 名`;
-  document.getElementById('ci-type').textContent = c.lane.label;
-  document.getElementById('ci-dst').textContent  = c.isAB ? '生存圏 B' : '生存圏 A';
-  document.getElementById('ci-eta').textContent  = `${c.eta} 秒`;
-  const prog=document.getElementById('ci-prog');
-  prog.style.width=`${Math.round(c.progress*100)}%`;
-  prog.style.background=hex;
+  const c=selected,hex=`#${c.lane.color.toString(16).padStart(6,'0')}`;
+  document.getElementById('ci-id').textContent=c.id;
+  document.getElementById('ci-spd').textContent=`${c.kmh} km/h`;
+  document.getElementById('ci-occ').textContent=`${c.occupants} 名`;
+  document.getElementById('ci-type').textContent=c.lane.label;
+  document.getElementById('ci-dst').textContent=c.isAB?'生存圏 B':'生存圏 A';
+  document.getElementById('ci-eta').textContent=`${c.eta} 秒`;
+  const prog=document.getElementById('ci-prog'); prog.style.width=`${Math.round(c.progress*100)}%`; prog.style.background=hex;
 }
 
-// ══════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════
 // ANIMATE
-// ══════════════════════════════════════════════════════════════
-let prevT=performance.now(), uiT=0, chartT=0, elapsed=0;
-
-function animate() {
+// ════════════════════════════════════════════
+let prevT=performance.now(),uiT=0,chartT=0,elapsed=0;
+function animate(){
   requestAnimationFrame(animate);
-  const now=performance.now();
-  const dt=Math.min((now-prevT)/1000, 0.05);
-  prevT=now; elapsed+=dt;
-
-  SimTime.update(dt);      // 時刻シミュレーション
+  const now=performance.now(), dt=Math.min((now-prevT)/1000,.05); prevT=now; elapsed+=dt;
+  SimTime.update(dt);
   TM.update(dt);
-
-  if(selected && !selected.done) followCam(dt);
-  else if(!selected) orbit.update();
-
-  updateDayNight();        // 昼夜サイクル
-
+  updateRain(dt);
+  updateDayNight();
+  if(selected&&!selected.done) followCam(dt); else if(!selected) orbit.update();
   uiT+=dt;
-  if(uiT>=0.4){
-    const s=TM.stats();
-    updateUI(s);
-    if(selected) updateCarInfo();
-    uiT=0;
-  }
+  if(uiT>=0.4){ const s=TM.stats(); updateUI(s); if(selected) updateCarInfo(); uiT=0; }
   chartT+=dt;
-  if(chartT>=1){
-    pushChart(TM.stats().tpAB, TM.stats().tpBA);
-    chartT=0;
-  }
-
-  drawMinimap();           // ミニマップ毎フレーム更新
-
-  // ビーコンのパルス
-  scene.traverse(o=>{
-    if(o.userData.beacon && o.material)
-      o.material.emissiveIntensity=2.5+1.8*Math.sin(elapsed*2.0+o.position.x*0.07);
-  });
-
+  if(chartT>=1){ pushChart(TM.stats().tpAB,TM.stats().tpBA); drawDemandChart(); chartT=0; }
+  drawMinimap();
+  scene.traverse(o=>{ if(o.userData.beacon&&o.material) o.material.emissiveIntensity=2.5+1.8*Math.sin(elapsed*2+o.position.x*.07); });
   composer.render();
-  labelRend.render(scene, camera);
+  labelRend.render(scene,camera);
 }
 
-// ══════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════
 // RESIZE
-// ══════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════
 window.addEventListener('resize',()=>{
-  camera.aspect=innerWidth/innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(innerWidth,innerHeight);
-  composer.setSize(innerWidth,innerHeight);
-  bloom.resolution.set(innerWidth,innerHeight);
-  labelRend.setSize(innerWidth,innerHeight);
+  camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth,innerHeight); composer.setSize(innerWidth,innerHeight);
+  bloom.resolution.set(innerWidth,innerHeight); labelRend.setSize(innerWidth,innerHeight);
 });
 
-// ══════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════
 // BOOT
-// ══════════════════════════════════════════════════════════════
-buildWorld();
-TM.init();
-animate();
+// ════════════════════════════════════════════
+buildWorld(); TM.init(); drawDemandChart(); animate();
 </script>
 </body>
 </html>
