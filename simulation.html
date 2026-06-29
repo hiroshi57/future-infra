@@ -27,7 +27,7 @@
     #hdr {
       top:14px; left:50%; transform:translateX(-50%);
       padding:10px 28px;
-      display:flex; align-items:center; gap:24px;
+      display:flex; align-items:center; gap:18px;
       white-space:nowrap; z-index:10;
     }
     #hdr h1 {
@@ -37,7 +37,28 @@
     #hdr h1 strong { color:#60d0ff; font-weight:700; }
     #hdr .ver { font-size:10px; color:rgba(100,140,170,.6); margin-left:-8px; }
 
-    .spd-group { display:flex; align-items:center; gap:6px; }
+    /* 時刻表示 */
+    #hdr .sim-clock {
+      display:flex; align-items:baseline; gap:4px;
+      border-left:1px solid rgba(80,170,255,.15); padding-left:18px;
+    }
+    #sim-time { font-size:18px; font-weight:700; color:#60d0ff; font-variant-numeric:tabular-nums; letter-spacing:.04em; }
+    .sim-tz   { font-size:10px; color:#3a7090; }
+
+    #rush-badge {
+      display:none; font-size:10px; padding:3px 10px; border-radius:12px;
+      background:rgba(255,80,0,.12); border:1px solid rgba(255,80,0,.35);
+      color:#ff8040; letter-spacing:.06em; animation:pulse 1.4s ease-in-out infinite;
+    }
+    #night-badge {
+      display:none; font-size:10px; padding:3px 10px; border-radius:12px;
+      background:rgba(100,80,255,.12); border:1px solid rgba(100,80,255,.3);
+      color:#9988ff; letter-spacing:.06em;
+    }
+    @keyframes pulse { 0%,100%{opacity:.8} 50%{opacity:1} }
+
+    .spd-group { display:flex; align-items:center; gap:6px;
+      border-left:1px solid rgba(80,170,255,.15); padding-left:18px; }
     .spd-lbl   { font-size:11px; color:#5a8099; }
     .spd-btn   {
       padding:4px 12px; font-size:12px; border-radius:7px; cursor:pointer;
@@ -112,6 +133,12 @@
     .kpi-sub-num  { font-size:20px; font-weight:700; color:#fff; }
     .kpi-sub-lbl  { font-size:9px; color:#3a7090; margin-top:2px; }
 
+    /* 乗客数KPI */
+    .kpi-pax-row { display:flex; align-items:baseline; gap:6px; margin-top:14px; padding-top:14px;
+      border-top:1px solid rgba(80,170,255,.10); }
+    .kpi-pax-num  { font-size:28px; font-weight:800; color:#88ddaa; line-height:1; }
+    .kpi-pax-unit { font-size:10px; color:#3a8060; }
+
     /* ══════════════════════════════════════════
        ④ 下中央：選択車両パネル
     ══════════════════════════════════════════ */
@@ -157,12 +184,53 @@
     .leg-speed { font-size:10px; color:#3a7090; margin-left:auto; padding-left:8px; }
 
     /* ══════════════════════════════════════════
-       ⑥ ヒント（下右）
+       ⑥ ミニマップ（下右）
     ══════════════════════════════════════════ */
-    #hint {
-      bottom:16px; right:14px; padding:10px 14px; z-index:10;
-      font-size:10px; color:rgba(100,140,170,.55); line-height:1.9;
-      text-align:right; border:none; background:none;
+    #minimap-wrap {
+      bottom:16px; right:14px; padding:12px 14px;
+      z-index:10; min-width:240px;
+    }
+    #minimap-wrap .sec-ttl { margin-bottom:8px; }
+    #minimap {
+      display:block; border-radius:5px;
+      border:1px solid rgba(80,170,255,.12);
+    }
+    .mm-hint {
+      font-size:9px; color:rgba(80,120,150,.5); margin-top:7px;
+      line-height:1.7; text-align:right;
+    }
+
+    /* ══════════════════════════════════════════
+       ⑦ コンセプト説明カード（初回）
+    ══════════════════════════════════════════ */
+    #intro-card {
+      position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);
+      background:rgba(3,7,22,.96);
+      border:1px solid rgba(80,170,255,.28);
+      border-radius:20px; padding:36px 44px;
+      z-index:200; text-align:center; max-width:500px;
+      backdrop-filter:blur(24px);
+      transition:opacity 1.4s ease;
+      pointer-events:none;
+    }
+    #intro-card h2 {
+      font-size:20px; font-weight:300; color:#60d0ff;
+      letter-spacing:.22em; margin-bottom:22px; line-height:1.5;
+    }
+    #intro-card p {
+      font-size:12.5px; color:rgba(160,200,220,.78);
+      line-height:2.0; margin-bottom:10px;
+    }
+    #intro-card .ic-keywords {
+      display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:18px;
+    }
+    #intro-card .ic-tag {
+      font-size:10px; padding:3px 12px; border-radius:20px;
+      background:rgba(80,160,255,.10); border:1px solid rgba(80,160,255,.2);
+      color:#6aaabb; letter-spacing:.06em;
+    }
+    #intro-card .ic-dim {
+      font-size:10px; color:#2a5066; margin-top:16px; letter-spacing:.04em;
     }
 
     /* ══════════════════════════════════════════
@@ -202,7 +270,13 @@
 <!-- ① ヘッダー -->
 <div class="panel" id="hdr">
   <h1><strong>未来の生存圏</strong> &times; 自動運転モビリティ</h1>
-  <span class="ver">v3.0</span>
+  <span class="ver">v4.0</span>
+  <div class="sim-clock">
+    <span id="sim-time">07:00</span>
+    <span class="sim-tz">JST</span>
+    <span id="rush-badge">ラッシュ時</span>
+    <span id="night-badge">深&nbsp;夜</span>
+  </div>
   <div class="spd-group">
     <span class="spd-lbl">速度倍率</span>
     <button class="spd-btn on" id="s1" onclick="setSpeed(1)">×1</button>
@@ -296,6 +370,11 @@
       <div class="kpi-sub-lbl">→ 生存圏A</div>
     </div>
   </div>
+  <!-- 乗客輸送KPI -->
+  <div class="kpi-pax-row">
+    <div class="kpi-pax-num" id="kv-pax">0</div>
+    <div class="kpi-pax-unit">名 輸送済み</div>
+  </div>
 </div>
 
 <!-- ④ 選択車両 -->
@@ -337,16 +416,33 @@
     <span class="leg-speed"></span>
   </div>
   <div style="margin-top:10px; font-size:10px; color:#3a7090; border-top:1px solid rgba(80,170,255,.1); padding-top:8px;">
-    車両をクリック → フォロー追尾
+    車両クリック → フォロー追尾
   </div>
 </div>
 
-<!-- ⑥ ヒント -->
-<div id="hint" class="panel">
-  ドラッグ: 回転<br>
-  右ドラッグ: パン<br>
-  ホイール: ズーム<br>
-  ESC: 選択解除
+<!-- ⑥ ミニマップ（下右） -->
+<div class="panel" id="minimap-wrap">
+  <div class="sec-ttl">全体マップ</div>
+  <canvas id="minimap" width="220" height="72"></canvas>
+  <div class="mm-hint">
+    ドラッグ: 回転 &nbsp;|&nbsp; 右ドラッグ: パン<br>
+    ホイール: ズーム &nbsp;|&nbsp; ESC: 選択解除
+  </div>
+</div>
+
+<!-- ⑦ コンセプト説明カード -->
+<div id="intro-card">
+  <h2>未来の生存圏<br>× 自動運転モビリティ</h2>
+  <p>少子高齢化・ドーナッツ化現象により、人が住む場所は<br>特定の「生存圏」に集約されていく。</p>
+  <p>生存圏間は自動運転車がJR新幹線のように高頻度往来し、<br>急行・通常・合乗の3車線で人を効率よく輸送する。</p>
+  <div class="ic-keywords">
+    <span class="ic-tag">少子高齢化</span>
+    <span class="ic-tag">ドーナッツ化</span>
+    <span class="ic-tag">自動運転</span>
+    <span class="ic-tag">生存圏</span>
+    <span class="ic-tag">3分間隔運行</span>
+  </div>
+  <div class="ic-dim">シミュレーション開始中...</div>
 </div>
 
 <!-- Three.js importmap -->
@@ -374,7 +470,6 @@ import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer
 const C = {
   ROAD_HALF: 270,
 
-  // 車線定義  ─────────────────────────────────────────────────
   LANES: [
     { id:'abe', bar:'b-abe', cnt:'c-abe', z:-19, dir:'AB', type:'express',
       speed:12.0, color:0xff5544, glow:0xff2200, interval:0.85, label:'急行 A→B' },
@@ -400,9 +495,32 @@ const C = {
 };
 
 // ══════════════════════════════════════════════════════════════
+// 時刻シミュレーション
+// ══════════════════════════════════════════════════════════════
+const SimTime = {
+  hour: 7, min: 0,
+  // 1リアル秒 = 2シミュ分（30分 = 1シミュ時間）
+  update(dt) {
+    this.min += dt * 2 * speedMul;
+    if(this.min >= 60) { this.min -= 60; this.hour = (this.hour + 1) % 24; }
+  },
+  get isRush()  { const h=this.hour; return (h>=7&&h<9)||(h>=17&&h<19); },
+  get isNight() { const h=this.hour; return h>=22||h<5; },
+  // 交通密度倍率（小=高密度、大=低密度）
+  get rushMul() {
+    if(this.isRush)  return 0.52;   // ラッシュ: 頻繁に出発
+    if(this.isNight) return 2.8;    // 深夜: 少ない
+    return 1.0;
+  },
+  get str() {
+    return `${this.hour.toString().padStart(2,'0')}:${Math.floor(this.min).toString().padStart(2,'0')}`;
+  },
+};
+
+// ══════════════════════════════════════════════════════════════
 // STATE
 // ══════════════════════════════════════════════════════════════
-let speedMul = 1, selected = null, arrAB = 0, arrBA = 0;
+let speedMul = 1, selected = null, arrAB = 0, arrBA = 0, paxTotal = 0;
 let _carId   = 0;
 
 window.setSpeed = s => {
@@ -415,6 +533,13 @@ window.deselect = () => {
   orbit.enabled = true;
 };
 document.addEventListener('keydown', e => { if(e.key==='Escape') deselect(); });
+
+// ── コンセプトカード: 5秒後フェードアウト ─────────────────
+const introEl = document.getElementById('intro-card');
+setTimeout(() => {
+  introEl.style.opacity = '0';
+  setTimeout(() => { introEl.style.display='none'; }, 1400);
+}, 5000);
 
 // ══════════════════════════════════════════════════════════════
 // RENDERER & SCENE
@@ -438,7 +563,6 @@ const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x03050d);
 scene.fog        = new THREE.FogExp2(0x03050d, 0.0012);
 
-// カメラ ── 少し斜めから俯瞰（道路の奥行きが見える角度）
 const camera = new THREE.PerspectiveCamera(48, innerWidth/innerHeight, 0.5, 3500);
 camera.position.set(60, 210, 280);
 camera.lookAt(0, 0, 0);
@@ -456,15 +580,13 @@ const composer  = new EffectComposer(renderer);
 composer.addPass(new RenderPass(scene, camera));
 const bloom = new UnrealBloomPass(
   new THREE.Vector2(innerWidth, innerHeight),
-  0.75,   // strength（控えめに）
-  0.40,   // radius
-  0.76    // threshold（高め → 輝度大のもののみ光る）
+  0.75, 0.40, 0.76
 );
 composer.addPass(bloom);
 composer.addPass(new OutputPass());
 
 // ── Lights ────────────────────────────────────────────────────
-scene.add(new THREE.AmbientLight(0x1a2840, 2.5));
+const ambient = new THREE.AmbientLight(0x1a2840, 2.5); scene.add(ambient);
 const sun = new THREE.DirectionalLight(0xffeedd, 1.4);
 sun.position.set(200, 400, 100);
 sun.castShadow = true;
@@ -472,10 +594,8 @@ Object.assign(sun.shadow.camera, { near:1, far:1200, left:-500, right:500, top:1
 sun.shadow.mapSize.set(2048, 2048);
 scene.add(sun);
 
-// 生存圏グロー
 const gA = new THREE.PointLight(0x1155ff, 3.5, 300, 1.5); gA.position.set(-360, 70, 0); scene.add(gA);
 const gB = new THREE.PointLight(0x9922ee, 3.5, 300, 1.5); gB.position.set( 360, 70, 0); scene.add(gB);
-// 道路中央 LEDライン補助光
 scene.add(Object.assign(new THREE.PointLight(0x0044ff, 1.2, 200, 2), { position: new THREE.Vector3(0, 15, 0) }));
 
 // ══════════════════════════════════════════════════════════════
@@ -513,29 +633,24 @@ function box(w,h,d,x,y,z,mat,cast=false) {
 function buildWorld() {
   buildGround();
   buildHighway();
-  buildDirectionArrows();   // ← NEW: 方向矢印
+  buildDirectionArrows();
   buildZone('A');
   buildZone('B');
   buildGates();
   buildLampposts();
-  buildZoneLabels();        // ← NEW: CSS2D 生存圏ラベル
-  buildLaneLabels();        // ← NEW: CSS2D 車線ラベル
+  buildZoneLabels();
+  buildLaneLabels();
   buildStars();
 }
 
-// ── 地面 ──────────────────────────────────────────────────────
 function buildGround() {
   plane(1600, 260, 0, 0, 0, MAT.lamb(0x050810));
 }
 
-// ── 道路 ──────────────────────────────────────────────────────
 function buildHighway() {
   const len = C.ROAD_HALF * 2;
-
-  // 路面ベース
   plane(len, 50, 0, 0.05, 0, MAT.std(0x0e1520));
 
-  // レーン面（不透明で明るく）
   C.LANES.forEach(l => {
     const mat = new THREE.MeshStandardMaterial({
       color: l.color, emissive: l.glow, emissiveIntensity: 0.12, roughness: 0.88,
@@ -543,21 +658,15 @@ function buildHighway() {
     plane(len, 5.8, 0, 0.10, l.z, mat);
   });
 
-  // 中央分離帯
   plane(len, 10, 0, 0.07, 0, MAT.std(0x0d2016, 0x0d3020, 0.15));
-
-  // 分離帯の樹木
   for(let x=-250; x<=250; x+=30) addTree(x, 0, 0, 0.9);
 
-  // LED 車線エッジ（白・強め）
   const ledMat = MAT.glow(0xaaccff, 2.8);
   [-23,-17,-11,-5, 5,11,17,23].forEach(z => plane(len, 0.35, 0, 0.15, z, ledMat));
 
-  // 中央分離帯 LED（緑）
   const medLed = MAT.glow(0x00ff88, 2.0);
   [-4.5, 4.5].forEach(z => plane(len, 0.2, 0, 0.15, z, medLed));
 
-  // ガードレール
   mkRail(-C.ROAD_HALF, C.ROAD_HALF, -25.0);
   mkRail(-C.ROAD_HALF, C.ROAD_HALF,  25.0);
   mkRail(-C.ROAD_HALF, C.ROAD_HALF, -5.0, 0x225522);
@@ -570,9 +679,7 @@ function mkRail(x1, x2, z, col=0x334455) {
   for(let x=x1; x<=x2; x+=12) box(0.22, 1.4, 0.22, x, 0, z, m, true);
 }
 
-// ── 方向矢印（道路面に描画）── NEW ──────────────────────────
 function buildDirectionArrows() {
-  // Canvas テクスチャで矢印を生成
   const makeArrow = (toRight) => {
     const cv = document.createElement('canvas');
     cv.width = cv.height = 128;
@@ -610,7 +717,6 @@ function buildDirectionArrows() {
   });
 }
 
-// ── CSS2Dラベル：生存圏A / 生存圏B ── NEW ───────────────────
 function buildZoneLabels() {
   const mkLabel = (text, cls, x, y=55) => {
     const div = document.createElement('div');
@@ -624,7 +730,6 @@ function buildZoneLabels() {
   mkLabel('生存圏 B', 'zone-label-B',  360);
 }
 
-// ── CSS2Dラベル：車線種別 ── NEW ─────────────────────────────
 function buildLaneLabels() {
   const mkLane = (text, x, z) => {
     const div = document.createElement('div');
@@ -642,23 +747,19 @@ function buildLaneLabels() {
   mkLane('← 急行', -120,  19);
 }
 
-// ── 生存圏 ───────────────────────────────────────────────────
 function buildZone(side) {
   const isA = side==='A';
   const xr  = isA ? C.ZONE_A : C.ZONE_B;
   const rng = mkRng(isA ? 42 : 137);
   const len = xr[1]-xr[0], cx=(xr[0]+xr[1])/2;
 
-  // 地面
   plane(len, 110, cx, 0.02, 0, MAT.lamb(isA ? 0x060e14 : 0x0c0816));
 
-  // 内部道路グリッド
   for(let gx=xr[0]+15; gx<xr[1]; gx+=17)
     plane(0.8, 110, gx, 0.04, 0, MAT.lamb(0x090d18));
   for(let gz=-52; gz<=52; gz+=17)
     plane(len, 0.8, cx, 0.04, gz, MAT.lamb(0x090d18));
 
-  // 建物
   const bTypes = ['office','residential','mixed'];
   for(let gx=xr[0]+2; gx<xr[1]-2; gx+=17) {
     for(let gz=-52; gz<52; gz+=17) {
@@ -675,22 +776,16 @@ function buildZone(side) {
 
 function buildBuilding(cx, cz, bw, bh, bd, type, isA, rng) {
   const g = new THREE.Group();
-
-  // 外壁カラー（ゾーンで明確に差別化）
   const wallA = [0x0a2850, 0x0c3060, 0x0e2848, 0x082040][Math.floor(rng()*4)];
   const wallB = [0x28083a, 0x30064a, 0x200840, 0x380a56][Math.floor(rng()*4)];
   const wallCol = isA ? wallA : wallB;
   const winColor = isA ? 0x88ccff : 0xcc88ff;
 
-  // ─ オフィスタワー ─
   if(type==='office') {
     const body = new THREE.Mesh(
       new THREE.BoxGeometry(bw, bh, bd),
-      new THREE.MeshStandardMaterial({ color:wallCol, roughness:0.65, metalness:0.25 })
-    );
+      new THREE.MeshStandardMaterial({ color:wallCol, roughness:0.65, metalness:0.25 }));
     body.position.y=bh/2; body.castShadow=true; g.add(body);
-
-    // 窓帯（高い建物ほど多め）
     const winMat = MAT.std(0x000000, winColor, 0.75+rng()*0.55);
     for(let wy=2.5; wy<bh-1; wy+=3.0) {
       [-1,1].forEach(side => {
@@ -700,7 +795,6 @@ function buildBuilding(cx, cz, bw, bh, bd, type, isA, rng) {
         g.add(wf);
       });
     }
-    // アンテナ
     if(bh>22) {
       const ant = new THREE.Mesh(new THREE.CylinderGeometry(0.08,0.12,10,5), MAT.lamb(0x556677));
       ant.position.y=bh+5; g.add(ant);
@@ -709,40 +803,31 @@ function buildBuilding(cx, cz, bw, bh, bd, type, isA, rng) {
       bk.position.y=bh+10.4; bk.userData.beacon=true; g.add(bk);
     }
 
-  // ─ 住居タワー（ポディウム+セットバック） ─
   } else if(type==='residential') {
     const ph = Math.min(6, bh*0.35);
-    // ポディウム（やや広め）
     const pod = new THREE.Mesh(
-      new THREE.BoxGeometry(bw*1.25, ph, bd*1.25),
-      MAT.lamb(wallCol));
+      new THREE.BoxGeometry(bw*1.25, ph, bd*1.25), MAT.lamb(wallCol));
     pod.position.y=ph/2; pod.castShadow=true; g.add(pod);
-    // タワー
     const twH=bh-ph, tw=Math.max(3,bw*0.75), td=Math.max(3,bd*0.75);
     const tw_mesh = new THREE.Mesh(
       new THREE.BoxGeometry(tw, twH, td),
       new THREE.MeshStandardMaterial({color:wallCol, roughness:0.72}));
     tw_mesh.position.y=ph+twH/2; tw_mesh.castShadow=true; g.add(tw_mesh);
-    // バルコニー帯
     const balMat = MAT.std(0, winColor, 0.45+rng()*0.35);
     for(let wy=ph+2.5; wy<bh-2; wy+=4.0) {
       const bal = new THREE.Mesh(new THREE.PlaneGeometry(tw*0.82, 0.9), balMat);
       bal.position.set(0,wy,td/2+0.02); g.add(bal);
     }
 
-  // ─ 複合用途（低層商業+上層住居） ─
   } else {
-    // 商業ガラス低層
     const comH = Math.min(5, bh*0.3);
     const com = new THREE.Mesh(
       new THREE.BoxGeometry(bw, comH, bd),
       new THREE.MeshStandardMaterial({color:0x081826, roughness:0.2, metalness:0.4}));
     com.position.y=comH/2; com.castShadow=true; g.add(com);
-    // 商業ガラス（光る）
     const retMat = MAT.glow(isA?0x0055ff:0x8800ee, 0.6);
     const ret=new THREE.Mesh(new THREE.PlaneGeometry(bw-0.4, comH*0.7), retMat);
     ret.position.set(0,comH*0.5,bd/2+0.03); g.add(ret);
-    // 上層
     const upH=bh-comH, uw=bw*0.7, ud=bd*0.7;
     const up=new THREE.Mesh(
       new THREE.BoxGeometry(uw,upH,ud),
@@ -755,10 +840,8 @@ function buildBuilding(cx, cz, bw, bh, bd, type, isA, rng) {
     }
   }
 
-  // 屋上
   const roofM=new THREE.Mesh(new THREE.BoxGeometry(bw+0.6,0.4,bd+0.6), MAT.lamb(0x060e1a));
   roofM.position.y=bh+0.2; g.add(roofM);
-
   g.position.set(cx, 0, cz);
   scene.add(g);
 }
@@ -775,17 +858,11 @@ function addTree(x, y, z, sc=1) {
   g.position.set(x,y,z); scene.add(g);
 }
 
-// ── ゲート ───────────────────────────────────────────────────
 function buildGates() {
   [-C.ROAD_HALF, C.ROAD_HALF].forEach(gx => {
     const m = MAT.lamb(0x223344);
-    // 縦柱
-    [-26,26].forEach(gz => {
-      box(1.4, 18, 1.4, gx, 0, gz, m, true);
-    });
-    // 横梁
+    [-26,26].forEach(gz => { box(1.4, 18, 1.4, gx, 0, gz, m, true); });
     box(1.4, 1.4, 54, gx, 18, 0, m);
-    // LEDビーズ
     const lm = MAT.glow(0x88eeff, 4.0);
     for(let gz=-24; gz<=24; gz+=8) {
       const lp=new THREE.Mesh(new THREE.SphereGeometry(0.44,8,6),lm);
@@ -794,7 +871,6 @@ function buildGates() {
   });
 }
 
-// ── 街灯 ─────────────────────────────────────────────────────
 function buildLampposts() {
   const pm=MAT.lamb(0x334455), lm=MAT.glow(0xffffbb, 4.0);
   for(let x=-C.ROAD_HALF+22; x<=C.ROAD_HALF; x+=44) {
@@ -808,7 +884,6 @@ function buildLampposts() {
   }
 }
 
-// ── 星 ───────────────────────────────────────────────────────
 function buildStars() {
   const pos=[];
   for(let i=0;i<3000;i++)
@@ -842,31 +917,26 @@ class Car {
   _build() {
     const g  = new THREE.Group();
     const l  = this.lane;
-    // 種別ごとにサイズを変える（一目で分かるように）
     const sx = l.type==='express' ? 0.82 : (l.type==='shared' ? 1.45 : 1.0);
     const sy = l.type==='express' ? 0.82 : (l.type==='shared' ? 1.15 : 1.0);
     const sz = l.type==='express' ? 0.88 : (l.type==='shared' ? 1.30 : 1.0);
     const L=C.CAR_L*sx, H=C.CAR_H*sy, W=C.CAR_W*sz;
 
-    // 車体
     const body=new THREE.Mesh(
       new THREE.BoxGeometry(L,H,W),
       new THREE.MeshStandardMaterial({color:0xe0ecf8, roughness:0.45, metalness:0.3}));
     body.position.y=H/2+0.25; body.castShadow=true; g.add(body);
 
-    // フロントガラス
     const ws=new THREE.Mesh(
       new THREE.BoxGeometry(0.14,H*0.60,W*0.82),
       MAT.glass(0x99ccee, 0.72));
     ws.position.set((this.isAB?1:-1)*L/2, H*0.60, 0); g.add(ws);
 
-    // ルーフアクセント（種別カラー、輝度高め）
     const roof=new THREE.Mesh(
       new THREE.BoxGeometry(L*0.55,0.28,W*0.78),
       MAT.glow(l.color, l.type==='normal' ? 1.2 : 2.2));
     roof.position.y=H+0.28; g.add(roof);
 
-    // ヘッドライト（発光）
     const hxPos=(this.isAB?1:-1)*L/2;
     const hlM=MAT.glow(0xffffff, 5.5);
     [-1,1].forEach(s=>{
@@ -874,7 +944,6 @@ class Car {
       hl.position.set(hxPos, H*0.32, s*W*0.38); g.add(hl);
     });
 
-    // テールライト（赤発光）
     const txPos=(this.isAB?-1:1)*L/2;
     const tlM=MAT.glow(0xff2200, 4.0);
     [-1,1].forEach(s=>{
@@ -882,7 +951,6 @@ class Car {
       tl.position.set(txPos, H*0.32, s*W*0.38); g.add(tl);
     });
 
-    // 合乗バスの窓（乗客表示）
     if(l.type==='shared') {
       const pwM=new THREE.MeshStandardMaterial({color:0,emissive:0xffe8aa,emissiveIntensity:0.7,transparent:true,opacity:0.85});
       for(let i=0;i<3;i++){
@@ -892,7 +960,6 @@ class Car {
       }
     }
 
-    // 急行: アンダーLED（超音速イメージ）
     if(l.type==='express') {
       const udM=MAT.glow(0xff3300,1.5);
       const ud=new THREE.Mesh(new THREE.PlaneGeometry(L*0.7,W*0.55),udM);
@@ -955,7 +1022,8 @@ const TM = (() => {
       const cars=lanes[l.id];
       timers[l.id] -= dt*speedMul;
       if(timers[l.id]<=0){
-        timers[l.id] = l.interval+(Math.random()-.5)*0.4;
+        // ラッシュ倍率を適用（小さいほど頻繁に出発）
+        timers[l.id] = (l.interval+(Math.random()-.5)*0.4) * SimTime.rushMul;
         const sx = l.dir==='AB' ? -C.ROAD_HALF-10 : C.ROAD_HALF+10;
         if(!cars.some(c=>Math.abs(c.x-sx)<C.MIN_GAP+C.CAR_L)) cars.push(new Car(l));
       }
@@ -963,6 +1031,7 @@ const TM = (() => {
       cars.filter(c=>c.done).forEach(c=>{
         (l.dir==='AB' ? tpAB : tpBA).push(now);
         if(l.dir==='AB') arrAB++; else arrBA++;
+        paxTotal += c.occupants;   // 乗客数を累計
         c.dispose();
       });
       lanes[l.id]=cars.filter(c=>!c.done);
@@ -983,6 +1052,106 @@ const TM = (() => {
 
   return { init, update, stats, all };
 })();
+
+// ══════════════════════════════════════════════════════════════
+// MINIMAP
+// ══════════════════════════════════════════════════════════════
+const mmEl  = document.getElementById('minimap');
+const mmCtx = mmEl.getContext('2d');
+const MM_W  = 220, MM_H = 72;
+
+// 座標変換：シミュ空間(-440~+440) → ミニマップピクセル
+const xToMm = x => (x + 440) / 880 * MM_W;
+const zToMm = z => (z + 24)  / 48  * MM_H;   // Z: -24~+24 の範囲
+
+function drawMinimap() {
+  mmCtx.clearRect(0, 0, MM_W, MM_H);
+
+  // 背景
+  mmCtx.fillStyle = 'rgba(4,9,26,1)';
+  mmCtx.fillRect(0, 0, MM_W, MM_H);
+
+  // 生存圏A（左・青）
+  mmCtx.fillStyle = 'rgba(16,44,160,.32)';
+  mmCtx.fillRect(0, 0, xToMm(-270), MM_H);
+
+  // 生存圏B（右・紫）
+  mmCtx.fillStyle = 'rgba(72,16,140,.32)';
+  mmCtx.fillRect(xToMm(270), 0, MM_W - xToMm(270), MM_H);
+
+  // 道路エリア（中央）
+  mmCtx.fillStyle = 'rgba(14,22,48,.7)';
+  mmCtx.fillRect(xToMm(-270), 0, xToMm(270) - xToMm(-270), MM_H);
+
+  // 各レーン帯
+  C.LANES.forEach(l => {
+    const r=(l.color>>16)&255, g=(l.color>>8)&255, b=l.color&255;
+    mmCtx.fillStyle = `rgba(${r},${g},${b},0.18)`;
+    const y = zToMm(l.z) - 2.5;
+    mmCtx.fillRect(xToMm(-270), y, xToMm(270)-xToMm(-270), 5);
+  });
+
+  // 中央分離帯（緑）
+  mmCtx.fillStyle = 'rgba(0,180,80,.2)';
+  mmCtx.fillRect(xToMm(-270), zToMm(-5), xToMm(270)-xToMm(-270), zToMm(5)-zToMm(-5));
+
+  // 境界線
+  mmCtx.strokeStyle = 'rgba(80,170,255,.25)';
+  mmCtx.lineWidth = 0.5;
+  mmCtx.strokeRect(xToMm(-270), 0, xToMm(270)-xToMm(-270), MM_H);
+
+  // ゾーンラベル
+  mmCtx.font = 'bold 9px sans-serif';
+  mmCtx.fillStyle = 'rgba(80,120,255,.75)';
+  mmCtx.fillText('A', 4, 12);
+  mmCtx.fillStyle = 'rgba(160,80,255,.75)';
+  mmCtx.fillText('B', MM_W - 12, 12);
+
+  // 全車両を描画
+  TM.all().forEach(c => {
+    if(c.done) return;
+    const r=(c.lane.color>>16)&255, g=(c.lane.color>>8)&255, b=c.lane.color&255;
+    const mx = xToMm(c.x);
+    const mz = zToMm(c.lane.z);
+    mmCtx.fillStyle = `rgb(${r},${g},${b})`;
+    mmCtx.fillRect(mx-2.5, mz-2, 5, 4);
+  });
+
+  // 選択車両をハイライト
+  if(selected && !selected.done) {
+    const mx = xToMm(selected.x);
+    const mz = zToMm(selected.lane.z);
+    mmCtx.strokeStyle = '#ffffff';
+    mmCtx.lineWidth = 1.5;
+    mmCtx.strokeRect(mx-5, mz-3.5, 10, 7);
+  }
+
+  // カメラ視点位置の参考線（薄く）
+  mmCtx.strokeStyle = 'rgba(200,220,255,.15)';
+  mmCtx.lineWidth = 0.5;
+  const cpx = xToMm(Math.max(-440, Math.min(440, camera.position.x)));
+  mmCtx.beginPath(); mmCtx.moveTo(cpx, 0); mmCtx.lineTo(cpx, MM_H); mmCtx.stroke();
+}
+
+// ══════════════════════════════════════════════════════════════
+// 昼夜サイクル（ambient・fog・sunの変化）
+// ══════════════════════════════════════════════════════════════
+const _bgNight = new THREE.Color(0x020408);
+const _bgDay   = new THREE.Color(0x04080e);
+const _bgRush  = new THREE.Color(0x050510);
+
+function updateDayNight() {
+  const isN = SimTime.isNight, isR = SimTime.isRush;
+  const tgtBg = isN ? _bgNight : isR ? _bgRush : _bgDay;
+  scene.background.lerp(tgtBg, 0.008);
+  scene.fog.density += ((isN ? 0.0018 : 0.0012) - scene.fog.density) * 0.008;
+
+  const tgtSun = isN ? 0.18 : isR ? 1.9 : 1.4;
+  sun.intensity += (tgtSun - sun.intensity) * 0.012;
+
+  const tgtAmb = isN ? 1.6 : isR ? 2.8 : 2.5;
+  ambient.intensity += (tgtAmb - ambient.intensity) * 0.012;
+}
 
 // ══════════════════════════════════════════════════════════════
 // INTERACTION
@@ -1035,7 +1204,6 @@ function drawChart(){
   ctx2.clearRect(0,0,W,H);
   ctx2.fillStyle='rgba(0,12,35,.6)';
   ctx2.fillRect(0,0,W,H);
-  // Grid
   ctx2.strokeStyle='rgba(80,160,255,.07)';
   ctx2.lineWidth=1;
   for(let y=H/4;y<H;y+=H/4){ctx2.beginPath();ctx2.moveTo(0,y);ctx2.lineTo(W,y);ctx2.stroke();}
@@ -1063,6 +1231,7 @@ function updateUI(s) {
   document.getElementById('kv-total').textContent = s.total;
   document.getElementById('kv-ab').textContent    = arrAB;
   document.getElementById('kv-ba').textContent    = arrBA;
+  document.getElementById('kv-pax').textContent   = paxTotal.toLocaleString();
   document.getElementById('sv-ab').textContent    = `${s.tpAB} 台/分`;
   document.getElementById('sv-ba').textContent    = `${s.tpBA} 台/分`;
   document.getElementById('tp-ab').style.width    = `${Math.min(100,s.tpAB/maxTP*100)}%`;
@@ -1072,6 +1241,11 @@ function updateUI(s) {
     document.getElementById(l.bar).style.width=`${Math.min(100,cnt/C.MAX_LANE*100)}%`;
     document.getElementById(l.cnt).textContent=cnt;
   });
+
+  // 時刻・バッジ更新
+  document.getElementById('sim-time').textContent = SimTime.str;
+  document.getElementById('rush-badge').style.display  = SimTime.isRush  ? 'inline' : 'none';
+  document.getElementById('night-badge').style.display = SimTime.isNight ? 'inline' : 'none';
 }
 
 function updateCarInfo() {
@@ -1099,10 +1273,13 @@ function animate() {
   const dt=Math.min((now-prevT)/1000, 0.05);
   prevT=now; elapsed+=dt;
 
+  SimTime.update(dt);      // 時刻シミュレーション
   TM.update(dt);
 
   if(selected && !selected.done) followCam(dt);
   else if(!selected) orbit.update();
+
+  updateDayNight();        // 昼夜サイクル
 
   uiT+=dt;
   if(uiT>=0.4){
@@ -1117,6 +1294,8 @@ function animate() {
     chartT=0;
   }
 
+  drawMinimap();           // ミニマップ毎フレーム更新
+
   // ビーコンのパルス
   scene.traverse(o=>{
     if(o.userData.beacon && o.material)
@@ -1124,7 +1303,7 @@ function animate() {
   });
 
   composer.render();
-  labelRend.render(scene, camera);   // CSS2Dラベルを更新
+  labelRend.render(scene, camera);
 }
 
 // ══════════════════════════════════════════════════════════════
