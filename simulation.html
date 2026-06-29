@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>未来の生存圏 × 自動運転モビリティ</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { overflow: hidden; background: #060912; font-family: 'Segoe UI', 'Noto Sans JP', sans-serif; }
+    #canvas-container { width: 100vw; height: 100vh; }
+
+    /* ─── Title ─── */
+    #title {
+      position: fixed; top: 16px; left: 16px;
+      color: rgba(200, 230, 255, 0.9); font-size: 15px;
+      font-weight: 300; letter-spacing: 0.12em;
+      text-shadow: 0 0 20px rgba(80, 180, 255, 0.5);
+    }
+    #title strong { color: #5cc8ff; font-weight: 700; }
+
+    /* ─── Stats panel ─── */
+    #panel {
+      position: fixed; top: 16px; right: 16px;
+      background: rgba(6, 12, 28, 0.88);
+      border: 1px solid rgba(80, 180, 255, 0.25);
+      border-radius: 10px; padding: 16px;
+      color: #cde; min-width: 268px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 0 30px rgba(0,80,160,0.2);
+    }
+    #panel h2 {
+      font-size: 11px; color: #5cc8ff; letter-spacing: 0.1em;
+      text-transform: uppercase; margin-bottom: 12px;
+    }
+    .srow {
+      display: flex; justify-content: space-between;
+      align-items: center; margin: 5px 0; font-size: 12px;
+    }
+    .slabel { color: #88aacc; }
+    .sval { color: #fff; font-weight: 600; font-size: 13px; }
+    .hr { border-top: 1px solid rgba(80,180,255,0.12); margin: 10px 0; }
+    .dir-label { font-size: 10px; color: #5580a0; margin-bottom: 5px; }
+    .lrow {
+      display: flex; align-items: center;
+      gap: 6px; margin: 4px 0; font-size: 11px;
+    }
+    .ldot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+    .lname { color: #99bbcc; min-width: 34px; }
+    .lbarbg {
+      flex: 1; height: 3px;
+      background: rgba(255,255,255,0.08); border-radius: 2px;
+    }
+    .lbar { height: 100%; border-radius: 2px; transition: width 0.4s ease; }
+    .lcnt { color: #fff; font-weight: 600; min-width: 18px; text-align: right; }
+
+    /* ─── Legend ─── */
+    #legend {
+      position: fixed; bottom: 16px; left: 16px;
+      background: rgba(6, 12, 28, 0.85);
+      border: 1px solid rgba(80, 180, 255, 0.2);
+      border-radius: 8px; padding: 12px;
+      color: #cde; backdrop-filter: blur(10px);
+    }
+    #legend h3 { font-size: 10px; color: #5cc8ff; margin-bottom: 8px; letter-spacing: 0.08em; }
+    .leg { display: flex; align-items: center; gap: 8px; margin: 4px 0; font-size: 11px; color: #aac0d0; }
+    .legbox { width: 22px; height: 7px; border-radius: 2px; }
+
+    /* ─── Hint ─── */
+    #hint {
+      position: fixed; bottom: 16px; right: 16px;
+      color: rgba(120,160,190,0.5); font-size: 10px; text-align: right;
+      line-height: 1.7;
+    }
+  </style>
+</head>
+<body>
+
+<div id="canvas-container"></div>
+
+<div id="title"><strong>未来の生存圏</strong> &times; 自動運転モビリティ</div>
+
+<div id="panel">
+  <h2>交通シミュレーション</h2>
+  <div class="srow"><span class="slabel">走行車両数</span><span class="sval" id="s-total">0</span></div>
+  <div class="srow"><span class="slabel">A&rarr;B スループット</span><span class="sval" id="s-ab">─</span></div>
+  <div class="srow"><span class="slabel">B&rarr;A スループット</span><span class="sval" id="s-ba">─</span></div>
+  <div class="hr"></div>
+  <div class="dir-label">A &rarr; B 方向</div>
+  <div class="lrow">
+    <div class="ldot" style="background:#e74c3c"></div>
+    <span class="lname">急行</span>
+    <div class="lbarbg"><div class="lbar" id="b-ab-e" style="background:#e74c3c;width:0%"></div></div>
+    <span class="lcnt" id="c-ab-e">0</span>
+  </div>
+  <div class="lrow">
+    <div class="ldot" style="background:#7f8c8d"></div>
+    <span class="lname">通常</span>
+    <div class="lbarbg"><div class="lbar" id="b-ab-n" style="background:#7f8c8d;width:0%"></div></div>
+    <span class="lcnt" id="c-ab-n">0</span>
+  </div>
+  <div class="lrow">
+    <div class="ldot" style="background:#2980b9"></div>
+    <span class="lname">合乗</span>
+    <div class="lbarbg"><div class="lbar" id="b-ab-s" style="background:#2980b9;width:0%"></div></div>
+    <span class="lcnt" id="c-ab-s">0</span>
+  </div>
+  <div class="dir-label" style="margin-top:8px">B &rarr; A 方向</div>
+  <div class="lrow">
+    <div class="ldot" style="background:#2980b9"></div>
+    <span class="lname">合乗</span>
+    <div class="lbarbg"><div class="lbar" id="b-ba-s" style="background:#2980b9;width:0%"></div></div>
+    <span class="lcnt" id="c-ba-s">0</span>
+  </div>
+  <div class="lrow">
+    <div class="ldot" style="background:#7f8c8d"></div>
+    <span class="lname">通常</span>
+    <div class="lbarbg"><div class="lbar" id="b-ba-n" style="background:#7f8c8d;width:0%"></div></div>
+    <span class="lcnt" id="c-ba-n">0</span>
+  </div>
+  <div class="lrow">
+    <div class="ldot" style="background:#e74c3c"></div>
+    <span class="lname">急行</span>
+    <div class="lbarbg"><div class="lbar" id="b-ba-e" style="background:#e74c3c;width:0%"></div></div>
+    <span class="lcnt" id="c-ba-e">0</span>
+  </div>
+</div>
+
+<div id="legend">
+  <h3>車線凡例</h3>
+  <div class="leg"><div class="legbox" style="background:#e74c3c"></div>急行（追越）&sim;120 km/h</div>
+  <div class="leg"><div class="legbox" style="background:#7f8c8d"></div>通常　　　　&sim;80 km/h</div>
+  <div class="leg"><div class="legbox" style="background:#2980b9"></div>合乗　　　　&sim;50 km/h</div>
+  <div class="leg"><div class="legbox" style="background:#1e6b30"></div>中央分離帯</div>
+</div>
+
+<div id="hint">
+  マウス左ボタン: 回転<br>
+  右ボタン: パン<br>
+  ホイール: ズーム
+</div>
+
+<!-- Three.js via importmap -->
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.163.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.163.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+// ================================================================
+// CONSTANTS
+// ================================================================
+const C = {
+  ROAD_HALF: 260,          // highway half-length
+  ROAD_WIDTH: 46,          // total road width (Z direction)
+
+  // Lane definitions (Z from road center)
+  LANES: [
+    { id:'ab-e', bar:'b-ab-e', cnt:'c-ab-e', z:-19, dir:'AB', type:'express', speed:11.0, color:0xe74c3c, interval:1.0 },
+    { id:'ab-n', bar:'b-ab-n', cnt:'c-ab-n', z:-13, dir:'AB', type:'normal',  speed: 7.0, color:0x7f8c8d, interval:1.6 },
+    { id:'ab-s', bar:'b-ab-s', cnt:'c-ab-s', z: -7, dir:'AB', type:'shared',  speed: 4.2, color:0x2980b9, interval:2.4 },
+    { id:'ba-s', bar:'b-ba-s', cnt:'c-ba-s', z:  7, dir:'BA', type:'shared',  speed: 4.2, color:0x2980b9, interval:2.4 },
+    { id:'ba-n', bar:'b-ba-n', cnt:'c-ba-n', z: 13, dir:'BA', type:'normal',  speed: 7.0, color:0x7f8c8d, interval:1.6 },
+    { id:'ba-e', bar:'b-ba-e', cnt:'c-ba-e', z: 19, dir:'BA', type:'express', speed:11.0, color:0xe74c3c, interval:1.0 },
+  ],
+
+  // Zone X ranges
+  ZONE_A: [-430, -260],
+  ZONE_B: [ 260,  430],
+  ZONE_Z: [-50, 50],
+
+  // Car
+  CAR_L: 7, CAR_H: 1.8, CAR_W: 3.2,
+  MIN_GAP: 14,
+
+  // Stats
+  TP_WINDOW: 30,   // throughput measurement window (seconds)
+  MAX_PER_LANE: 24,
+};
+
+// ================================================================
+// SCENE
+// ================================================================
+const container = document.getElementById('canvas-container');
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x060912);
+scene.fog = new THREE.FogExp2(0x060912, 0.0018);
+
+const camera = new THREE.PerspectiveCamera(52, innerWidth / innerHeight, 0.5, 3000);
+camera.position.set(0, 200, 260);
+camera.lookAt(0, 0, 0);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setSize(innerWidth, innerHeight);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.1;
+container.appendChild(renderer.domElement);
+
+const orbit = new OrbitControls(camera, renderer.domElement);
+orbit.enableDamping = true;
+orbit.dampingFactor = 0.06;
+orbit.minDistance = 60;
+orbit.maxDistance = 900;
+orbit.maxPolarAngle = Math.PI / 2.05;
+orbit.target.set(0, 0, 0);
+
+// Lighting
+scene.add(new THREE.AmbientLight(0x1a2640, 2.0));
+
+const sun = new THREE.DirectionalLight(0xfff0d0, 1.8);
+sun.position.set(300, 400, 150);
+sun.castShadow = true;
+Object.assign(sun.shadow, { mapSize: { width:2048, height:2048 } });
+Object.assign(sun.shadow.camera, { near:1, far:1200, left:-500, right:500, top:120, bottom:-120 });
+scene.add(sun);
+
+// City glow (blue-purple point lights over zones)
+const glowA = new THREE.PointLight(0x4080ff, 2.5, 300);
+glowA.position.set(-350, 60, 0);
+scene.add(glowA);
+const glowB = new THREE.PointLight(0xa040ff, 2.5, 300);
+glowB.position.set( 350, 60, 0);
+scene.add(glowB);
+
+// ================================================================
+// SEEDED RANDOM
+// ================================================================
+function mkRng(seed) {
+  let s = seed;
+  return () => { s = (s * 9301 + 49297) % 233280; return s / 233280; };
+}
+
+// ================================================================
+// WORLD BUILDER
+// ================================================================
+function buildWorld() {
+  buildGround();
+  buildHighway();
+  buildLivingZone('A');
+  buildLivingZone('B');
+  buildGates();
+  buildLampposts();
+  buildStars();
+}
+
+// ── Ground ──────────────────────────────────────────────────────
+function buildGround() {
+  const geo = new THREE.PlaneGeometry(1400, 260);
+  const mat = new THREE.MeshLambertMaterial({ color: 0x080c18 });
+  const m = new THREE.Mesh(geo, mat);
+  m.rotation.x = -Math.PI / 2;
+  m.receiveShadow = true;
+  scene.add(m);
+}
+
+// ── Highway ─────────────────────────────────────────────────────
+function buildHighway() {
+  const len = C.ROAD_HALF * 2;
+
+  // Road base
+  addPlane(len, C.ROAD_WIDTH + 4, 0, 0.04, 0, 0x12151e);
+
+  // Lane colored surfaces
+  C.LANES.forEach(lane => {
+    addPlane(len, 5.6, 0, 0.09, lane.z, lane.color, 0.45);
+  });
+
+  // Median strip
+  addPlane(len, 10, 0, 0.07, 0, 0x0e2a14, 1.0);
+
+  // Median trees
+  for (let x = -240; x <= 240; x += 28) buildTree(x, 0, 0, 0.75);
+
+  // Lane boundary lines (solid, at lane edges)
+  [-22, -16, -10, -4, 4, 10, 16, 22].forEach(bz => {
+    addPlane(len, 0.35, 0, 0.12, bz, 0xffffff, 0.55);
+  });
+
+  // Road edge guardrails
+  buildGuardrail(-C.ROAD_HALF, C.ROAD_HALF, -23.5);
+  buildGuardrail(-C.ROAD_HALF, C.ROAD_HALF,  23.5);
+  // Median guardrails
+  buildGuardrail(-C.ROAD_HALF, C.ROAD_HALF, -4.5, 0x225522);
+  buildGuardrail(-C.ROAD_HALF, C.ROAD_HALF,  4.5, 0x225522);
+}
+
+function addPlane(w, h, x, y, z, color, opacity = 1) {
+  const geo = new THREE.PlaneGeometry(w, h);
+  const mat = new THREE.MeshLambertMaterial({
+    color, transparent: opacity < 1, opacity,
+  });
+  const m = new THREE.Mesh(geo, mat);
+  m.rotation.x = -Math.PI / 2;
+  m.position.set(x, y, z);
+  m.receiveShadow = true;
+  scene.add(m);
+  return m;
+}
+
+function buildGuardrail(x1, x2, z, color = 0x445566) {
+  const len = x2 - x1;
+  const mat = new THREE.MeshLambertMaterial({ color });
+  [0.5, 1.1].forEach(y => {
+    const m = new THREE.Mesh(new THREE.BoxGeometry(len, 0.25, 0.18), mat);
+    m.position.set((x1 + x2) / 2, y, z);
+    scene.add(m);
+  });
+  for (let x = x1; x <= x2; x += 10) {
+    const m = new THREE.Mesh(new THREE.BoxGeometry(0.25, 1.4, 0.25), mat);
+    m.position.set(x, 0.7, z);
+    scene.add(m);
+  }
+}
+
+function buildTree(x, y, z, scale = 1) {
+  const g = new THREE.Group();
+  const trunk = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.3 * scale, 0.4 * scale, 3 * scale, 6),
+    new THREE.MeshLambertMaterial({ color: 0x3a2500 })
+  );
+  trunk.position.y = 1.5 * scale;
+  trunk.castShadow = true;
+  g.add(trunk);
+
+  [[0, 3.8, 0, 2.6], [0, 5.4, 0, 2.1], [0, 6.8, 0, 1.4]].forEach(([lx, ly, lz, r], i) => {
+    const colors = [0x1a5c22, 0x1e6b28, 0x246b2e];
+    const leaf = new THREE.Mesh(
+      new THREE.SphereGeometry(r * scale, 7, 5),
+      new THREE.MeshLambertMaterial({ color: colors[i] })
+    );
+    leaf.position.set(lx, ly * scale, lz);
+    leaf.castShadow = true;
+    g.add(leaf);
+  });
+
+  g.position.set(x, y, z);
+  scene.add(g);
+}
+
+// ── Living Zone ─────────────────────────────────────────────────
+function buildLivingZone(side) {
+  const isA  = side === 'A';
+  const xr   = isA ? C.ZONE_A : C.ZONE_B;
+  const rng  = mkRng(isA ? 42 : 137);
+  const zlen = xr[1] - xr[0];
+
+  // Zone base
+  addPlane(zlen, 110, (xr[0] + xr[1]) / 2, 0.02, 0, isA ? 0x080d1a : 0x0c0818);
+
+  // Internal street grid
+  for (let gx = xr[0] + 15; gx < xr[1]; gx += 18) {
+    addPlane(0.8, 110, gx, 0.04, 0, 0x0f1520);
+  }
+  for (let gz = -48; gz <= 48; gz += 16) {
+    addPlane(zlen, 0.8, (xr[0] + xr[1]) / 2, 0.04, gz, 0x0f1520);
+  }
+
+  // Buildings in grid cells
+  const bColors = isA
+    ? [0x0a2040, 0x0c2850, 0x0a1e38, 0x102848, 0x0e2040]
+    : [0x28083a, 0x320a4a, 0x28083a, 0x380c52, 0x2e0840];
+
+  for (let gx = xr[0] + 2; gx < xr[1] - 2; gx += 18) {
+    for (let gz = -47; gz < 47; gz += 16) {
+      if (rng() < 0.12) continue;
+      const h  = 4 + rng() * 38;
+      const bw = 9 + rng() * 5;
+      const bd = 9 + rng() * 5;
+      const cx = gx + 9;
+      const cz = gz + 8;
+      if (cx + bw / 2 > xr[1] - 1) continue;
+      buildBuilding(cx, cz, bw, h, bd, bColors[Math.floor(rng() * bColors.length)], rng, isA);
+    }
+  }
+}
+
+function buildBuilding(cx, cz, bw, bh, bd, color, rng, isA) {
+  const g = new THREE.Group();
+
+  // Body
+  const body = new THREE.Mesh(
+    new THREE.BoxGeometry(bw, bh, bd),
+    new THREE.MeshLambertMaterial({ color })
+  );
+  body.position.y = bh / 2;
+  body.castShadow = true;
+  body.receiveShadow = true;
+  g.add(body);
+
+  // Window glow strips (emissive)
+  if (bh > 7) {
+    const winColor = rng() > 0.35 ? 0xffe8a0 : 0x88ccff;
+    const winMat = new THREE.MeshBasicMaterial({ color: winColor, transparent: true, opacity: 0.55 + rng() * 0.3 });
+    for (let wy = 2.5; wy < bh - 1; wy += 3.2) {
+      // Front face
+      const wf = new THREE.Mesh(new THREE.PlaneGeometry(bw * 0.75, 1.2), winMat);
+      wf.position.set(0, wy, bd / 2 + 0.05);
+      g.add(wf);
+      // Side faces
+      const ws1 = new THREE.Mesh(new THREE.PlaneGeometry(bd * 0.75, 1.2), winMat);
+      ws1.rotation.y = Math.PI / 2;
+      ws1.position.set(bw / 2 + 0.05, wy, 0);
+      g.add(ws1);
+    }
+  }
+
+  // Rooftop
+  const roof = new THREE.Mesh(
+    new THREE.BoxGeometry(bw + 0.6, 0.4, bd + 0.6),
+    new THREE.MeshLambertMaterial({ color: 0x081018 })
+  );
+  roof.position.y = bh + 0.2;
+  g.add(roof);
+
+  // Antenna + beacon (tall buildings)
+  if (bh > 24) {
+    const antMat = new THREE.MeshLambertMaterial({ color: 0x667788 });
+    const ant = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.12, 10, 5), antMat);
+    ant.position.y = bh + 5;
+    g.add(ant);
+
+    const beaconMat = new THREE.MeshBasicMaterial({ color: isA ? 0x44aaff : 0xaa44ff, transparent: true });
+    const beacon = new THREE.Mesh(new THREE.SphereGeometry(0.35, 8, 6), beaconMat);
+    beacon.position.y = bh + 10.3;
+    beacon.userData.beacon = true;
+    g.add(beacon);
+  }
+
+  g.position.set(cx, 0, cz);
+  scene.add(g);
+}
+
+// ── Gates ───────────────────────────────────────────────────────
+function buildGates() {
+  [-C.ROAD_HALF, C.ROAD_HALF].forEach(gx => {
+    const mat = new THREE.MeshLambertMaterial({ color: 0x334455 });
+
+    // Side pillars
+    [-24, 24].forEach(gz => {
+      const p = new THREE.Mesh(new THREE.BoxGeometry(1.5, 16, 1.5), mat);
+      p.position.set(gx, 8, gz);
+      p.castShadow = true;
+      scene.add(p);
+    });
+
+    // Top beam
+    const beam = new THREE.Mesh(new THREE.BoxGeometry(1.5, 1.2, 50), mat);
+    beam.position.set(gx, 15.5, 0);
+    scene.add(beam);
+
+    // Gate lights
+    for (let gz = -22; gz <= 22; gz += 8) {
+      const lm = new THREE.Mesh(
+        new THREE.SphereGeometry(0.5, 8, 6),
+        new THREE.MeshBasicMaterial({ color: 0x77ddff })
+      );
+      lm.position.set(gx, 15, gz);
+      scene.add(lm);
+    }
+  });
+}
+
+// ── Lampposts ───────────────────────────────────────────────────
+function buildLampposts() {
+  const postMat = new THREE.MeshLambertMaterial({ color: 0x445566 });
+  const lampMat = new THREE.MeshBasicMaterial({ color: 0xffffcc });
+
+  for (let x = -C.ROAD_HALF + 20; x <= C.ROAD_HALF; x += 40) {
+    [-26, 26].forEach(gz => {
+      const post = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.28, 11, 6), postMat);
+      post.position.set(x, 5.5, gz);
+      scene.add(post);
+
+      const armDir = gz > 0 ? -3 : 3;
+      const arm = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 3.5, 4), postMat);
+      arm.rotation.z = Math.PI / 2;
+      arm.position.set(x + armDir / 2, 11, gz);
+      scene.add(arm);
+
+      const lamp = new THREE.Mesh(new THREE.SphereGeometry(0.38, 7, 5), lampMat);
+      lamp.position.set(x + armDir, 11, gz);
+      scene.add(lamp);
+    });
+  }
+}
+
+// ── Stars ───────────────────────────────────────────────────────
+function buildStars() {
+  const positions = [];
+  for (let i = 0; i < 2500; i++) {
+    positions.push(
+      (Math.random() - 0.5) * 2400,
+      120 + Math.random() * 500,
+      (Math.random() - 0.5) * 2400
+    );
+  }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+  scene.add(new THREE.Points(geo, new THREE.PointsMaterial({ color: 0xffffff, size: 0.6 })));
+}
+
+// ================================================================
+// CAR
+// ================================================================
+class Car {
+  constructor(lane) {
+    this.lane   = lane;
+    this.isAB   = lane.dir === 'AB';
+    this.speed  = lane.speed;
+    this.x      = this.isAB ? -C.ROAD_HALF - 8 :  C.ROAD_HALF + 8;
+    this.endX   = this.isAB ?  C.ROAD_HALF + 8  : -C.ROAD_HALF - 8;
+    this.done   = false;
+
+    this.mesh = this._build();
+    this.mesh.position.set(this.x, 0, lane.z);
+    scene.add(this.mesh);
+  }
+
+  _build() {
+    const g    = new THREE.Group();
+    const l    = this.lane;
+    const big  = l.type === 'shared';
+    const sx   = big ? 1.35 : 1.0;
+    const sz   = big ? 1.20 : 1.0;
+    const L    = C.CAR_L * sx;
+    const H    = C.CAR_H;
+    const W    = C.CAR_W * sz;
+
+    // Body
+    const body = new THREE.Mesh(
+      new THREE.BoxGeometry(L, H, W),
+      new THREE.MeshLambertMaterial({ color: 0xdde8f0 })
+    );
+    body.position.y = H / 2 + 0.28;
+    body.castShadow = true;
+    g.add(body);
+
+    // Windshield
+    const ws = new THREE.Mesh(
+      new THREE.BoxGeometry(0.18, H * 0.65, W * 0.82),
+      new THREE.MeshLambertMaterial({ color: 0x77bbee, transparent: true, opacity: 0.75 })
+    );
+    ws.position.set((this.isAB ? 1 : -1) * L / 2, H * 0.65, 0);
+    g.add(ws);
+
+    // Roof accent (lane type color)
+    const roof = new THREE.Mesh(
+      new THREE.BoxGeometry(L * 0.55, 0.28, W * 0.78),
+      new THREE.MeshBasicMaterial({ color: l.color })
+    );
+    roof.position.y = H + 0.3;
+    g.add(roof);
+
+    // Headlights
+    const headX = (this.isAB ? 1 : -1) * L / 2;
+    const tailX = (this.isAB ? -1 : 1) * L / 2;
+    [-1, 1].forEach(s => {
+      const hd = new THREE.Mesh(new THREE.SphereGeometry(0.22, 7, 5),
+        new THREE.MeshBasicMaterial({ color: 0xffffff }));
+      hd.position.set(headX, H * 0.35, s * W * 0.38);
+      g.add(hd);
+
+      const tl = new THREE.Mesh(new THREE.SphereGeometry(0.18, 7, 5),
+        new THREE.MeshBasicMaterial({ color: 0xff3300 }));
+      tl.position.set(tailX, H * 0.35, s * W * 0.38);
+      g.add(tl);
+    });
+
+    if (!this.isAB) g.rotation.y = Math.PI;
+    return g;
+  }
+
+  update(dt, peers) {
+    if (this.done) return;
+
+    // Speed reduction if car ahead is close
+    let spd = this.speed;
+    const ahead = this._carAhead(peers);
+    if (ahead !== null) {
+      const gap = this.isAB ? ahead.x - this.x - C.CAR_L : this.x - ahead.x - C.CAR_L;
+      if (gap < C.MIN_GAP) spd *= Math.max(0, gap / C.MIN_GAP);
+    }
+
+    this.x += (this.isAB ? 1 : -1) * spd * dt;
+    this.mesh.position.x = this.x;
+
+    if ((this.isAB && this.x >= this.endX) || (!this.isAB && this.x <= this.endX)) {
+      this.done = true;
+    }
+  }
+
+  _carAhead(peers) {
+    let best = null, bestDist = Infinity;
+    for (const p of peers) {
+      if (p === this || p.done) continue;
+      const d = this.isAB ? p.x - this.x : this.x - p.x;
+      if (d > 0 && d < bestDist) { bestDist = d; best = p; }
+    }
+    return best;
+  }
+
+  dispose() {
+    scene.remove(this.mesh);
+    this.mesh.traverse(o => {
+      if (o.isMesh) { o.geometry.dispose(); o.material.dispose(); }
+    });
+  }
+}
+
+// ================================================================
+// TRAFFIC MANAGER
+// ================================================================
+const traffic = (() => {
+  const lanes     = {};   // id -> Car[]
+  const timers    = {};   // id -> seconds until next spawn
+  const tpAB = [], tpBA = [];
+
+  function init() {
+    C.LANES.forEach(l => { lanes[l.id] = []; timers[l.id] = Math.random() * l.interval; });
+  }
+
+  function update(dt) {
+    const now = performance.now() / 1000;
+
+    C.LANES.forEach(l => {
+      const cars = lanes[l.id];
+
+      // Spawn
+      timers[l.id] -= dt;
+      if (timers[l.id] <= 0) {
+        timers[l.id] = l.interval + (Math.random() - 0.5) * 0.5;
+        const spawnX = l.dir === 'AB' ? -C.ROAD_HALF - 6 : C.ROAD_HALF + 6;
+        const tooClose = cars.some(c => Math.abs(c.x - spawnX) < C.MIN_GAP + C.CAR_L);
+        if (!tooClose) cars.push(new Car(l));
+      }
+
+      // Update
+      cars.forEach(c => c.update(dt, cars));
+
+      // Remove arrived
+      cars.filter(c => c.done).forEach(c => {
+        (l.dir === 'AB' ? tpAB : tpBA).push(now);
+        c.dispose();
+      });
+      lanes[l.id] = cars.filter(c => !c.done);
+    });
+
+    // Trim old throughput entries
+    const cut = now - C.TP_WINDOW;
+    while (tpAB.length && tpAB[0] < cut) tpAB.shift();
+    while (tpBA.length && tpBA[0] < cut) tpBA.shift();
+  }
+
+  function stats() {
+    return {
+      total: Object.values(lanes).reduce((s, a) => s + a.length, 0),
+      tpAB:  Math.round(tpAB.length / C.TP_WINDOW * 60),
+      tpBA:  Math.round(tpBA.length / C.TP_WINDOW * 60),
+      lanes: Object.fromEntries(C.LANES.map(l => [l.id, lanes[l.id].length])),
+    };
+  }
+
+  return { init, update, stats };
+})();
+
+// ================================================================
+// UI UPDATE
+// ================================================================
+function updateUI() {
+  const s = traffic.stats();
+  document.getElementById('s-total').textContent = s.total;
+  document.getElementById('s-ab').textContent = `${s.tpAB} 台/分`;
+  document.getElementById('s-ba').textContent = `${s.tpBA} 台/分`;
+
+  C.LANES.forEach(l => {
+    const cnt = s.lanes[l.id] || 0;
+    const pct = Math.min(100, cnt / C.MAX_PER_LANE * 100);
+    const bar = document.getElementById(l.bar);
+    const ce  = document.getElementById(l.cnt);
+    if (bar) bar.style.width = `${pct}%`;
+    if (ce)  ce.textContent = cnt;
+  });
+}
+
+// ================================================================
+// ANIMATION LOOP
+// ================================================================
+let prevT   = performance.now();
+let uiTimer = 0;
+let elapsed = 0;
+
+function animate() {
+  requestAnimationFrame(animate);
+
+  const now  = performance.now();
+  const dt   = Math.min((now - prevT) / 1000, 0.05);
+  prevT = now;
+  elapsed += dt;
+
+  traffic.update(dt);
+
+  uiTimer += dt;
+  if (uiTimer >= 0.5) { updateUI(); uiTimer = 0; }
+
+  // Animate beacon lights on tall buildings
+  scene.traverse(o => {
+    if (o.userData.beacon) {
+      o.material.opacity = 0.25 + 0.75 * (0.5 + 0.5 * Math.sin(elapsed * 2.0 + o.position.x * 0.1));
+    }
+  });
+
+  orbit.update();
+  renderer.render(scene, camera);
+}
+
+// ================================================================
+// RESIZE
+// ================================================================
+window.addEventListener('resize', () => {
+  camera.aspect = innerWidth / innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+});
+
+// ================================================================
+// BOOT
+// ================================================================
+buildWorld();
+traffic.init();
+animate();
+
+</script>
+</body>
+</html>
