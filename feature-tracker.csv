@@ -1,0 +1,191 @@
+ID,カテゴリ,機能名,対象ファイル,ユーザーストーリーID,期待動作,テスト状態,テスト結果,バグ番号,優先度,備考
+F-001,UI/UX,イントロカード表示,simulation.html,US-001,ページ読込後5秒間コンセプトカードが表示され1.4秒かけてフェードアウトする,PASS,OK,-,高,opacity→0→display:none
+F-002,UI/UX,ヘッダー常時表示,simulation.html,US-002,タイトル/時計/速度ボタンが上部中央に固定表示される,PASS,OK,-,高,-
+F-003,制御,速度倍率×1,simulation.html,US-003,ボタン押下でspeedMul=1・on クラス切替,PASS,OK,-,高,-
+F-004,制御,速度倍率×2,simulation.html,US-004,ボタン押下でspeedMul=2・on クラス切替,PASS,OK,-,高,-
+F-005,制御,速度倍率×4,simulation.html,US-005,ボタン押下でspeedMul=4・on クラス切替,PASS,OK,-,高,-
+F-006,時刻,24時間シミュレーション時計,simulation.html,US-006,実時間dtに基づき仮想時刻が進み HH:MM 形式で表示される,PASS,OK,-,高,-
+F-007,時刻,ラッシュアワー判定,simulation.html,US-007,7-9時・17-19時に rushBadge が表示され rushMul=0.52 が適用される,PASS,OK,-,高,-
+F-008,時刻,深夜判定,simulation.html,US-008,22-5時に nightBadge が表示される,PASS,OK,-,中,-
+F-009,気象,雨天判定,simulation.html,US-009,20-6時に rainBadge が表示され rainIntensity が増加する,PASS,OK,-,中,-
+F-010,気象,雨パーティクル,simulation.html,US-010,7000粒の雨がY軸下方向に落下・上端でリセットされる,PASS,OK,-,中,-
+F-011,気象,路面濡れ表現,simulation.html,US-011,雨時に wetPlane の opacity/emissive が増加して路面反射を表現,PASS,OK,-,低,-
+F-012,3D,Three.js シーン初期化,simulation.html,US-012,WebGLRenderer/カメラ/OrbitControls が初期化される,PASS,OK,-,高,-
+F-013,3D,ブルームポストプロセス,simulation.html,US-013,UnrealBloomPass でグロー効果が全オブジェクトに適用される,PASS,OK,-,中,-
+F-014,3D,昼夜サイクルライティング,simulation.html,US-014,isNight/isRush により背景色・霧濃度・太陽光強度が線形補間される,PASS,OK,-,中,-
+F-015,3D,影マッピング,simulation.html,US-015,PCFSoftShadowMap で建物・車が地面に影を落とす,PASS,OK,-,低,-
+F-016,ワールド,地面生成,simulation.html,US-016,600×260 のプレーン地面が生成される,PASS,OK,-,中,-
+F-017,ワールド,高速道路生成,simulation.html,US-017,6車線（急行/通常/合乗 各2方向）の道路面が生成される,PASS,OK,-,高,-
+F-018,ワールド,方向矢印生成,simulation.html,US-018,A→B/B→A 矢印テクスチャが各車線に70間隔で配置される,PASS,OK,-,中,-
+F-019,ワールド,ゾーンA生成,simulation.html,US-019,X=-440〜-270 に青系建物群がグリッド配置される,PASS,OK,-,高,-
+F-020,ワールド,ゾーンB生成,simulation.html,US-020,X=270〜440 に紫系建物群がグリッド配置される,PASS,OK,-,高,-
+F-021,ワールド,建物タイプ:オフィス,simulation.html,US-021,ガラス窓列・背面ウィンドウ・高層アンテナ付き建物が生成される,PASS,OK,-,中,-
+F-022,ワールド,建物タイプ:住居,simulation.html,US-022,低層ポディウム+上層セットバック構造の住居棟が生成される,PASS,OK,-,中,-
+F-023,ワールド,建物タイプ:複合,simulation.html,US-023,地上階ガラス商業+上層コンクリート住居の複合棟が生成される,PASS,OK,-,中,-
+F-024,ワールド,ゲート生成,simulation.html,US-024,道路両端に20高さの門柱+横梁+照明が生成される,PASS,OK,-,中,-
+F-025,ワールド,街路灯生成,simulation.html,US-025,道路両側 44 間隔で灯柱+アーム+球体灯が生成される,PASS,OK,-,低,-
+F-026,ワールド,星空生成,simulation.html,US-026,3000点の星が上空 150〜750m に配置される,PASS,OK,-,低,-
+F-027,ワールド,木生成,simulation.html,US-027,中央分離帯に30間隔でオーク木が配置される,PASS,OK,-,低,-
+F-028,ワールド,CSS2D ゾーンラベル,simulation.html,US-028,「生存圏A」「生存圏B」の CSS2D ラベルが空中に浮かぶ,PASS,OK,-,中,-
+F-029,ワールド,車線ラベル,simulation.html,US-029,各車線に方向＋種別の CSS2D ラベルが表示される,PASS,OK,-,低,-
+F-030,車両,Car クラス初期化,simulation.html,US-030,車両ID（C001形式）・最大速度・出発/終点座標が設定される,PASS,OK,-,高,-
+F-031,車両,車両3Dモデル:急行,simulation.html,US-031,細身・赤ルーフ・床下グロー・ヘッドライト/テールランプ付き車両,PASS,OK,-,高,-
+F-032,車両,車両3Dモデル:通常,simulation.html,US-032,標準サイズ・黄ルーフ・ヘッドライト/テールランプ付き車両,PASS,OK,-,高,-
+F-033,車両,車両3Dモデル:合乗バス,simulation.html,US-033,大型・青ルーフ・側面窓・2〜6名乗車の合乗バス,PASS,OK,-,高,-
+F-034,車両,車両移動・速度制御,simulation.html,US-034,maxSpd に向け加速し前方車両との gap が MIN_GAP 未満なら減速する,PASS,OK,-,高,-
+F-035,車両,前方車両検知 (Adaptive),simulation.html,US-035,同一車線の前方車両距離を走査し追従速度制御を行う,PASS,OK,-,高,-
+F-036,車両,車両到達・廃棄,simulation.html,US-036,endX に到達した車両は done=true になりシーンから除去される,PASS,OK,-,高,-
+F-037,車両,合乗乗客数,simulation.html,US-037,合乗車両は 2〜6 名をランダム保持し輸送済みカウントに加算される,PASS,OK,-,中,-
+F-038,インタラクション,車両クリック選択,simulation.html,US-038,3D車両クリックで selected 設定・carinfo パネル表示・追尾カメラ開始,PASS,OK,-,高,-
+F-039,インタラクション,選択解除（×ボタン）,simulation.html,US-039,ci-close クリックで selected=null・carinfo 非表示・orbit 再有効化,PASS,OK,-,高,-
+F-040,インタラクション,選択解除（ESC）,simulation.html,US-040,ESC キー押下で deselect() が呼ばれ追尾解除される,PASS,OK,-,高,-
+F-041,インタラクション,追尾カメラ,simulation.html,US-041,selected 車両の位置に基づきカメラが lerp で滑らかに追尾する,PASS,OK,-,高,-
+F-042,インタラクション,OrbitControls,simulation.html,US-042,左ドラッグ回転・右ドラッグパン・ホイールズームが動作する,PASS,OK,-,高,-
+F-043,インタラクション,リサイズ対応,simulation.html,US-043,ウィンドウリサイズ時にカメラ比率・レンダラーサイズが更新される,PASS,OK,-,中,-
+F-044,KPI,走行中台数表示,simulation.html,US-044,全車線の走行中車両数合計が左パネルに表示される,PASS,OK,-,高,-
+F-045,KPI,到着累計 A→B,simulation.html,US-045,生存圏Bに到着した車両累計が表示される,PASS,OK,-,高,-
+F-046,KPI,到着累計 B→A,simulation.html,US-046,生存圏Aに到着した車両累計が表示される,PASS,OK,-,高,-
+F-047,KPI,輸送済み乗客数,simulation.html,US-047,全車両の occupants 合計がカンマ区切りで表示される,PASS,OK,-,高,-
+F-048,KPI,スループット A→B,simulation.html,US-048,30秒窓内の到着数から 台/分 に換算しバー+数値表示する,PASS,OK,-,高,-
+F-049,KPI,スループット B→A,simulation.html,US-049,30秒窓内の到着数から 台/分 に換算しバー+数値表示する,PASS,OK,-,高,-
+F-050,KPI,車線別台数,simulation.html,US-050,6車線各々の走行中台数をバー+数値で表示する,PASS,OK,-,高,-
+F-051,グラフ,60秒スパークライン,simulation.html,US-051,A→B・B→A の過去60秒スループットを折れ線で描画する,PASS,OK,-,中,-
+F-052,グラフ,24時間需要グラフ,simulation.html,US-052,24時間需要曲線・現在時刻マーカー・需要ラベルを描画する,PASS,OK,-,中,-
+F-053,グラフ,ラッシュ帯ハイライト,simulation.html,US-053,需要グラフの 7-9 時・17-19 時帯がオレンジでハイライトされる,PASS,OK,-,低,-
+F-054,ミニマップ,全体マップ描画,simulation.html,US-054,220×72px Canvas にゾーン・車線・現在車両位置をリアルタイム描画,PASS,OK,-,高,-
+F-055,ミニマップ,選択車両ハイライト,simulation.html,US-055,selected 車両が白枠でミニマップ上に強調表示される,PASS,OK,-,中,-
+F-056,ミニマップ,雨粒表現,simulation.html,US-056,雨時にミニマップ上でも雨粒が点描される,PASS,OK,-,低,-
+F-057,車両情報パネル,車両ID表示,simulation.html,US-057,車両ID（C001形式）が carinfo パネルに表示される,PASS,OK,-,高,-
+F-058,車両情報パネル,速度表示,simulation.html,US-058,現在速度が km/h 換算で表示される,PASS,OK,-,高,-
+F-059,車両情報パネル,乗客数表示,simulation.html,US-059,occupants 値が「N名」形式で表示される,PASS,OK,-,高,-
+F-060,車両情報パネル,車線名表示,simulation.html,US-060,車線ラベル（急行A→B等）が表示される,PASS,OK,-,高,-
+F-061,車両情報パネル,目的地表示,simulation.html,US-061,「生存圏A/B」が目的地として表示される,PASS,OK,-,高,-
+F-062,車両情報パネル,ETA表示,simulation.html,US-062,残距離と現在速度から到着秒数を計算し表示する,PASS,OK,-,高,-
+F-063,車両情報パネル,進捗バー,simulation.html,US-063,startX〜endX の走行進捗がカラーバーで表示される,PASS,OK,-,中,-
+F-064,交通管理,車両スポーン制御,simulation.html,US-064,interval+rushMul に基づくタイマーで各車線に車両を生成する,PASS,OK,-,高,-
+F-065,交通管理,スポーン位置重複チェック,simulation.html,US-065,スポーン座標付近に既存車両がいる場合は生成をスキップする,PASS,OK,-,高,-
+F-066,交通管理,到着処理,simulation.html,US-066,done 車両をリストから除去し到着カウント・乗客合計を更新する,PASS,OK,-,高,-
+F-067,交通管理,スループット計算,simulation.html,US-067,30秒スライディングウィンドウで台/分を計算する,PASS,OK,-,高,-
+F-068,Minecraft,地面生成,gen_mirai_sonken.py,US-068,200×90 の草地＋高架下石畳が Y=0 に生成される,PASS,OK,-,高,-
+F-069,Minecraft,高架ビアダクト,gen_mirai_sonken.py,US-069,Y=6 の道路面・8間隔支柱・クロスブレース・LED照明が生成される,PASS,OK,-,高,-
+F-070,Minecraft,進入ランプ,gen_mirai_sonken.py,US-070,両端に6段階スラブのスロープが生成される,PASS,OK,-,高,-
+F-071,Minecraft,車線色分け,gen_mirai_sonken.py,US-071,急行(赤)・通常(灰)・合乗(水色)・中央分離帯(苔)が Y=6 に配置される,PASS,OK,-,高,-
+F-072,Minecraft,白線,gen_mirai_sonken.py,US-072,4ブロック間隔で車線境界白コンクリートが配置される,PASS,OK,-,中,-
+F-073,Minecraft,中央分離帯樹木,gen_mirai_sonken.py,US-073,10間隔でオーク木が高架中央分離帯に配置される,PASS,OK,-,低,-
+F-074,Minecraft,ガードレール,gen_mirai_sonken.py,US-074,道路両端・中央分離帯端にアイアンバーが配置される,PASS,OK,-,中,-
+F-075,Minecraft,自動運転車（急行）,gen_mirai_sonken.py,US-075,白車体・赤ルーフ・タイヤ・ヘッドライト/テールランプの急行車配置,PASS,OK,-,高,-
+F-076,Minecraft,自動運転車（通常）,gen_mirai_sonken.py,US-076,白車体・黄ルーフの通常車配置,PASS,OK,-,高,-
+F-077,Minecraft,自動運転車（合乗バス）,gen_mirai_sonken.py,US-077,大型・青ルーフ・側面窓の合乗バス配置,PASS,OK,-,高,-
+F-078,Minecraft,生存圏A生成,gen_mirai_sonken.py,US-078,X=0〜37 にシアン系建物・グリッド道路が生成される,PASS,OK,-,高,-
+F-079,Minecraft,生存圏B生成,gen_mirai_sonken.py,US-079,X=162〜199 にパープル系建物・グリッド道路が生成される,PASS,OK,-,高,-
+F-080,Minecraft,地下駐車場,gen_mirai_sonken.py,US-080,Y=-5〜-1 に床・天井・照明・白線・進入スロープが生成される,PASS,OK,-,高,-
+F-081,Minecraft,広場エリア,gen_mirai_sonken.py,US-081,苔ブロック地面＋オーク木の広場が確率的に配置される,PASS,OK,-,中,-
+F-082,Minecraft,オフィスタワー,gen_mirai_sonken.py,US-082,ガラス多め・アンテナ・太陽光パネル付きオフィス棟,PASS,OK,-,中,-
+F-083,Minecraft,住居タワー,gen_mirai_sonken.py,US-083,ポディウム+セットバックタワー・バルコニー窓付き住居棟,PASS,OK,-,中,-
+F-084,Minecraft,複合用途建物,gen_mirai_sonken.py,US-084,地上3階ガラス商業+4階以上コンクリート住居の複合棟,PASS,OK,-,中,-
+F-085,Minecraft,歩行者デッキ,gen_mirai_sonken.py,US-085,高さ10の建物間を結ぶ磨かれた深石板の空中歩廊,PASS,OK,-,中,-
+F-086,Minecraft,インフラ施設,gen_mirai_sonken.py,US-086,交通管制タワー・変電設備が各ゾーンに生成される,PASS,OK,-,中,-
+F-087,Minecraft,入口ゲート,gen_mirai_sonken.py,US-087,20高さの深石板門柱+ビーコンが道路両端に生成される,PASS,OK,-,高,-
+F-088,Minecraft,車線案内サイン,gen_mirai_sonken.py,US-088,3箇所の高架看板に急行(赤)/通常(黄)/合乗(青)の色分けサイン,PASS,OK,-,中,-
+F-089,Minecraft,街路樹,gen_mirai_sonken.py,US-089,各ゾーン縁にオーク・バーチ・竹が5間隔で配置される,PASS,OK,-,低,-
+F-090,Minecraft,schemファイル出力,gen_mirai_sonken.py,US-090,mirai_sonken_v2.schem が指定ディレクトリに保存される,PASS,OK,-,高,-
+F-091,パフォーマンス,InstancedMesh 車両統合,simulation.html,T-001,全車両を InstancedMesh で1 draw call に統合しFPS向上,TODO,-,-,高,次スプリント
+F-092,パフォーマンス,建物 InstancedMesh,simulation.html,T-001,建物ジオメトリを InstancedMesh で最適化,TODO,-,-,高,次スプリント
+F-093,パフォーマンス,LOD 遠距離簡略化,simulation.html,T-003,遠距離建物を THREE.LOD で低ポリゴンに切替,TODO,-,-,中,次スプリント
+F-094,パフォーマンス,IdleCallback UI更新,simulation.html,T-004,requestIdleCallback でUI更新をフレーム外に逃がす,TODO,-,-,中,-
+F-095,パフォーマンス,60fps キャップ,simulation.html,T-007,requestAnimationFrame を 60fps に制限して CPU 過剰消費防止,TODO,-,-,中,-
+F-096,パフォーマンス,影マップ動的縮小,simulation.html,T-009,低スペック端末で shadow.mapSize を 512 にフォールバック,TODO,-,-,中,-
+F-097,パフォーマンス,dispose 確認,simulation.html,T-010,シーン破棄時に geometry/material を確実に dispose,TODO,-,-,中,-
+F-098,パフォーマンス,雨 WebGPU 移行,simulation.html,T-006,雨パーティクルを WebGPU インスタンシングに移行,TODO,-,-,低,将来
+F-099,インタラクション,キーボード 1/2/4,simulation.html,T-011,1/2/4キーで速度切替,DONE,実装済み,-,高,v5.1
+F-100,インタラクション,Space 一時停止,simulation.html,T-012,Spaceキーで一時停止/再開,DONE,実装済み,-,高,v5.1
+F-101,インタラクション,カメラプリセット,simulation.html,T-013,俯瞰/側面/デフォルトボタンとT/S/Homeキー,DONE,実装済み,-,高,v5.1
+F-102,インタラクション,車両ホバーハイライト,simulation.html,T-015,マウスホバーで OutlinePass を表示,TODO,-,-,中,次スプリント
+F-103,インタラクション,車両フィルター,simulation.html,T-016,急行/通常/合乗の表示/非表示トグル,DONE,実装済み,-,高,v5.1
+F-104,インタラクション,フルスクリーン,simulation.html,T-017,Fキー・ボタンで全画面切替,DONE,実装済み,-,中,v5.1
+F-105,インタラクション,ダブルクリック追尾,simulation.html,T-018,車両ダブルクリックで最大ズーム追尾,TODO,-,-,中,次スプリント
+F-106,インタラクション,右クリックメニュー,simulation.html,T-019,車両右クリックでコンテキストメニュー,TODO,-,-,中,次スプリント
+F-107,インタラクション,方向キーカメラ,simulation.html,T-023,↑↓でズーム/←→で回転,TODO,-,-,中,-
+F-108,インタラクション,クリップボードコピー,simulation.html,T-024,車両情報をコピーするボタン,TODO,-,-,低,-
+F-109,インタラクション,車両速度グラフ,simulation.html,T-025,選択車両の速度グラフを carinfo 内表示,TODO,-,-,中,-
+F-110,UI/UX,パネル折りたたみ,simulation.html,T-028,▲/▼ボタンで各パネルを最小化,DONE,実装済み,-,中,v5.1
+F-111,UI/UX,ダークモード切替,simulation.html,T-027,昼間テーマへの切替ボタン,TODO,-,-,中,-
+F-112,UI/UX,パネルドラッグ移動,simulation.html,T-029,パネルを任意位置にドラッグ,TODO,-,-,低,-
+F-113,UI/UX,ツールチップ全KPI,simulation.html,T-030,KPI数値ホバーで説明テキスト表示,TODO,-,-,中,-
+F-114,UI/UX,カラーテーマ,simulation.html,T-031,赤/青/緑3種のブランドカラーテーマ,TODO,-,-,低,-
+F-115,UI/UX,フォントサイズスライダー,simulation.html,T-032,アクセシビリティ用フォントサイズ可変,TODO,-,-,低,-
+F-116,UI/UX,高コントラストモード,simulation.html,T-033,白地/黒文字の視覚障害対応モード,TODO,-,-,中,-
+F-117,UI/UX,アニメーションOFF,simulation.html,T-034,prefers-reduced-motion でブルーム・雨停止,TODO,-,-,中,-
+F-118,UI/UX,スクリーンショット,simulation.html,T-035,canvas を PNG 保存するボタン,TODO,-,-,中,-
+F-119,UI/UX,フルスクリーンボタン,simulation.html,T-036,⛶ボタン追加,DONE,実装済み,-,中,v5.1
+F-120,UI/UX,ローディングスピナー,simulation.html,T-037,Three.js CDN 読込中にスピナー+進捗バー表示,DONE,実装済み,-,高,v5.1
+F-121,UI/UX,WebGL エラーバウンダリ,simulation.html,T-038,WebGL 非対応端末にエラーメッセージ表示,DONE,実装済み,-,高,v5.1
+F-122,UI/UX,エラーバウンダリ汎用,simulation.html,T-038,Three.js 初期化失敗時のフォールバック表示,TODO,-,-,中,-
+F-123,UI/UX,キーバインドヘルプ,simulation.html,T-039,?キーでショートカット一覧モーダル,TODO,-,-,中,-
+F-124,UI/UX,自動デモモード,simulation.html,T-040,30秒無操作で車両を順番追尾するデモ,TODO,-,-,低,-
+F-125,UI/UX,モバイルボトムシート,simulation.html,T-026,モバイルで右パネルを引き出せるUI,TODO,-,-,中,-
+F-126,データ,CSV エクスポート,simulation.html,T-041,到着履歴を CSV ダウンロード,TODO,-,-,中,-
+F-127,データ,速度分布ヒストグラム,simulation.html,T-042,速度分布グラフを右パネルに追加,TODO,-,-,中,-
+F-128,データ,渋滞ヒートマップ,simulation.html,T-043,車線ごとの渋滞強度を路面色で可視化,TODO,-,-,高,-
+F-129,データ,累計統計モーダル,simulation.html,T-044,走行台数/平均速度/乗客数の集計モーダル,TODO,-,-,中,-
+F-130,データ,仮想エネルギー消費,simulation.html,T-045,kWh 消費量 KPI,TODO,-,-,低,-
+F-131,データ,CO₂削減量表示,simulation.html,T-046,合乗 vs 通常の CO₂削減量,TODO,-,-,低,-
+F-132,データ,平均速度トレンド,simulation.html,T-047,60秒スパークラインに平均速度系列を追加,TODO,-,-,中,-
+F-133,データ,車線効率スコア,simulation.html,T-048,合乗車の乗客効率スコア表示,TODO,-,-,低,-
+F-134,データ,24時間累計棒グラフ,simulation.html,T-049,時間帯別到着台数棒グラフ,TODO,-,-,中,-
+F-135,データ,シミュ比較モード,simulation.html,T-050,左右分割で設定A vs B 比較,TODO,-,-,低,-
+F-136,シミュレーション,事故イベント,simulation.html,T-051,確率的に車両が停止し後続が詰まる,DONE,実装済み,-,高,v5.1
+F-137,シミュレーション,工事規制,simulation.html,T-052,区間通行止めで車線迂回,TODO,-,-,中,-
+F-138,シミュレーション,霧天候,simulation.html,T-053,霧で視程低下・車速削減,TODO,-,-,中,-
+F-139,シミュレーション,雪天候,simulation.html,T-054,雪パーティクル+路面白化+速度低下,TODO,-,-,中,-
+F-140,シミュレーション,車両密度スライダー,simulation.html,T-055,MAX_LANEをUIから動的変更,TODO,-,-,高,-
+F-141,シミュレーション,人口スライダー,simulation.html,T-056,人口に応じて合乗需要が変化,TODO,-,-,中,-
+F-142,シミュレーション,ラッシュ時刻カスタム,simulation.html,T-057,ラッシュ時間帯をUIで設定可能,TODO,-,-,中,-
+F-143,シミュレーション,EV 充電停車,simulation.html,T-058,走行距離一定で充電停車イベント,TODO,-,-,中,-
+F-144,シミュレーション,緊急車両,simulation.html,T-059,サイレン付き緊急車の優先通行,TODO,-,-,中,-
+F-145,シミュレーション,車線変更アニメ,simulation.html,T-060,隣車線への滑らかな移動アニメ,TODO,-,-,中,-
+F-146,シミュレーション,対話ゲート,simulation.html,T-061,通行料UIと収益KPI,TODO,-,-,低,-
+F-147,シミュレーション,気象予報サイドバー,simulation.html,T-062,次6時間の気象予報ウィジェット,TODO,-,-,低,-
+F-148,シミュレーション,車両老朽化,simulation.html,T-063,走行距離超過で速度低下・修理イベント,TODO,-,-,低,-
+F-149,シミュレーション,自動運転レベル表示,simulation.html,T-064,L3/L4/L5 表示,TODO,-,-,低,-
+F-150,シミュレーション,深夜減便,simulation.html,T-065,深夜は spawn interval を自動3倍に,TODO,-,-,中,-
+F-151,シミュレーション,路線番号制度,simulation.html,T-066,M1/E2 等の路線番号付与,TODO,-,-,低,-
+F-152,シミュレーション,人流サンキー図,simulation.html,T-067,A→B/B→A 積算人流を可視化,TODO,-,-,低,-
+F-153,シミュレーション,信号機システム,simulation.html,T-068,ゲート前仮想信号機,TODO,-,-,中,-
+F-154,シミュレーション,速度違反検知,simulation.html,T-069,MAX速度超過で車両を赤フラッシュ,TODO,-,-,中,-
+F-155,シミュレーション,プラトーン走行,simulation.html,T-070,急行3台が隊列走行するモード,TODO,-,-,中,-
+F-156,Minecraft,CLI 引数対応,gen_mirai_sonken.py,T-071,--seed/--out オプションを argparse で追加,TODO,-,-,中,-
+F-157,Minecraft,バリデーション,gen_mirai_sonken.py,T-072,生成後 block 数集計サマリー,TODO,-,-,中,-
+F-158,Minecraft,カラーテーマ選択,gen_mirai_sonken.py,T-073,--theme オプション,TODO,-,-,低,-
+F-159,Minecraft,Y軸オフセット,gen_mirai_sonken.py,T-074,--ground-y オプション,TODO,-,-,低,-
+F-160,Minecraft,生成進捗バー,gen_mirai_sonken.py,T-075,tqdm で進捗表示,TODO,-,-,中,-
+F-161,Minecraft,ゾーンC追加,gen_mirai_sonken.py,T-076,第3の生存圏を任意追加,TODO,-,-,低,-
+F-162,Minecraft,川・運河,gen_mirai_sonken.py,T-077,水ブロックで川生成オプション,TODO,-,-,低,-
+F-163,Minecraft,夜景モード,gen_mirai_sonken.py,T-078,建物窓に glowstone 配置,TODO,-,-,低,-
+F-164,Minecraft,スカイウォーク延長,gen_mirai_sonken.py,T-079,歩行者デッキを高架道路まで延長,TODO,-,-,中,-
+F-165,Minecraft,ユニットテスト,gen_mirai_sonken.py,T-080,pytest で単体テスト,TODO,-,-,中,-
+F-166,インフラ,GitHub Actions CI,simulation.html,T-081,W3C バリデーション CI,TODO,-,-,高,-
+F-167,インフラ,Lighthouse CI,simulation.html,T-082,パフォーマンス/a11y スコア計測,TODO,-,-,中,-
+F-168,インフラ,Playwright テスト,simulation.html,T-083,Three.js シーン描画確認の自動テスト,TODO,-,-,中,-
+F-169,インフラ,ESLint 設定,simulation.html,T-084,script タグを抽出してリント,TODO,-,-,中,-
+F-170,インフラ,Prettier,simulation.html,T-085,HTML/JS 自動整形,TODO,-,-,低,-
+F-171,インフラ,devcontainer,simulation.html,T-086,Node+Python 環境定義,TODO,-,-,中,-
+F-172,インフラ,Docker Compose,gen_mirai_sonken.py,T-087,Dockerfile で Python 隔離実行,TODO,-,-,中,-
+F-173,インフラ,Three.js ローカルバンドル,simulation.html,T-088,CDN 依存排除・npm + esbuild,TODO,-,-,中,-
+F-174,インフラ,PWA 化,simulation.html,T-089,manifest.json + Service Worker,TODO,-,-,中,-
+F-175,インフラ,OG タグ,simulation.html,T-090,SNS シェア用 meta og:image,TODO,-,-,低,-
+F-176,テスト,E2E テスト,simulation.html,T-091,Playwright で arrAB > 0 を検証,TODO,-,-,高,-
+F-177,テスト,スナップショットテスト,simulation.html,T-092,minimap 描画画像比較,TODO,-,-,中,-
+F-178,テスト,FPS 計測テスト,simulation.html,T-093,平均FPSをコンソールログ,TODO,-,-,中,-
+F-179,テスト,メモリリークテスト,simulation.html,T-094,Car.dispose() 後 scene.children 確認,TODO,-,-,高,-
+F-180,テスト,a11y 監査,simulation.html,T-095,axe-core で a11y 問題列挙,TODO,-,-,中,-
+F-181,テスト,クロスブラウザテスト,simulation.html,T-096,Chrome/Firefox/Safari 互換確認,TODO,-,-,中,-
+F-182,テスト,ネットワーク制限テスト,simulation.html,T-097,3G シミュレーションでUX確認,TODO,-,-,低,-
+F-183,テスト,Python 型ヒント,gen_mirai_sonken.py,T-098,mypy 対応型アノテーション,TODO,-,-,中,-
+F-184,テスト,Python テスト,gen_mirai_sonken.py,T-099,pytest で schem ファイル生成確認,TODO,-,-,中,-
+F-185,テスト,ドキュメントサイト,simulation.html,T-100,mkdocs でドキュメントをWeb公開,TODO,-,-,低,-
+F-186,インタラクション,時刻スライダー,simulation.html,T-007P,ヘッダーに time range slider を追加,TODO,-,-,中,P-07
+F-187,インタラクション,deselect後カメラ復帰,simulation.html,T-004P,deselect後に俯瞰位置へ lerp で戻る,TODO,-,-,中,P-04
+F-188,シミュレーション,需要グラフ更新高速化,simulation.html,T-003P,chartT を 0.2秒に短縮,TODO,-,-,低,P-03
+F-189,気象,雨×ブルーム白飛び対策,simulation.html,T-008P,雨時に bloom.threshold を動的調整,TODO,-,-,低,P-08
+F-190,シミュレーション,TimeSlider連動,simulation.html,T-007P,時刻スライダーと SimTime を同期,TODO,-,-,中,-

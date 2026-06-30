@@ -51,10 +51,18 @@
     @keyframes pulse { 0%,100%{opacity:.8} 50%{opacity:1} }
 
     .spd-group { display:flex; align-items:center; gap:6px; border-left:1px solid rgba(80,170,255,.15); padding-left:18px; }
-    .spd-lbl   { font-size:11px; color:#5a8099; }
-    .spd-btn   { padding:4px 12px; font-size:12px; border-radius:7px; cursor:pointer; background:rgba(80,160,255,.07); border:1px solid rgba(80,160,255,.22); color:#88bbdd; transition:all .15s; }
+    /* BUG-06: 速度ボタンの視認性改善 */
+    .spd-lbl   { font-size:11px; color:#7aaabb; }
+    .spd-btn   { padding:4px 12px; font-size:12px; border-radius:7px; cursor:pointer; background:rgba(80,160,255,.07); border:1px solid rgba(80,160,255,.22); color:#88bbdd; transition:all .15s; position:relative; }
     .spd-btn:hover { background:rgba(80,160,255,.18); color:#fff; }
-    .spd-btn.on    { background:rgba(80,160,255,.28); border-color:#60d0ff; color:#fff; font-weight:600; }
+    .spd-btn.on    { background:rgba(80,160,255,.28); border-color:#60d0ff; color:#fff; font-weight:700; box-shadow:0 0 8px rgba(80,180,255,.3); }
+
+    /* BUG-03: 追尾中バッジ */
+    #follow-badge {
+      display:none; font-size:10px; padding:3px 10px; border-radius:12px;
+      background:rgba(255,200,0,.12); border:1px solid rgba(255,200,0,.35);
+      color:#ffdd66; letter-spacing:.06em;
+    }
 
     /* ── 右パネル ── */
     #right { top:14px; right:14px; padding:18px 20px; min-width:280px; z-index:10; }
@@ -65,7 +73,8 @@
     .tp-bar { height:100%; border-radius:3px; transition:width .4s ease; }
     .tp-val { font-size:13px; font-weight:700; color:#fff; min-width:52px; text-align:right; }
     .hr { border-top:1px solid rgba(80,170,255,.10); margin:12px 0; }
-    .dir-lbl { font-size:10px; color:#3a7090; margin-bottom:6px; letter-spacing:.06em; }
+    /* BUG-14: 方向ラベルの視認性改善 */
+    .dir-lbl { font-size:11px; color:#6aaccc; margin-bottom:6px; letter-spacing:.06em; font-weight:600; }
     .lrow { display:flex; align-items:center; gap:8px; margin:5px 0; font-size:12px; }
     .ldot  { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
     .lname { color:#99c0d0; min-width:42px; }
@@ -85,14 +94,16 @@
     #demand-wrap { margin-top:14px; }
     .demand-hdr  { display:flex; align-items:center; justify-content:space-between; margin-bottom:4px; }
     .demand-ttl  { font-size:10px; color:#3a7090; letter-spacing:.06em; }
-    .demand-badge{ font-size:9px; color:#ff8040; }
+    /* BUG-05: demand-badge コントラスト改善 */
+    .demand-badge{ font-size:10px; color:#ffb080; background:rgba(255,100,40,.18); border:1px solid rgba(255,100,40,.35); border-radius:6px; padding:1px 7px; }
     #demand-chart{ width:100%; height:46px; border-radius:5px; display:block; background:rgba(0,12,35,.5); }
 
     /* ── 左KPI ── */
     #left { top:14px; left:14px; padding:18px 20px; min-width:160px; z-index:10; }
     .kpi-block { text-align:center; }
     .kpi-main  { font-size:42px; font-weight:800; color:#60d0ff; line-height:1; letter-spacing:-.02em; }
-    .kpi-unit  { font-size:11px; color:#5a8099; margin-top:3px; }
+    /* BUG-11: KPIラベルの視認性改善 */
+    .kpi-unit  { font-size:13px; color:#7aaabb; margin-top:5px; letter-spacing:.04em; }
     .kpi-sub   { display:flex; gap:16px; margin-top:12px; }
     .kpi-sub-item { flex:1; text-align:center; }
     .kpi-sub-num  { font-size:20px; font-weight:700; color:#fff; }
@@ -106,12 +117,20 @@
     #carinfo-ttl { font-size:11px; color:#4a9abf; letter-spacing:.1em; text-transform:uppercase; margin-bottom:12px; }
     .ci-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
     .ci-cell { background:rgba(80,160,255,.06); border-radius:8px; padding:8px 10px; border:1px solid rgba(80,160,255,.10); }
-    .ci-lbl  { font-size:9px; color:#3a7090; letter-spacing:.07em; text-transform:uppercase; margin-bottom:4px; }
+    .ci-lbl  { font-size:10px; color:#7aaabb; letter-spacing:.07em; text-transform:uppercase; margin-bottom:4px; }
     .ci-val  { font-size:16px; font-weight:700; color:#fff; }
-    .ci-prog-wrap { height:3px; background:rgba(255,255,255,.08); border-radius:2px; margin-top:12px; overflow:hidden; }
+    .ci-prog-wrap { height:4px; background:rgba(255,255,255,.08); border-radius:2px; margin-top:12px; overflow:hidden; }
     .ci-prog { height:100%; border-radius:2px; transition:width .3s ease; }
-    #ci-close { position:absolute; top:12px; right:14px; background:none; border:none; color:#3a7090; cursor:pointer; font-size:18px; line-height:1; padding:2px 6px; border-radius:4px; }
-    #ci-close:hover { color:#fff; background:rgba(255,255,255,.08); }
+    /* BUG-02: 閉じるボタンの視認性改善 */
+    #ci-close {
+      position:absolute; top:10px; right:10px;
+      background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15);
+      color:#aaccdd; cursor:pointer; font-size:16px; line-height:1;
+      padding:4px 9px; border-radius:6px; transition:all .15s;
+    }
+    #ci-close:hover { color:#fff; background:rgba(255,80,80,.25); border-color:rgba(255,80,80,.4); }
+    /* BUG-13: ESCヒント */
+    .ci-esc-hint { font-size:9px; color:rgba(80,120,150,.55); margin-top:10px; text-align:right; letter-spacing:.04em; }
 
     /* ── 凡例 ── */
     #legend { bottom:16px; left:14px; padding:14px 16px; z-index:10; }
@@ -121,6 +140,14 @@
     .leg-text  { font-size:11px; color:#99bfcc; }
     .leg-speed { font-size:10px; color:#3a7090; margin-left:auto; padding-left:8px; }
 
+    /* BUG-01: 操作ヒント（視認性向上） */
+    .interact-hint {
+      margin-top:10px; padding:8px 10px;
+      background:rgba(80,160,255,.09); border:1px solid rgba(80,160,255,.22);
+      border-radius:8px; font-size:11px; color:#6ab8d8; line-height:1.6;
+    }
+    .interact-hint strong { color:#60d0ff; }
+
     /* ── ミニマップ ── */
     #minimap-wrap { bottom:16px; right:14px; padding:12px 14px; z-index:10; min-width:240px; }
     #minimap-wrap .sec-ttl { margin-bottom:8px; }
@@ -128,11 +155,12 @@
     .mm-hint { font-size:9px; color:rgba(80,120,150,.5); margin-top:7px; line-height:1.7; text-align:right; }
 
     /* ── コンセプトカード ── */
+    /* BUG-10: intro表示中は背後の誤操作を防止 → pointer-events:all */
     #intro-card {
       position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);
       background:rgba(3,7,22,.96); border:1px solid rgba(80,170,255,.28);
       border-radius:20px; padding:36px 44px; z-index:200; text-align:center; max-width:500px;
-      backdrop-filter:blur(24px); transition:opacity 1.4s ease; pointer-events:none;
+      backdrop-filter:blur(24px); transition:opacity 1.4s ease; pointer-events:all;
     }
     #intro-card h2  { font-size:20px; font-weight:300; color:#60d0ff; letter-spacing:.22em; margin-bottom:22px; line-height:1.5; }
     #intro-card p   { font-size:12.5px; color:rgba(160,200,220,.78); line-height:2.0; margin-bottom:10px; }
@@ -145,9 +173,135 @@
     .zone-label-A { color:#4488ff; text-shadow:0 0 24px #4488ff,0 0 60px #4488ff88; background:rgba(0,5,24,.75); border:1px solid rgba(68,136,255,.3); }
     .zone-label-B { color:#bb44ff; text-shadow:0 0 24px #bb44ff,0 0 60px #bb44ff88; background:rgba(10,0,24,.75); border:1px solid rgba(187,68,255,.3); }
     .lane-label { font-size:10px; font-weight:600; letter-spacing:.08em; padding:2px 7px; border-radius:3px; pointer-events:none; color:rgba(255,255,255,.7); background:rgba(0,0,0,.55); }
+
+    /* ══ ローディングスピナー (Task37) ══ */
+    #loader {
+      position:fixed; inset:0; z-index:500;
+      background:#03050d; display:flex; flex-direction:column;
+      align-items:center; justify-content:center; gap:20px;
+      transition:opacity .6s ease;
+    }
+    #loader.hidden { opacity:0; pointer-events:none; }
+    .spinner {
+      width:48px; height:48px; border-radius:50%;
+      border:3px solid rgba(80,170,255,.15);
+      border-top-color:#60d0ff;
+      animation:spin .9s linear infinite;
+    }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    .loader-txt { font-size:12px; color:#4a7a99; letter-spacing:.12em; }
+    .loader-bar-wrap { width:200px; height:3px; background:rgba(80,170,255,.12); border-radius:2px; }
+    .loader-bar { height:100%; background:#60d0ff; border-radius:2px; width:0%; transition:width .3s ease; }
+
+    /* ══ WebGL エラー (Task38) ══ */
+    #webgl-err {
+      display:none; position:fixed; inset:0; z-index:600;
+      background:#03050d; align-items:center; justify-content:center;
+      flex-direction:column; gap:16px; text-align:center; padding:32px;
+    }
+    #webgl-err.show { display:flex; }
+    #webgl-err h2 { font-size:20px; color:#ff6644; }
+    #webgl-err p  { font-size:13px; color:#6a9aaa; line-height:1.8; }
+
+    /* ══ コントロールバー (Task13/17/12) ══ */
+    #ctrl-bar {
+      position:fixed; top:62px; left:50%; transform:translateX(-50%);
+      display:flex; align-items:center; gap:8px; z-index:10;
+      background:rgba(3,6,20,.82); border:1px solid rgba(80,170,255,.16);
+      border-radius:10px; padding:6px 14px; backdrop-filter:blur(12px);
+    }
+    .ctrl-sep { width:1px; height:18px; background:rgba(80,170,255,.15); margin:0 2px; }
+    .ctrl-btn {
+      padding:4px 11px; font-size:11px; border-radius:6px; cursor:pointer;
+      background:rgba(80,160,255,.06); border:1px solid rgba(80,160,255,.18);
+      color:#88bbdd; transition:all .15s; white-space:nowrap;
+    }
+    .ctrl-btn:hover { background:rgba(80,160,255,.18); color:#fff; }
+    .ctrl-btn.active { background:rgba(80,160,255,.28); border-color:#60d0ff; color:#fff; }
+    .ctrl-btn.danger { border-color:rgba(255,80,80,.3); color:#ff9977; }
+    .ctrl-btn.danger:hover { background:rgba(255,60,40,.18); color:#fff; }
+    #pause-btn.paused { background:rgba(255,200,0,.15); border-color:rgba(255,200,0,.4); color:#ffdd66; }
+
+    /* ══ 車両フィルター (Task16) ══ */
+    #filter-bar {
+      position:fixed; top:108px; left:50%; transform:translateX(-50%);
+      display:flex; align-items:center; gap:6px; z-index:10;
+      background:rgba(3,6,20,.80); border:1px solid rgba(80,170,255,.14);
+      border-radius:9px; padding:5px 12px; backdrop-filter:blur(12px);
+    }
+    .filter-lbl { font-size:10px; color:#4a7a99; margin-right:4px; }
+    .filter-btn {
+      padding:3px 10px; font-size:11px; border-radius:5px; cursor:pointer;
+      border:1px solid transparent; transition:all .15s; display:flex; align-items:center; gap:5px;
+    }
+    .filter-btn .fdot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+    .filter-btn.on  { opacity:1; }
+    .filter-btn.off { opacity:.35; }
+
+    /* ══ 事故バッジ (Task51) ══ */
+    #accident-badge {
+      display:none; font-size:10px; padding:3px 10px; border-radius:12px;
+      background:rgba(255,50,50,.15); border:1px solid rgba(255,50,50,.4);
+      color:#ff7755; letter-spacing:.06em; animation:pulse 0.8s ease-in-out infinite;
+    }
+    #accident-log {
+      position:fixed; top:155px; left:50%; transform:translateX(-50%);
+      font-size:10px; color:#ff8866; background:rgba(3,6,20,.85);
+      border:1px solid rgba(255,80,50,.2); border-radius:8px;
+      padding:4px 14px; z-index:10; display:none; letter-spacing:.04em;
+      backdrop-filter:blur(10px);
+    }
+
+    /* ══ パネル折りたたみ (Task28) ══ */
+    .panel-toggle {
+      position:absolute; top:10px; right:10px; width:22px; height:22px;
+      background:rgba(80,160,255,.08); border:1px solid rgba(80,160,255,.18);
+      border-radius:5px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+      font-size:10px; color:#5a9aaa; transition:all .15s; line-height:1;
+    }
+    .panel-toggle:hover { background:rgba(80,160,255,.2); color:#fff; }
+    .panel-body { transition:all .3s ease; overflow:hidden; }
+    .panel-body.collapsed { max-height:0 !important; opacity:0; }
+    #right { position:relative; }
+    #left  { position:relative; }
+    #minimap-wrap { position:relative; }
+    #legend { position:relative; }
+
+    /* ══ BUG-08: モバイル・小画面対応 ══ */
+    @media (max-width: 768px) {
+      #right { display:none; }
+      #left  { min-width:120px; padding:12px 14px; }
+      #left .kpi-main { font-size:32px; }
+      #carinfo { min-width:280px; }
+      .ci-grid { grid-template-columns:repeat(2,1fr); }
+      #legend { padding:10px 12px; }
+      #minimap-wrap { display:none; }
+      #hdr h1 { font-size:12px; }
+      #sim-time { font-size:15px; }
+    }
+    @media (max-width: 480px) {
+      #hdr { padding:8px 14px; gap:10px; }
+      .spd-group { padding-left:10px; }
+      #carinfo { min-width:calc(100vw - 32px); }
+    }
   </style>
 </head>
 <body>
+
+<!-- WebGL エラー (Task38) -->
+<div id="webgl-err">
+  <h2>⚠️ WebGL が利用できません</h2>
+  <p>このシミュレーターは WebGL 2.0 が必要です。<br>
+  Chrome / Edge / Firefox の最新版でお試しください。<br>
+  GPU ドライバーの更新も有効な場合があります。</p>
+</div>
+
+<!-- ローディング (Task37) -->
+<div id="loader">
+  <div class="spinner"></div>
+  <div class="loader-bar-wrap"><div class="loader-bar" id="loader-bar"></div></div>
+  <div class="loader-txt">シミュレーションを構築中...</div>
+</div>
 
 <canvas id="cv"></canvas>
 
@@ -163,25 +317,62 @@
     <span id="rain-badge">雨&nbsp;</span>
   </div>
   <div class="spd-group">
-    <span class="spd-lbl">速度倍率</span>
-    <button class="spd-btn on" id="s1" onclick="setSpeed(1)">×1</button>
-    <button class="spd-btn"   id="s2" onclick="setSpeed(2)">×2</button>
-    <button class="spd-btn"   id="s4" onclick="setSpeed(4)">×4</button>
+    <span class="spd-lbl">シミュ速度</span>
+    <button class="spd-btn on" id="s1" onclick="setSpeed(1)" title="等倍速（リアルタイム）">×1</button>
+    <button class="spd-btn"   id="s2" onclick="setSpeed(2)" title="2倍速">×2</button>
+    <button class="spd-btn"   id="s4" onclick="setSpeed(4)" title="4倍速">×4</button>
   </div>
+  <!-- 追尾中バッジ -->
+  <span id="follow-badge">📹 追尾中</span>
+  <!-- 事故バッジ (Task51) -->
+  <span id="accident-badge">⚠️ 事故発生</span>
 </div>
+
+<!-- コントロールバー (Task12/13/17) -->
+<div id="ctrl-bar">
+  <span class="filter-lbl">カメラ</span>
+  <button class="ctrl-btn" onclick="setCamPreset('top')"    title="俯瞰 [T]">俯瞰</button>
+  <button class="ctrl-btn" onclick="setCamPreset('side')"   title="側面 [S]">側面</button>
+  <button class="ctrl-btn" onclick="setCamPreset('default')" title="デフォルト [Home]">デフォルト</button>
+  <div class="ctrl-sep"></div>
+  <button class="ctrl-btn" id="pause-btn" onclick="togglePause()" title="一時停止 [Space]">⏸ 一時停止</button>
+  <button class="ctrl-btn" onclick="resetTime()"            title="時刻リセット [R]">⏱ 07:00 リセット</button>
+  <div class="ctrl-sep"></div>
+  <button class="ctrl-btn" onclick="toggleFullscreen()"     title="フルスクリーン [F]">⛶ 全画面</button>
+</div>
+
+<!-- 車両フィルター (Task16) -->
+<div id="filter-bar">
+  <span class="filter-lbl">表示フィルター</span>
+  <button class="filter-btn on" id="f-express" onclick="toggleFilter('express')">
+    <span class="fdot" style="background:#ff5544"></span>急行
+  </button>
+  <button class="filter-btn on" id="f-normal"  onclick="toggleFilter('normal')">
+    <span class="fdot" style="background:#cccccc"></span>通常
+  </button>
+  <button class="filter-btn on" id="f-shared"  onclick="toggleFilter('shared')">
+    <span class="fdot" style="background:#22aaff"></span>合乗
+  </button>
+</div>
+
+<!-- 事故ログ (Task51) -->
+<div id="accident-log"></div>
 
 <!-- 右パネル -->
 <div class="panel" id="right">
+  <button class="panel-toggle" onclick="collapsePanel('right-body')" title="折りたたみ">▲</button>
+  <div class="panel-body" id="right-body" style="max-height:600px">
   <div class="sec-ttl">スループット (台/分)</div>
   <div class="tp-row">
     <span class="tp-arrow" style="color:#ff5544">A→B</span>
     <div class="tp-bar-wrap"><div class="tp-bar" id="tp-ab" style="background:#ff5544;width:0%"></div></div>
-    <span class="tp-val" id="sv-ab">─</span>
+    <!-- BUG-04: 初期値を─→0台/分に変更 -->
+    <span class="tp-val" id="sv-ab">0 台/分</span>
   </div>
   <div class="tp-row">
     <span class="tp-arrow" style="color:#2299ee">B→A</span>
     <div class="tp-bar-wrap"><div class="tp-bar" id="tp-ba" style="background:#2299ee;width:0%"></div></div>
-    <span class="tp-val" id="sv-ba">─</span>
+    <span class="tp-val" id="sv-ba">0 台/分</span>
   </div>
 
   <div class="hr"></div>
@@ -215,10 +406,13 @@
     </div>
     <canvas id="demand-chart"></canvas>
   </div>
+  </div><!-- /right-body -->
 </div>
 
 <!-- 左KPI -->
 <div class="panel" id="left">
+  <button class="panel-toggle" onclick="collapsePanel('left-body')" title="折りたたみ">▲</button>
+  <div class="panel-body" id="left-body" style="max-height:300px">
   <div class="sec-ttl">走行中</div>
   <div class="kpi-block">
     <div class="kpi-main" id="kv-total">0</div>
@@ -234,6 +428,7 @@
     <div class="kpi-pax-num" id="kv-pax">0</div>
     <div class="kpi-pax-unit">名 輸送済み</div>
   </div>
+  </div><!-- /left-body -->
 </div>
 
 <!-- 選択車両 -->
@@ -249,6 +444,8 @@
     <div class="ci-cell"><div class="ci-lbl">到着まで</div><div class="ci-val" id="ci-eta">─</div></div>
   </div>
   <div class="ci-prog-wrap"><div class="ci-prog" id="ci-prog"></div></div>
+  <!-- BUG-13: ESCキーヒントをパネル内に追記 -->
+  <div class="ci-esc-hint">ESC キーまたは ✕ で追尾解除</div>
 </div>
 
 <!-- 凡例 -->
@@ -258,14 +455,21 @@
   <div class="leg-item"><div class="leg-swatch" style="background:#cccccc"></div><span class="leg-text">通常走行</span><span class="leg-speed">〜80 km/h</span></div>
   <div class="leg-item"><div class="leg-swatch" style="background:#22aaff;box-shadow:0 0 8px #22aaff"></div><span class="leg-text">合乗（シェア）</span><span class="leg-speed">〜50 km/h</span></div>
   <div class="leg-item"><div class="leg-swatch" style="background:#1a5c22"></div><span class="leg-text">中央分離帯</span><span></span></div>
-  <div style="margin-top:10px;font-size:10px;color:#3a7090;border-top:1px solid rgba(80,170,255,.1);padding-top:8px;">車両クリック → フォロー追尾</div>
+  <!-- BUG-01: 操作ヒントを目立たせる -->
+  <div class="interact-hint">
+    <strong>🖱 車両クリック</strong> → 追尾カメラ<br>
+    <strong>ESC / ✕</strong> → 追尾解除・自由視点
+  </div>
 </div>
 
 <!-- ミニマップ -->
 <div class="panel" id="minimap-wrap">
+  <button class="panel-toggle" onclick="collapsePanel('minimap-body')" title="折りたたみ">▲</button>
+  <div class="panel-body" id="minimap-body" style="max-height:120px">
   <div class="sec-ttl">全体マップ</div>
   <canvas id="minimap" width="220" height="72"></canvas>
   <div class="mm-hint">ドラッグ: 回転 | 右ドラッグ: パン<br>ホイール: ズーム | ESC: 選択解除</div>
+  </div><!-- /minimap-body -->
 </div>
 
 <!-- コンセプトカード -->
@@ -334,24 +538,113 @@ const SimTime = {
 };
 
 // ════════════════════════════════════════════
+// WebGL チェック (Task38)
+// ════════════════════════════════════════════
+(()=>{
+  const c=document.createElement('canvas');
+  if(!c.getContext('webgl2')&&!c.getContext('webgl')){
+    document.getElementById('webgl-err').classList.add('show');
+    document.getElementById('loader').style.display='none';
+    throw new Error('WebGL unavailable');
+  }
+})();
+
+// ════════════════════════════════════════════
 // STATE
 // ════════════════════════════════════════════
 let speedMul=1, selected=null, arrAB=0, arrBA=0, paxTotal=0;
-let _carId=0;
+let _carId=0, paused=false;
 
+// フィルター状態 (Task16)
+const filterState = { express:true, normal:true, shared:true };
+
+// ════════════════════════════════════════════
+// GLOBAL CONTROLS (Task11/12/13/17/16/28)
+// ════════════════════════════════════════════
 window.setSpeed = s => {
   speedMul=s;
   ['s1','s2','s4'].forEach((id,i)=>document.getElementById(id).classList.toggle('on',[1,2,4][i]===s));
 };
+
+window.togglePause = () => {
+  paused = !paused;
+  const btn = document.getElementById('pause-btn');
+  btn.textContent = paused ? '▶ 再開' : '⏸ 一時停止';
+  btn.classList.toggle('paused', paused);
+};
+
+window.resetTime = () => {
+  SimTime.hour = 7; SimTime.min = 0;
+};
+
+window.toggleFullscreen = () => {
+  if(!document.fullscreenElement) document.documentElement.requestFullscreen().catch(()=>{});
+  else document.exitFullscreen();
+};
+
+window.collapsePanel = (bodyId) => {
+  const body = document.getElementById(bodyId);
+  const btn  = body.previousElementSibling;
+  const collapsed = body.classList.toggle('collapsed');
+  btn.textContent  = collapsed ? '▼' : '▲';
+};
+
+window.toggleFilter = (type) => {
+  filterState[type] = !filterState[type];
+  document.getElementById(`f-${type}`).classList.toggle('on',  filterState[type]);
+  document.getElementById(`f-${type}`).classList.toggle('off', !filterState[type]);
+  // 対象車線の mesh を show/hide
+  TM.all().forEach(c=>{ if(c.lane.type===type) c.mesh.visible = filterState[type]; });
+};
+
+let _camSaved = null;
+window.setCamPreset = (preset) => {
+  if(!_camSaved) _camSaved = { pos: camera.position.clone(), tgt: orbit.target.clone() };
+  orbit.enabled = true; if(selected) deselect();
+  if(preset==='top'){
+    camera.position.set(0, 500, 0.1);
+    orbit.target.set(0, 0, 0);
+  } else if(preset==='side'){
+    camera.position.set(0, 60, 350);
+    orbit.target.set(0, 5, 0);
+  } else {
+    camera.position.set(60, 210, 280);
+    orbit.target.set(0, 5, 0);
+  }
+  orbit.update();
+};
+
 window.deselect = () => {
   selected=null;
   document.getElementById('carinfo').style.display='none';
+  document.getElementById('follow-badge').style.display='none';
   orbit.enabled=true;
 };
-document.addEventListener('keydown', e=>{ if(e.key==='Escape') deselect(); });
 
+// キーボードショートカット (Task11/12/13/17)
+document.addEventListener('keydown', e=>{
+  if(e.target.tagName==='INPUT') return;
+  switch(e.key){
+    case 'Escape': deselect(); break;
+    case ' ': e.preventDefault(); togglePause(); break;
+    case '1': setSpeed(1); break;
+    case '2': setSpeed(2); break;
+    case '4': setSpeed(4); break;
+    case 'f': case 'F': toggleFullscreen(); break;
+    case 'r': case 'R': resetTime(); break;
+    case 't': case 'T': setCamPreset('top'); break;
+    case 's': case 'S': setCamPreset('side'); break;
+    case 'Home': setCamPreset('default'); break;
+  }
+});
+
+// BUG-10: イントロカード
 const introEl=document.getElementById('intro-card');
-setTimeout(()=>{ introEl.style.opacity='0'; setTimeout(()=>introEl.style.display='none',1400); },5000);
+setTimeout(()=>{
+  introEl.style.opacity='0';
+  introEl.style.pointerEvents='none';
+  setTimeout(()=>introEl.style.display='none',1400);
+},5000);
 
 // ════════════════════════════════════════════
 // RENDERER
@@ -469,13 +762,6 @@ function updateRain(dt){
 // ════════════════════════════════════════════
 // WORLD BUILD
 // ════════════════════════════════════════════
-function buildWorld(){
-  buildGround(); buildHighway(); buildDirectionArrows();
-  buildZone('A'); buildZone('B');
-  buildGates(); buildLampposts();
-  buildZoneLabels(); buildLaneLabels(); buildStars();
-}
-
 function buildGround(){ plane(1600,260,0,0,0,MAT.lamb(0x050810)); }
 
 function buildHighway(){
@@ -525,8 +811,9 @@ function buildZoneLabels(){
   mk('生存圏 A','zone-label-A',-360);
   mk('生存圏 B','zone-label-B', 360);
 }
+// BUG-09: 車線ラベルを車両と重ならない高さ(y=12)に調整
 function buildLaneLabels(){
-  const mk=(t,x,z)=>{ const d=document.createElement('div'); d.className='lane-label'; d.textContent=t; const o=new CSS2DObject(d); o.position.set(x,5,z); scene.add(o); };
+  const mk=(t,x,z)=>{ const d=document.createElement('div'); d.className='lane-label'; d.textContent=t; const o=new CSS2DObject(d); o.position.set(x,12,z); scene.add(o); };
   mk('急行 →',-120,-19); mk('通常 →',-120,-13); mk('合乗 →',-120,-7);
   mk('← 合乗',-120,7);  mk('← 通常',-120,13); mk('← 急行',-120,19);
 }
@@ -663,6 +950,82 @@ class Car {
 }
 
 // ════════════════════════════════════════════
+// 事故イベントシステム (Task51)
+// ════════════════════════════════════════════
+const AccidentSys = (()=>{
+  let active = [];           // { car, timer, duration, origSpd }
+  let nextAccident = 45;    // 次の事故までの秒数
+
+  const ACCIDENT_CHANCE = 0.003;  // 1フレームあたり発生確率（低確率）
+  const MIN_DURATION = 8;
+  const MAX_DURATION = 20;
+
+  function trySpawn(dt, cars){
+    nextAccident -= dt * speedMul;
+    if(nextAccident > 0) return;
+    nextAccident = 30 + Math.random()*60; // 30〜90秒後に次の機会
+
+    // ランダムに走行中の車両を選ぶ
+    const candidates = cars.filter(c=>!c.done && c.curSpd > 1 && !active.some(a=>a.car===c));
+    if(!candidates.length) return;
+    const car = candidates[Math.floor(Math.random()*candidates.length)];
+    const dur  = MIN_DURATION + Math.random()*(MAX_DURATION-MIN_DURATION);
+    active.push({ car, timer: dur, duration: dur, origSpd: car.maxSpd });
+    car.maxSpd = 0; // 停止
+    // 車体を赤く点滅させる（ルーフ色変更）
+    car.mesh.traverse(o=>{
+      if(o.isMesh && o.material && o.material.emissive){
+        o._savedEmissive = o.material.emissive.clone();
+        o._savedEI       = o.material.emissiveIntensity;
+        o.material.emissive.set(0xff2200);
+        o.material.emissiveIntensity = 2.5;
+      }
+    });
+    showAccidentLog(car);
+  }
+
+  function update(dt){
+    active = active.filter(({car, timer, origSpd})=>{
+      const remaining = timer - dt * speedMul;
+      if(remaining <= 0){
+        // 復旧
+        car.maxSpd = origSpd;
+        car.mesh.traverse(o=>{
+          if(o.isMesh && o.material && o._savedEmissive){
+            o.material.emissive.copy(o._savedEmissive);
+            o.material.emissiveIntensity = o._savedEI;
+          }
+        });
+        return false;
+      }
+      // 点滅
+      const blink = Math.sin(performance.now()*0.008)*0.5+0.5;
+      car.mesh.traverse(o=>{
+        if(o.isMesh && o.material && o._savedEmissive){
+          o.material.emissiveIntensity = 1.5 + blink*2;
+        }
+      });
+      active.find(a=>a.car===car).timer = remaining;
+      return true;
+    });
+
+    const badge = document.getElementById('accident-badge');
+    badge.style.display = active.length ? 'inline' : 'none';
+  }
+
+  let logTimer = 0;
+  function showAccidentLog(car){
+    const log = document.getElementById('accident-log');
+    log.textContent = `⚠️ 車両 ${car.id}（${car.lane.label}）で一時停車が発生しました`;
+    log.style.display = 'block';
+    clearTimeout(logTimer);
+    logTimer = setTimeout(()=>{ log.style.display='none'; }, 5000);
+  }
+
+  return { trySpawn, update };
+})();
+
+// ════════════════════════════════════════════
 // TRAFFIC MANAGER
 // ════════════════════════════════════════════
 const TM=(()=>{
@@ -670,6 +1033,9 @@ const TM=(()=>{
   const init=()=>C.LANES.forEach(l=>{ lanes[l.id]=[]; timers[l.id]=Math.random()*l.interval; });
   const update=dt=>{
     const now=performance.now()/1000;
+    const allCars=Object.values(lanes).flat();
+    AccidentSys.trySpawn(dt, allCars);
+    AccidentSys.update(dt);
     C.LANES.forEach(l=>{
       const cars=lanes[l.id];
       timers[l.id]-=dt*speedMul;
@@ -679,6 +1045,8 @@ const TM=(()=>{
         if(!cars.some(c=>Math.abs(c.x-sx)<C.MIN_GAP+C.CAR_L)) cars.push(new Car(l));
       }
       cars.forEach(c=>c.update(dt,cars));
+      // フィルター非表示の車両も visible を反映
+      cars.forEach(c=>{ if(!filterState[c.lane.type]) c.mesh.visible=false; });
       cars.filter(c=>c.done).forEach(c=>{ (l.dir==='AB'?tpAB:tpBA).push(now); if(l.dir==='AB')arrAB++;else arrBA++; paxTotal+=c.occupants; c.dispose(); });
       lanes[l.id]=cars.filter(c=>!c.done);
     });
@@ -707,7 +1075,8 @@ function drawMinimap(){
   C.LANES.forEach(l=>{ const r=(l.color>>16)&255,g=(l.color>>8)&255,b=l.color&255; mmCtx.fillStyle=`rgba(${r},${g},${b},.18)`; mmCtx.fillRect(xMm(-270),zMm(l.z)-2.5,xMm(270)-xMm(-270),5); });
   mmCtx.fillStyle='rgba(0,180,80,.2)'; mmCtx.fillRect(xMm(-270),zMm(-5),xMm(270)-xMm(-270),zMm(5)-zMm(-5));
   mmCtx.strokeStyle='rgba(80,170,255,.25)'; mmCtx.lineWidth=.5; mmCtx.strokeRect(xMm(-270),0,xMm(270)-xMm(-270),MM_H);
-  mmCtx.font='bold 9px sans-serif'; mmCtx.fillStyle='rgba(80,120,255,.75)'; mmCtx.fillText('A',4,12); mmCtx.fillStyle='rgba(160,80,255,.75)'; mmCtx.fillText('B',MM_W-12,12);
+  // BUG-07: ミニマップA/Bラベルのフォントサイズ拡大・視認性改善
+  mmCtx.font='bold 11px sans-serif'; mmCtx.fillStyle='rgba(100,150,255,.9)'; mmCtx.fillText('A',4,14); mmCtx.fillStyle='rgba(180,100,255,.9)'; mmCtx.fillText('B',MM_W-14,14);
   TM.all().forEach(c=>{ if(c.done) return; const r=(c.lane.color>>16)&255,g=(c.lane.color>>8)&255,b=c.lane.color&255; mmCtx.fillStyle=`rgb(${r},${g},${b})`; mmCtx.fillRect(xMm(c.x)-2.5,zMm(c.lane.z)-2,5,4); });
   if(selected&&!selected.done){ mmCtx.strokeStyle='#fff'; mmCtx.lineWidth=1.5; mmCtx.strokeRect(xMm(selected.x)-5,zMm(selected.lane.z)-3.5,10,7); }
   // 雨粒をミニマップにも点描
@@ -800,6 +1169,8 @@ canvas.addEventListener('click',e=>{
   if(!obj?.userData.car) return;
   selected=obj.userData.car; orbit.enabled=false;
   document.getElementById('carinfo').style.display='block';
+  // BUG-03: 追尾バッジ表示
+  document.getElementById('follow-badge').style.display='inline';
 });
 function followCam(dt){
   if(!selected||selected.done){deselect();return;}
@@ -850,7 +1221,9 @@ function updateCarInfo(){
   document.getElementById('ci-occ').textContent=`${c.occupants} 名`;
   document.getElementById('ci-type').textContent=c.lane.label;
   document.getElementById('ci-dst').textContent=c.isAB?'生存圏 B':'生存圏 A';
-  document.getElementById('ci-eta').textContent=`${c.eta} 秒`;
+  // BUG-12: ETA=0の時「到着中」と表示
+  const etaVal = c.eta;
+  document.getElementById('ci-eta').textContent = etaVal <= 0 ? '到着中…' : `${etaVal} 秒`;
   const prog=document.getElementById('ci-prog'); prog.style.width=`${Math.round(c.progress*100)}%`; prog.style.background=hex;
 }
 
@@ -860,16 +1233,26 @@ function updateCarInfo(){
 let prevT=performance.now(),uiT=0,chartT=0,elapsed=0;
 function animate(){
   requestAnimationFrame(animate);
-  const now=performance.now(), dt=Math.min((now-prevT)/1000,.05); prevT=now; elapsed+=dt;
-  SimTime.update(dt);
-  TM.update(dt);
-  updateRain(dt);
-  updateDayNight();
+  const now=performance.now(), dt=Math.min((now-prevT)/1000,.05); prevT=now;
+
+  // Task12: 一時停止中はシミュ更新をスキップ（描画は継続）
+  if(!paused){
+    elapsed+=dt;
+    SimTime.update(dt);
+    TM.update(dt);
+    updateRain(dt);
+    updateDayNight();
+  }
+
   if(selected&&!selected.done) followCam(dt); else if(!selected) orbit.update();
-  uiT+=dt;
-  if(uiT>=0.4){ const s=TM.stats(); updateUI(s); if(selected) updateCarInfo(); uiT=0; }
-  chartT+=dt;
-  if(chartT>=1){ pushChart(TM.stats().tpAB,TM.stats().tpBA); drawDemandChart(); chartT=0; }
+
+  if(!paused){
+    uiT+=dt;
+    if(uiT>=0.4){ const s=TM.stats(); updateUI(s); if(selected) updateCarInfo(); uiT=0; }
+    chartT+=dt;
+    if(chartT>=1){ pushChart(TM.stats().tpAB,TM.stats().tpBA); drawDemandChart(); chartT=0; }
+  }
+
   drawMinimap();
   scene.traverse(o=>{ if(o.userData.beacon&&o.material) o.material.emissiveIntensity=2.5+1.8*Math.sin(elapsed*2+o.position.x*.07); });
   composer.render();
@@ -886,9 +1269,48 @@ window.addEventListener('resize',()=>{
 });
 
 // ════════════════════════════════════════════
-// BOOT
+// BOOT — ローダー進捗付き (Task37)
 // ════════════════════════════════════════════
-buildWorld(); TM.init(); drawDemandChart(); animate();
+const loaderBar = document.getElementById('loader-bar');
+const loaderEl  = document.getElementById('loader');
+
+function setLoaderProgress(pct, msg){
+  loaderBar.style.width = pct + '%';
+  if(msg) document.querySelector('.loader-txt').textContent = msg;
+}
+
+// 非同期ステップで進捗を見せる
+(async()=>{
+  setLoaderProgress(10,  '地面・道路を構築中...');
+  await new Promise(r=>setTimeout(r,0));
+  buildGround(); buildHighway(); buildDirectionArrows();
+
+  setLoaderProgress(35, '生存圏Aを構築中...');
+  await new Promise(r=>setTimeout(r,0));
+  buildZone('A');
+
+  setLoaderProgress(60, '生存圏Bを構築中...');
+  await new Promise(r=>setTimeout(r,0));
+  buildZone('B');
+
+  setLoaderProgress(80, 'ゲート・街路灯・ラベルを配置中...');
+  await new Promise(r=>setTimeout(r,0));
+  buildGates(); buildLampposts();
+  buildZoneLabels(); buildLaneLabels(); buildStars();
+
+  setLoaderProgress(95, 'シミュレーション初期化中...');
+  await new Promise(r=>setTimeout(r,0));
+  TM.init(); drawDemandChart();
+
+  setLoaderProgress(100, '完了！');
+  await new Promise(r=>setTimeout(r,300));
+
+  // ローダーを非表示
+  loaderEl.classList.add('hidden');
+  setTimeout(()=>{ loaderEl.style.display='none'; }, 700);
+
+  animate();
+})();
 </script>
 </body>
 </html>
