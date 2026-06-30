@@ -267,6 +267,64 @@
     #minimap-wrap { position:relative; }
     #legend { position:relative; }
 
+    /* ══ シミュ設定パネル (T-140/141/142) ══ */
+    #sim-settings {
+      position:fixed; top:14px; left:50%; transform:translateX(-50%);
+      margin-top:156px; /* ctrl-bar + filter-bar の下 */
+      display:none; /* JS で表示 */
+      background:rgba(3,6,20,.90); border:1px solid rgba(80,170,255,.18);
+      border-radius:12px; padding:14px 18px; z-index:10;
+      backdrop-filter:blur(14px); min-width:380px;
+    }
+    #sim-settings.visible { display:block; }
+    .ss-row { display:flex; align-items:center; gap:10px; margin:8px 0; }
+    .ss-lbl { font-size:11px; color:#6aaccc; min-width:110px; }
+    .ss-range { flex:1; accent-color:#60d0ff; cursor:pointer; }
+    .ss-val  { font-size:12px; font-weight:700; color:#fff; min-width:32px; text-align:right; }
+    .ss-sep  { border-top:1px solid rgba(80,170,255,.1); margin:10px 0; }
+
+    /* ══ キーバインドヘルプ (T-039) ══ */
+    #help-modal {
+      display:none; position:fixed; inset:0; z-index:400;
+      background:rgba(2,4,14,.88); align-items:center; justify-content:center;
+      backdrop-filter:blur(8px);
+    }
+    #help-modal.show { display:flex; }
+    .help-box {
+      background:rgba(3,8,24,.97); border:1px solid rgba(80,170,255,.28);
+      border-radius:18px; padding:28px 36px; max-width:480px; width:90%;
+    }
+    .help-box h3 { font-size:14px; color:#60d0ff; letter-spacing:.14em; margin-bottom:18px; }
+    .help-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px 24px; }
+    .hk { display:flex; align-items:center; gap:8px; }
+    .hk kbd {
+      font-size:10px; padding:2px 7px; border-radius:4px;
+      background:rgba(80,160,255,.12); border:1px solid rgba(80,160,255,.3);
+      color:#88ccee; font-family:monospace; white-space:nowrap;
+    }
+    .hk span { font-size:11px; color:#99bfcc; }
+    .help-close-btn {
+      margin-top:18px; width:100%; padding:7px; border-radius:8px;
+      background:rgba(80,160,255,.12); border:1px solid rgba(80,160,255,.25);
+      color:#88bbdd; cursor:pointer; font-size:12px; transition:all .15s;
+    }
+    .help-close-btn:hover { background:rgba(80,160,255,.25); color:#fff; }
+
+    /* ══ 車両速度グラフ (T-025) ══ */
+    .ci-spd-graph-wrap { margin-top:10px; }
+    .ci-spd-graph-lbl { font-size:9px; color:#3a7090; margin-bottom:3px; }
+    #ci-spd-graph { width:100%; height:36px; border-radius:5px; display:block; background:rgba(0,10,30,.5); }
+
+    /* ══ ヒートマップ凡例 (T-128) ══ */
+    #heatmap-legend {
+      display:none; margin-top:8px; padding:6px 10px;
+      background:rgba(0,10,30,.6); border-radius:6px;
+    }
+    #heatmap-legend.show { display:block; }
+    .hm-bar { display:flex; height:6px; border-radius:3px; overflow:hidden; margin-bottom:4px; }
+    .hm-seg { flex:1; }
+    .hm-labels { display:flex; justify-content:space-between; font-size:9px; color:#4a7090; }
+
     /* ══ BUG-08: モバイル・小画面対応 ══ */
     @media (max-width: 768px) {
       #right { display:none; }
@@ -328,17 +386,66 @@
   <span id="accident-badge">⚠️ 事故発生</span>
 </div>
 
-<!-- コントロールバー (Task12/13/17) -->
+<!-- コントロールバー -->
 <div id="ctrl-bar">
   <span class="filter-lbl">カメラ</span>
-  <button class="ctrl-btn" onclick="setCamPreset('top')"    title="俯瞰 [T]">俯瞰</button>
-  <button class="ctrl-btn" onclick="setCamPreset('side')"   title="側面 [S]">側面</button>
+  <button class="ctrl-btn" onclick="setCamPreset('top')"     title="俯瞰 [T]">俯瞰</button>
+  <button class="ctrl-btn" onclick="setCamPreset('side')"    title="側面 [S]">側面</button>
   <button class="ctrl-btn" onclick="setCamPreset('default')" title="デフォルト [Home]">デフォルト</button>
   <div class="ctrl-sep"></div>
-  <button class="ctrl-btn" id="pause-btn" onclick="togglePause()" title="一時停止 [Space]">⏸ 一時停止</button>
-  <button class="ctrl-btn" onclick="resetTime()"            title="時刻リセット [R]">⏱ 07:00 リセット</button>
+  <button class="ctrl-btn" id="pause-btn"  onclick="togglePause()"      title="一時停止 [Space]">⏸ 一時停止</button>
+  <button class="ctrl-btn"                 onclick="resetTime()"         title="時刻リセット [R]">⏱ リセット</button>
   <div class="ctrl-sep"></div>
-  <button class="ctrl-btn" onclick="toggleFullscreen()"     title="フルスクリーン [F]">⛶ 全画面</button>
+  <button class="ctrl-btn" id="heatmap-btn" onclick="toggleHeatmap()"   title="渋滞ヒートマップ [H]">🌡 混雑度</button>
+  <button class="ctrl-btn"                 onclick="toggleSimSettings()" title="シミュ設定 [G]">⚙ 設定</button>
+  <div class="ctrl-sep"></div>
+  <button class="ctrl-btn"                 onclick="takeScreenshot()"    title="スクリーンショット [P]">📷</button>
+  <button class="ctrl-btn"                 onclick="exportCSV()"         title="CSV ダウンロード">⬇ CSV</button>
+  <button class="ctrl-btn"                 onclick="toggleHelp()"        title="ショートカット一覧 [?]">?</button>
+  <button class="ctrl-btn"                 onclick="toggleFullscreen()"  title="フルスクリーン [F]">⛶</button>
+</div>
+
+<!-- シミュ設定パネル (T-140/141/142) -->
+<div id="sim-settings">
+  <div class="sec-ttl">シミュレーション設定</div>
+  <div class="ss-row">
+    <span class="ss-lbl">車両密度 (台/車線)</span>
+    <input class="ss-range" type="range" min="4" max="50" value="26" id="density-slider"
+           oninput="setDensity(this.value)">
+    <span class="ss-val" id="density-val">26</span>
+  </div>
+  <div class="ss-row">
+    <span class="ss-lbl">合乗需要 (人口比)</span>
+    <input class="ss-range" type="range" min="0.3" max="3.0" step="0.1" value="1.0" id="pop-slider"
+           oninput="setPopDemand(this.value)">
+    <span class="ss-val" id="pop-val">×1.0</span>
+  </div>
+  <div class="ss-sep"></div>
+  <div class="sec-ttl" style="margin-bottom:8px">ラッシュアワー設定</div>
+  <div class="ss-row">
+    <span class="ss-lbl">朝ラッシュ開始</span>
+    <input class="ss-range" type="range" min="0" max="23" value="7" id="rush-am-start"
+           oninput="updateRushHours()">
+    <span class="ss-val" id="ras-val">7時</span>
+  </div>
+  <div class="ss-row">
+    <span class="ss-lbl">朝ラッシュ終了</span>
+    <input class="ss-range" type="range" min="0" max="23" value="9" id="rush-am-end"
+           oninput="updateRushHours()">
+    <span class="ss-val" id="rae-val">9時</span>
+  </div>
+  <div class="ss-row">
+    <span class="ss-lbl">夕ラッシュ開始</span>
+    <input class="ss-range" type="range" min="0" max="23" value="17" id="rush-pm-start"
+           oninput="updateRushHours()">
+    <span class="ss-val" id="rps-val">17時</span>
+  </div>
+  <div class="ss-row">
+    <span class="ss-lbl">夕ラッシュ終了</span>
+    <input class="ss-range" type="range" min="0" max="23" value="19" id="rush-pm-end"
+           oninput="updateRushHours()">
+    <span class="ss-val" id="rpe-val">19時</span>
+  </div>
 </div>
 
 <!-- 車両フィルター (Task16) -->
@@ -444,7 +551,11 @@
     <div class="ci-cell"><div class="ci-lbl">到着まで</div><div class="ci-val" id="ci-eta">─</div></div>
   </div>
   <div class="ci-prog-wrap"><div class="ci-prog" id="ci-prog"></div></div>
-  <!-- BUG-13: ESCキーヒントをパネル内に追記 -->
+  <!-- T-025: 速度グラフ -->
+  <div class="ci-spd-graph-wrap">
+    <div class="ci-spd-graph-lbl">速度履歴（直近40フレーム）</div>
+    <canvas id="ci-spd-graph"></canvas>
+  </div>
   <div class="ci-esc-hint">ESC キーまたは ✕ で追尾解除</div>
 </div>
 
@@ -462,6 +573,32 @@
   </div>
 </div>
 
+<!-- キーバインドヘルプ (T-039) -->
+<div id="help-modal" onclick="if(event.target===this)toggleHelp()">
+  <div class="help-box">
+    <h3>⌨ キーボードショートカット</h3>
+    <div class="help-grid">
+      <div class="hk"><kbd>1</kbd><span>×1 通常速度</span></div>
+      <div class="hk"><kbd>2</kbd><span>×2 速度</span></div>
+      <div class="hk"><kbd>4</kbd><span>×4 速度</span></div>
+      <div class="hk"><kbd>Space</kbd><span>一時停止 / 再開</span></div>
+      <div class="hk"><kbd>T</kbd><span>俯瞰カメラ</span></div>
+      <div class="hk"><kbd>S</kbd><span>側面カメラ</span></div>
+      <div class="hk"><kbd>Home</kbd><span>デフォルトカメラ</span></div>
+      <div class="hk"><kbd>R</kbd><span>時刻リセット (07:00)</span></div>
+      <div class="hk"><kbd>F</kbd><span>フルスクリーン</span></div>
+      <div class="hk"><kbd>H</kbd><span>渋滞ヒートマップ</span></div>
+      <div class="hk"><kbd>G</kbd><span>シミュ設定パネル</span></div>
+      <div class="hk"><kbd>P</kbd><span>スクリーンショット</span></div>
+      <div class="hk"><kbd>ESC</kbd><span>追尾解除 / モーダル閉</span></div>
+      <div class="hk"><kbd>?</kbd><span>このヘルプ</span></div>
+      <div class="hk"><kbd>クリック</kbd><span>車両選択・追尾</span></div>
+      <div class="hk"><kbd>Drag</kbd><span>カメラ回転 / パン</span></div>
+    </div>
+    <button class="help-close-btn" onclick="toggleHelp()">閉じる</button>
+  </div>
+</div>
+
 <!-- ミニマップ -->
 <div class="panel" id="minimap-wrap">
   <button class="panel-toggle" onclick="collapsePanel('minimap-body')" title="折りたたみ">▲</button>
@@ -469,6 +606,16 @@
   <div class="sec-ttl">全体マップ</div>
   <canvas id="minimap" width="220" height="72"></canvas>
   <div class="mm-hint">ドラッグ: 回転 | 右ドラッグ: パン<br>ホイール: ズーム | ESC: 選択解除</div>
+  <div id="heatmap-legend">
+    <div class="hm-bar">
+      <div class="hm-seg" style="background:#22cc44"></div>
+      <div class="hm-seg" style="background:#88cc22"></div>
+      <div class="hm-seg" style="background:#cccc00"></div>
+      <div class="hm-seg" style="background:#ee8800"></div>
+      <div class="hm-seg" style="background:#ff3300"></div>
+    </div>
+    <div class="hm-labels"><span>空き</span><span>混雑</span><span>渋滞</span></div>
+  </div>
   </div><!-- /minimap-body -->
 </div>
 
@@ -529,7 +676,7 @@ const SimTime = {
     this.min += dt * 2 * speedMul;
     if(this.min>=60){ this.min-=60; this.hour=(this.hour+1)%24; }
   },
-  get isRush()    { const h=this.hour; return (h>=7&&h<9)||(h>=17&&h<19); },
+  get isRush()    { const h=this.hour; return (h>=RushConfig.amStart&&h<RushConfig.amEnd)||(h>=RushConfig.pmStart&&h<RushConfig.pmEnd); },
   get isNight()   { const h=this.hour; return h>=22||h<5; },
   get isRaining() { const h=this.hour; return h>=20||h<6; },
   get rushMul()   { return this.isRush?0.52:this.isNight?2.8:1.0; },
@@ -557,6 +704,19 @@ let _carId=0, paused=false;
 
 // フィルター状態 (Task16)
 const filterState = { express:true, normal:true, shared:true };
+
+// ラッシュアワー設定 (T-142) — SimTime から参照されるので先に定義
+const RushConfig = { amStart:7, amEnd:9, pmStart:17, pmEnd:19 };
+
+// CSV 到着ログ (T-041)
+const arrivalLog = [];
+
+// 車両速度履歴 (T-025)
+const spdHistory = new Array(40).fill(0);
+let spdHistPtr = 0;
+
+// 人口倍率 (T-141)
+let popDemandMul = 1.0;
 
 // ════════════════════════════════════════════
 // GLOBAL CONTROLS (Task11/12/13/17/16/28)
@@ -597,9 +757,11 @@ window.toggleFilter = (type) => {
   TM.all().forEach(c=>{ if(c.lane.type===type) c.mesh.visible = filterState[type]; });
 };
 
-let _camSaved = null;
+// カメラ復帰用 (T-004P)
+let _preCamPos = null, _preCamTgt = null;
+let _camReturnLerp = 0; // 0=done, >0=lerping
+
 window.setCamPreset = (preset) => {
-  if(!_camSaved) _camSaved = { pos: camera.position.clone(), tgt: orbit.target.clone() };
   orbit.enabled = true; if(selected) deselect();
   if(preset==='top'){
     camera.position.set(0, 500, 0.1);
@@ -615,17 +777,124 @@ window.setCamPreset = (preset) => {
 };
 
 window.deselect = () => {
+  if(selected){
+    // T-004P: 追尾解除時にカメラを元位置へ lerp で復帰
+    if(_preCamPos){
+      _camReturnLerp = 1.0; // lerp 開始フラグ
+    }
+  }
   selected=null;
   document.getElementById('carinfo').style.display='none';
   document.getElementById('follow-badge').style.display='none';
+  spdHistory.fill(0); // 速度履歴クリア
   orbit.enabled=true;
 };
+
+// ══ T-140: 車両密度スライダー ══
+window.setDensity = v => {
+  C.MAX_LANE = parseInt(v);
+  document.getElementById('density-val').textContent = v;
+};
+
+// ══ T-141: 人口（合乗需要）スライダー ══
+window.setPopDemand = v => {
+  popDemandMul = parseFloat(v);
+  document.getElementById('pop-val').textContent = `×${parseFloat(v).toFixed(1)}`;
+};
+
+// ══ T-142: ラッシュ時刻カスタム ══
+window.updateRushHours = () => {
+  RushConfig.amStart = parseInt(document.getElementById('rush-am-start').value);
+  RushConfig.amEnd   = parseInt(document.getElementById('rush-am-end').value);
+  RushConfig.pmStart = parseInt(document.getElementById('rush-pm-start').value);
+  RushConfig.pmEnd   = parseInt(document.getElementById('rush-pm-end').value);
+  document.getElementById('ras-val').textContent = RushConfig.amStart + '時';
+  document.getElementById('rae-val').textContent = RushConfig.amEnd   + '時';
+  document.getElementById('rps-val').textContent = RushConfig.pmStart + '時';
+  document.getElementById('rpe-val').textContent = RushConfig.pmEnd   + '時';
+};
+
+// ══ T-039: キーバインドヘルプ ══
+window.toggleHelp = () => {
+  document.getElementById('help-modal').classList.toggle('show');
+};
+
+// ══ T-035: スクリーンショット ══
+window.takeScreenshot = () => {
+  composer.render(); labelRend.render(scene,camera);
+  const link = document.createElement('a');
+  link.download = `mirai-sonken-${new Date().toISOString().slice(0,19).replace(/:/g,'-')}.png`;
+  link.href = renderer.domElement.toDataURL('image/png');
+  link.click();
+};
+
+// ══ T-041: CSV エクスポート ══
+window.exportCSV = () => {
+  if(!arrivalLog.length){ alert('まだ到着した車両がありません'); return; }
+  const BOM = '﻿';
+  const header = 'ID,車線ラベル,タイプ,方向,乗客数,到着シミュ時刻\n';
+  const rows = arrivalLog.map(r=>`${r.id},${r.label},${r.type},${r.dir},${r.pax},${r.simTime}`).join('\n');
+  const blob = new Blob([BOM+header+rows], {type:'text/csv;charset=utf-8'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href=url; a.download='arrival-log.csv'; a.click();
+  URL.revokeObjectURL(url);
+};
+
+// ══ シミュ設定パネル ══
+window.toggleSimSettings = () => {
+  document.getElementById('sim-settings').classList.toggle('visible');
+};
+
+// ══ T-128: 渋滞ヒートマップ ══
+let heatmapActive = false;
+const heatmeshes = []; // 各車線のヒートオーバーレイ plane
+
+window.toggleHeatmap = () => {
+  heatmapActive = !heatmapActive;
+  document.getElementById('heatmap-btn').classList.toggle('active', heatmapActive);
+  document.getElementById('heatmap-legend').classList.toggle('show', heatmapActive);
+  heatmeshes.forEach(m=>{ m.visible = heatmapActive; });
+};
+
+function buildHeatmap(){
+  const len = C.ROAD_HALF*2;
+  C.LANES.forEach(l=>{
+    const mat = new THREE.MeshBasicMaterial({
+      color:0x00ff00, transparent:true, opacity:0.28,
+      depthWrite:false, side:THREE.DoubleSide
+    });
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(len, 5.4), mat);
+    m.rotation.x = -Math.PI/2;
+    m.position.set(0, 0.22, l.z);
+    m.visible = false;
+    m.userData.laneId = l.id;
+    scene.add(m);
+    heatmeshes.push(m);
+  });
+}
+
+function updateHeatmap(laneStats){
+  if(!heatmapActive) return;
+  heatmeshes.forEach(m=>{
+    const cnt = laneStats[m.userData.laneId] || 0;
+    const ratio = Math.min(1, cnt / Math.max(1, C.MAX_LANE));
+    // 緑 → 黄 → 赤
+    const r = Math.min(1, ratio*2);
+    const g = Math.min(1, (1-ratio)*2);
+    m.material.color.setRGB(r, g*0.8, 0);
+    m.material.opacity = 0.15 + ratio*0.35;
+  });
+}
 
 // キーボードショートカット (Task11/12/13/17)
 document.addEventListener('keydown', e=>{
   if(e.target.tagName==='INPUT') return;
   switch(e.key){
-    case 'Escape': deselect(); break;
+    case 'Escape':
+      if(document.getElementById('help-modal').classList.contains('show')) toggleHelp();
+      else deselect();
+      break;
     case ' ': e.preventDefault(); togglePause(); break;
     case '1': setSpeed(1); break;
     case '2': setSpeed(2); break;
@@ -633,7 +902,11 @@ document.addEventListener('keydown', e=>{
     case 'f': case 'F': toggleFullscreen(); break;
     case 'r': case 'R': resetTime(); break;
     case 't': case 'T': setCamPreset('top'); break;
-    case 's': case 'S': setCamPreset('side'); break;
+    case 's': case 'S': if(!e.ctrlKey&&!e.metaKey) setCamPreset('side'); break;
+    case 'h': case 'H': toggleHeatmap(); break;
+    case 'g': case 'G': toggleSimSettings(); break;
+    case 'p': case 'P': takeScreenshot(); break;
+    case '?':           toggleHelp(); break;
     case 'Home': setCamPreset('default'); break;
   }
 });
@@ -1040,14 +1313,23 @@ const TM=(()=>{
       const cars=lanes[l.id];
       timers[l.id]-=dt*speedMul;
       if(timers[l.id]<=0){
-        timers[l.id]=(l.interval+(Math.random()-.5)*.4)*SimTime.rushMul;
+        // T-141: 合乗は人口倍率で interval を短縮（需要増）
+        const pMul = l.type==='shared' ? (1/Math.max(0.3,popDemandMul)) : 1;
+        timers[l.id]=(l.interval+(Math.random()-.5)*.4)*SimTime.rushMul*pMul;
         const sx=l.dir==='AB'?-C.ROAD_HALF-10:C.ROAD_HALF+10;
         if(!cars.some(c=>Math.abs(c.x-sx)<C.MIN_GAP+C.CAR_L)) cars.push(new Car(l));
       }
       cars.forEach(c=>c.update(dt,cars));
       // フィルター非表示の車両も visible を反映
       cars.forEach(c=>{ if(!filterState[c.lane.type]) c.mesh.visible=false; });
-      cars.filter(c=>c.done).forEach(c=>{ (l.dir==='AB'?tpAB:tpBA).push(now); if(l.dir==='AB')arrAB++;else arrBA++; paxTotal+=c.occupants; c.dispose(); });
+      cars.filter(c=>c.done).forEach(c=>{
+        (l.dir==='AB'?tpAB:tpBA).push(now);
+        if(l.dir==='AB')arrAB++;else arrBA++;
+        paxTotal+=c.occupants;
+        // T-041: 到着ログ記録
+        arrivalLog.push({ id:c.id, label:l.label, type:l.type, dir:l.dir, pax:c.occupants, simTime:SimTime.str });
+        c.dispose();
+      });
       lanes[l.id]=cars.filter(c=>!c.done);
     });
     const cut=now-C.TP_WIN;
@@ -1160,6 +1442,45 @@ function updateDayNight(){
 // ════════════════════════════════════════════
 const ray=new THREE.Raycaster(), mp=new THREE.Vector2();
 const fPos=new THREE.Vector3(), fLook=new THREE.Vector3();
+
+// ══ T-015: 車両ホバーハイライト ══
+let hovered = null;
+canvas.addEventListener('mousemove', e=>{
+  if(paused) return;
+  mp.set((e.clientX/innerWidth)*2-1, -(e.clientY/innerHeight)*2+1);
+  ray.setFromCamera(mp, camera);
+  const hits = ray.intersectObjects(TM.all().map(c=>c.mesh), true);
+  let newHov = null;
+  if(hits.length){
+    let obj=hits[0].object;
+    while(obj && !obj.userData.car) obj=obj.parent;
+    if(obj?.userData.car && obj.userData.car !== selected) newHov = obj.userData.car;
+  }
+  if(newHov === hovered) return;
+  // 前のホバーを解除
+  if(hovered){
+    hovered.mesh.traverse(o=>{
+      if(o.isMesh && o.material && o._hov !== undefined){
+        o.material.emissive.set(o._hov.e); o.material.emissiveIntensity = o._hov.i;
+        delete o._hov;
+      }
+    });
+  }
+  hovered = newHov;
+  if(hovered){
+    hovered.mesh.traverse(o=>{
+      if(o.isMesh && o.material && o.material.emissive){
+        o._hov = { e: o.material.emissive.clone(), i: o.material.emissiveIntensity };
+        o.material.emissive.set(0x66ccff);
+        o.material.emissiveIntensity = Math.max(o.material.emissiveIntensity, 2.0);
+      }
+    });
+    canvas.style.cursor = 'pointer';
+  } else {
+    canvas.style.cursor = '';
+  }
+});
+
 canvas.addEventListener('click',e=>{
   mp.set((e.clientX/innerWidth)*2-1,-(e.clientY/innerHeight)*2+1);
   ray.setFromCamera(mp,camera);
@@ -1167,10 +1488,15 @@ canvas.addEventListener('click',e=>{
   if(!hits.length) return;
   let obj=hits[0].object; while(obj&&!obj.userData.car) obj=obj.parent;
   if(!obj?.userData.car) return;
+  // T-004P: 追尾開始前のカメラ位置を保存
+  _preCamPos = camera.position.clone();
+  _preCamTgt = orbit.target.clone();
+  _camReturnLerp = 0;
+
   selected=obj.userData.car; orbit.enabled=false;
   document.getElementById('carinfo').style.display='block';
-  // BUG-03: 追尾バッジ表示
   document.getElementById('follow-badge').style.display='inline';
+  spdHistory.fill(0); spdHistPtr=0; // 速度グラフリセット
 });
 function followCam(dt){
   if(!selected||selected.done){deselect();return;}
@@ -1213,18 +1539,54 @@ function updateUI(s){
   document.getElementById('rush-badge').style.display=SimTime.isRush?'inline':'none';
   document.getElementById('night-badge').style.display=SimTime.isNight?'inline':'none';
 }
+// ══ T-025: 車両速度グラフ ══
+const spdGrEl = document.getElementById('ci-spd-graph');
+const spdGrCtx = spdGrEl.getContext('2d');
+function initSpdGraph(){
+  const dpr = Math.min(devicePixelRatio,2);
+  spdGrEl.width  = 316 * dpr;
+  spdGrEl.height = 36  * dpr;
+  spdGrCtx.scale(dpr, dpr);
+}
+initSpdGraph();
+
+function drawSpdGraph(hex){
+  const W=316, H=36;
+  spdGrCtx.clearRect(0,0,W,H);
+  spdGrCtx.fillStyle='rgba(0,10,30,.55)'; spdGrCtx.fillRect(0,0,W,H);
+  const maxV = Math.max(5, ...spdHistory);
+  spdGrCtx.strokeStyle='rgba(80,160,255,.1)'; spdGrCtx.lineWidth=.8;
+  [H*.25,H*.5,H*.75].forEach(y=>{ spdGrCtx.beginPath(); spdGrCtx.moveTo(0,y); spdGrCtx.lineTo(W,y); spdGrCtx.stroke(); });
+  spdGrCtx.beginPath();
+  spdHistory.forEach((v,i)=>{
+    const x=i/(spdHistory.length-1)*W, y=H-(v/maxV)*(H-6)-3;
+    i===0?spdGrCtx.moveTo(x,y):spdGrCtx.lineTo(x,y);
+  });
+  spdGrCtx.strokeStyle=hex; spdGrCtx.lineWidth=1.6;
+  spdGrCtx.shadowColor=hex; spdGrCtx.shadowBlur=4;
+  spdGrCtx.stroke(); spdGrCtx.shadowBlur=0;
+  // 現在値ドット
+  const last=spdHistory[spdHistory.length-1];
+  const lx=W, ly=H-(last/maxV)*(H-6)-3;
+  spdGrCtx.beginPath(); spdGrCtx.arc(lx-1,ly,3,0,Math.PI*2);
+  spdGrCtx.fillStyle=hex; spdGrCtx.fill();
+}
+
 function updateCarInfo(){
   if(!selected) return;
-  const c=selected,hex=`#${c.lane.color.toString(16).padStart(6,'0')}`;
+  const c=selected, hex=`#${c.lane.color.toString(16).padStart(6,'0')}`;
   document.getElementById('ci-id').textContent=c.id;
   document.getElementById('ci-spd').textContent=`${c.kmh} km/h`;
   document.getElementById('ci-occ').textContent=`${c.occupants} 名`;
   document.getElementById('ci-type').textContent=c.lane.label;
   document.getElementById('ci-dst').textContent=c.isAB?'生存圏 B':'生存圏 A';
-  // BUG-12: ETA=0の時「到着中」と表示
-  const etaVal = c.eta;
-  document.getElementById('ci-eta').textContent = etaVal <= 0 ? '到着中…' : `${etaVal} 秒`;
+  const etaVal=c.eta;
+  document.getElementById('ci-eta').textContent=etaVal<=0?'到着中…':`${etaVal} 秒`;
   const prog=document.getElementById('ci-prog'); prog.style.width=`${Math.round(c.progress*100)}%`; prog.style.background=hex;
+  // 速度グラフ更新
+  spdHistory[spdHistPtr % spdHistory.length] = c.kmh;
+  spdHistPtr++;
+  drawSpdGraph(hex);
 }
 
 // ════════════════════════════════════════════
@@ -1248,9 +1610,25 @@ function animate(){
 
   if(!paused){
     uiT+=dt;
-    if(uiT>=0.4){ const s=TM.stats(); updateUI(s); if(selected) updateCarInfo(); uiT=0; }
+    if(uiT>=0.4){
+      const s=TM.stats();
+      updateUI(s);
+      if(selected) updateCarInfo();
+      updateHeatmap(s.lanes);
+      uiT=0;
+    }
     chartT+=dt;
     if(chartT>=1){ pushChart(TM.stats().tpAB,TM.stats().tpBA); drawDemandChart(); chartT=0; }
+  }
+
+  // T-004P: deselect 後にカメラを元の俯瞰位置へ lerp で復帰
+  if(!selected && _camReturnLerp > 0 && _preCamPos){
+    const speed = 4 * dt;
+    camera.position.lerp(_preCamPos, speed);
+    orbit.target.lerp(_preCamTgt, speed);
+    _camReturnLerp -= speed;
+    if(_camReturnLerp <= 0){ _camReturnLerp=0; _preCamPos=null; }
+    orbit.update();
   }
 
   drawMinimap();
@@ -1297,6 +1675,7 @@ function setLoaderProgress(pct, msg){
   await new Promise(r=>setTimeout(r,0));
   buildGates(); buildLampposts();
   buildZoneLabels(); buildLaneLabels(); buildStars();
+  buildHeatmap(); // T-128: ヒートマップオーバーレイ生成
 
   setLoaderProgress(95, 'シミュレーション初期化中...');
   await new Promise(r=>setTimeout(r,0));
